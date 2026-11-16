@@ -82,7 +82,7 @@ flowchart LR
 | AI | Claude API (backend only), model name in env var | Strong text extraction, structured output | Local LLM (can't run on free hosting, less accurate) |
 | Validation | Zod (in `shared/`) | Same schema guards requests, AI output and front-end forms | Manual checks |
 | Tests | Vitest + Supertest against real Postgres (CI service container); engine as pure unit tests; Lighthouse + axe | Ownership bugs live in SQL, so test against a real database | Mocked database; Jest |
-| Hosting | Vercel (client) + Render (API) + Supabase (DB), `/api` rewrite (D-024) | Free tiers, auto-deploy from GitHub; same-origin cookies | Netlify; Google Cloud Run (about half a day of setup; later) |
+| Hosting | Vercel (client) + Render (API, Frankfurt: no London region, D-039) + Supabase (DB, London), `/api` rewrite (D-024) | Free tiers, auto-deploy from GitHub; same-origin cookies | Netlify; Google Cloud Run (about half a day of setup; later) |
 | CI/CD | GitHub Actions + host auto-deploy after CI passes (D-012, D-020) | Every change checked; a red build never goes live | Manual deploys |
 | Diagrams | Mermaid in `docs/` (D-028) | Version-controlled, rendered by GitHub | draw.io only (one diagram for slides) |
 
@@ -249,7 +249,9 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
 - Compare: strength (mg / micrograms / g / units normalised), dose, frequency (OD, BD, TDS, QDS, nocte, PRN
   synonyms normalised), form/release (MR vs IR), route.
 - Unpaired or ambiguous lines (possible brand/generic match such as Zestril vs lisinopril, same drug twice,
-  missing strength, "withheld") → `needs_review` for the pharmacist.
+  missing strength) → `needs_review` for the pharmacist.
+- A medicine the letter says is **withheld** and that is absent from the discharge list is **STOPPED**; the quoted
+  source sentence shows the word "withheld" (D-037).
 - **`needs_review` is a flag, not a fifth category (D-032).** Every line still has one of the four categories.
   - **UI:** each flagged line shows a clearly visible **"Needs review" badge with its `review_reason`** and an
     "Acknowledge" control (tick + optional note).
@@ -296,7 +298,7 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
   `main` with preview deploys for branches.
 - **Migrations:** manual GitHub Actions job ("Run migrations") using a `DATABASE_URL` secret; forward-only,
   additive changes only.
-- **Hosts:** both install from the repo root (workspaces) and build one package. `vercel.json` rewrites
+- **Hosts:** both install from the repo root (workspaces) and build one package. `client/vercel.json` (Vercel root directory = `client`) rewrites
   `/api/*` to the Render URL.
 - **Keep-alive:** uptime monitor calls `/api/health` every 10 minutes (avoids Render cold starts and
   Supabase pausing). Open the app 10 minutes before presenting; backup demo video.
@@ -315,6 +317,7 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
 | API key leak | Backend-only calls, `.env` ignored by git, secret scanning + push protection |
 | Supabase Data API exposure | Deny-all RLS, revoked privileges, no keys in the browser, server-only access |
 | AI API down / slow / rate-limited | Timeouts, retry once, manual entry fallback, backup demo video |
+| API hosted outside the UK (Render has no London region) | Frankfurt (EU, UK adequacy); no data stored there, the database stays in London; synthetic data only; production on UK hosting (D-039) |
 | Free hosting sleeps / DB pauses before the demo | Uptime ping on `/api/health` (runs `SELECT 1`); open early; backup video |
 | TypeScript slows a beginner down | Simplicity rules (D-016); explain-and-log after every feature |
 | Scope creep in a 30-hour sprint | Cut order (D-031): admin UI → Swagger → high-risk flags → stage 2 re-check → claim summary; feature freeze Tue 22:00 |
@@ -328,3 +331,28 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
 - Exactly which fields the current MYS DMS claim journey requires, and whether claims are per stage
   (check NHSBSA guidance / a pharmacist)
 - App name
+
+## 12. Seed / demo data plan (synthetic only, D-037)
+Seeded by `npm run seed` into public demo cases (`is_demo = true`, read-only). Written by the owner; no real
+patients, no real NHS numbers (999 test range only if one is ever shown).
+
+**DMS-0042 — main demo case (upper GI bleed)**, letter from "Northfield General Hospital (synthetic)":
+
+| Pre-admission (PMR) | Discharge letter sentence | Expected result |
+|---|---|---|
+| Warfarin 3 mg each evening | "Warfarin withheld following upper GI bleed; anticoagulant clinic to review." | **STOPPED**, high-risk (anticoagulant) |
+| Naproxen 500 mg twice daily | "Naproxen stopped following upper GI bleed." | **STOPPED** |
+| — | "Lansoprazole 30 mg once daily started." | **STARTED** |
+| Amlodipine 5 mg each morning | "Amlodipine increased to 10 mg once daily." | **CHANGED** (strength 5 mg → 10 mg) |
+| Lisinopril 10 mg each morning | "Zestril 10 mg one tablet in the morning." | UNCHANGED + **needs review** ("Possible brand/generic match: Zestril is a brand of lisinopril") |
+| Paracetamol 1 g four times a day when required | "Paracetamol 500 mg two tablets up to four times a day when required." | UNCHANGED + **needs review** ("Dose written differently") |
+| Atorvastatin 20 mg at night | "Continue atorvastatin 20 mg at night." | **UNCHANGED** |
+| Levothyroxine 100 micrograms each morning | "Continue levothyroxine 100 micrograms each morning." | **UNCHANGED** (full unit name) |
+
+**Further demo cases (outline, finalised with the owner in Phase 2):** DMS-0043 heart failure (furosemide
+increased, bisoprolol started); DMS-0044 fall (zopiclone and amitriptyline stopped); DMS-0045 basal insulin
+started (units, high-risk); DMS-0046 methotrexate written as daily (CHANGED frequency, high-risk);
+DMS-0047 short stay, all unchanged.
+
+The committed wireframes in `docs/designs/` show an earlier version of DMS-0042 (warfarin 3 mg → 2 mg); this
+table is the source of truth.

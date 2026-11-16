@@ -41,6 +41,9 @@ security or testing.** Follow the sprint plan below.
 1. **No real patient data, ever.** Synthetic demo letters only. Never invent real NHS numbers (use the 999 test range).
    The server rejects NHS-number-like values outside the 999 range (D-030).
 2. **Secrets only in `.env`** (never committed; `.env.example` lists names only). The frontend never sees an API key.
+   Claude Code is blocked from reading `.env` files (`.claude/settings.json`, D-038). Never ask the owner to paste a
+   secret into the chat or to run a secret-generating command with `!`: tell them the exact file + variable name and
+   to run any generator in a **separate PowerShell terminal**.
 3. **AI reads, code compares, pharmacist approves.** AI output never decides a clinical change on its own.
 4. **No AI-generated clinical advice.** No dose suggestions, no "switch to X". Signpost to pharmacist/prescriber.
 5. **Validate every AI response** with a Zod schema before using it. Fail gracefully if invalid.
@@ -61,7 +64,7 @@ security or testing.** Follow the sprint plan below.
 16. **Keep the handover docs current:** add to `docs/ai-usage-log.md` when an AI suggestion mattered or was
     rejected; tick `docs/requirements-checklist.md` as items are met.
 
-## Tech stack (decided 16 Nov 2026, see `docs/decisions.md` D-007 to D-032)
+## Tech stack (decided 16 Nov 2026, see `docs/decisions.md` D-007 to D-039)
 - **Language:** **TypeScript** everywhere (strict mode), kept beginner-readable (D-016): explicit types on function
   inputs/outputs; no `any` (use `unknown` + Zod); `type` aliases and `z.infer` only (no classes, `enum`,
   hand-written generics, decorators); no non-null assertions (`value!`); one shared `tsconfig.base.json`
@@ -95,6 +98,7 @@ security or testing.** Follow the sprint plan below.
 ```
 /shared            Zod schemas + inferred types used by client and server
 /client            React app
+  vercel.json      rewrites /api/* to the Render API (Vercel root directory = client)
   /src/pages       one file per page
   /src/components  reusable UI
   /src/api         fetch wrappers for our API
@@ -108,14 +112,13 @@ security or testing.** Follow the sprint plan below.
   /db              connection, migrate.ts, migrations/*.sql, seed (synthetic data only)
   /tests
 /docs              brief, architecture, decisions, user research, hazard log
-vercel.json        rewrites /api/* to the Render API
 ```
 
 ## Sprint plan (Mon 16 Nov → Wed 18 Nov 08:30). Deploy early, commit small and often.
 - **Phase 0, Mon afternoon (~2h): decide and design**
   1. ~~Review `docs/consult-claude-code.md`~~ **Done 16 Nov** (`docs/consult-review.md`, D-016 to D-032).
-  2. `dischargeiq-design`: pick a direction → `docs/design-system.md`.
-  3. Desktop + mobile layouts for all 8 pages → `docs/designs/` → **commit before any code**.
+  2. ~~`dischargeiq-design`: pick a direction~~ **Done** → `docs/design-system.md` (D-033).
+  3. ~~Desktop + mobile layouts for all 8 pages~~ **Done** → `docs/designs/`, committed before any code (D-034).
 - **Phase 1, Mon evening: foundation + go live early**
   Scaffold monorepo (shared/client/server), CI on GitHub Actions, `.env.example`, Supabase DB + migrations,
   deploy a "hello world" to Vercel + Render + Supabase **tonight** (find hosting problems early; prove the

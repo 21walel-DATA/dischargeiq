@@ -341,3 +341,46 @@ Template:
 - Why: One consistent numeral shape across the app; the slashed zero means 0 can't be misread as O; fixed-width
   digits line up in columns.
 - Alternatives considered: Archivo figures on labels (inconsistent zero between screens).
+
+## D-036 — Design refinements before the build (ACCEPTED, owner)
+- Date: 2026-11-16
+- Decision: Applied during the build (the PNG wireframes are not regenerated):
+  1. **Resolved review state:** once a "Needs review" line is acknowledged it switches to a calmer resolved
+     style: "✓ Checked: <note>" in faded ink, a solid thin border instead of the dashed one, no highlighter,
+     and the filled initials box. The legend at the top counts **only unresolved** review lines, so it always
+     matches the bottom bar ("1 line still needs checking").
+  2. **Numerals:** every dose and strength uses Atkinson Hyperlegible Next with tabular numerals and the
+     slashed zero, everywhere (confirms D-035).
+  3. **Placeholder contrast checked:** "Not on discharge list" / "Not on pre-admission list" use Faded ink
+     `#565D64` on Backing sheet `#ECEFEA`: **5.6:1**, above the 4.5:1 AA minimum (italic, 16 px).
+- Why: The legend and the bottom bar disagreed in the wireframe (2 vs 1), which undermines trust in a
+  safety screen; a resolved line should look finished.
+
+## D-037 — Demo example: warfarin withheld is shown as STOPPED (ACCEPTED, owner)
+- Date: 2026-11-16
+- Decision: The main demo case (DMS-0042) shows **warfarin withheld after an upper GI bleed** as STOPPED and
+  high-risk, with the letter sentence "Warfarin withheld following upper GI bleed; anticoagulant clinic to
+  review." Amlodipine 5 mg to 10 mg is the CHANGED example; Zestril/lisinopril stays the needs-review example.
+  A withheld medicine that is absent from the discharge list is STOPPED; the quoted sentence shows the word
+  "withheld" so the pharmacist sees it is not necessarily permanent. (This replaces the "withheld → needs
+  review" idea in D-022.) Seed plan: `architecture.md` section 12.
+- Why: Clinically realistic for the owner (former community pharmacist); the source sentence carries the nuance.
+- Note: the committed wireframes still show the earlier example (warfarin 3 mg to 2 mg); the seed plan is the
+  source of truth for demo data.
+
+## D-038 — Claude Code can't read `.env` files; secrets never pass through the chat (ACCEPTED, owner)
+- Date: 2026-11-16
+- Decision: `.claude/settings.json` denies Claude Code reading or editing `.env`, `.env.local`,
+  `.env.development`, `.env.production` and `.env.test` anywhere in the repo, plus common shell commands that
+  print them. `.env.example` stays readable. Secret-generating commands are run by the owner in a
+  **separate PowerShell terminal**, never with `!` inside Claude Code (that output would enter the AI's context).
+- Why: Defence in depth for golden rule 2: even by mistake, secret values never reach the AI model or its logs.
+- Limitation (honest): shell deny rules match command patterns, so an unusual command could still read a file;
+  the rule plus the working agreement together are the control.
+
+## D-039 — Render API in Frankfurt (ACCEPTED, owner)
+- Date: 2026-11-16
+- Decision: The Render web service runs in Frankfurt (Render has no London region). The database and all
+  stored data stay in Supabase London; the API only processes requests in transit, in the EU.
+- Why: Closest available region (low latency to London); EU processing is covered by UK adequacy regulations.
+  Synthetic data only in the prototype. Production would use UK hosting (e.g. Cloud Run `europe-west2`).

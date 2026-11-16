@@ -102,9 +102,15 @@ Line length: at most ~72 characters for running text.
 | Changed | `Δ` in a solid square | "Changed" | The changed field shows old value struck through and new value bold, on a violet tint, e.g. ~~3 mg~~ **2 mg** |
 | Unchanged | `=` in an outlined square | "Unchanged" | Muted ink, no band. It is the "nothing to do" state, so it is visually quietest |
 | Needs review | `?` in a dashed square | "Needs review" + reason | 2 px dashed ink border; reason highlighted like a highlighter pen; **Checked by** box required |
+| Review resolved | `✓` in an outlined square | "Checked: <note>" | After acknowledgement: 1 px solid backing-edge border (no dash), no highlighter, faded ink, filled initials box. Not counted in the legend or the bottom bar (D-036) |
 | High-risk | white `!` in a red octagon | "High-risk: <category>" | Filled red band across the top of the label |
 
-All six read correctly in greyscale and when printed. Screen readers get the word, never only the shape.
+All of these read correctly in greyscale and when printed. Screen readers get the word, never only the shape.
+
+- **Legend counts match the action bar:** the counts above the list show only **unresolved** "Needs review"
+  lines, the same number as "N lines still need checking" in the bottom bar.
+- **Placeholders:** "Not on discharge list" / "Not on pre-admission list" are Faded ink `#565D64` on Backing
+  sheet `#ECEFEA` = **5.6:1** (passes 4.5:1 AA). Never lighter than this.
 
 ## 6. Component rules
 - **Medicine label:** white, `--radius-label`, padding 16. Line 1: drug name (Archivo 700) and strength (Atkinson
