@@ -403,3 +403,19 @@ Template:
 - Why: Each removes a whole class of "works on my machine" or security problems before features arrive.
 - How I'd explain it in 30 seconds: "My tests run against a real Postgres in CI, never against live data, and
   the connection to Supabase is encrypted and checks the server's certificate, so nobody can impersonate it."
+
+## D-041 — Security incident: database password shown in the AI chat; diagnostics now print codes only
+- Date: 2026-11-16
+- What happened: while diagnosing a failing connection, Claude Code printed Supabase's error message after
+  trying to hide the connection details. The connection string was missing the `:` between username and
+  password, so the password was read as part of the username and slipped past the filter into the chat.
+- Response: the owner **reset the main database password immediately** and updated `server/.env`, the GitHub
+  secret and Render. Nothing was committed to git. The new connection was verified with a check that prints
+  only "ok" or an error code.
+- Decision: when diagnosing connections or secrets, print **only error codes and yes/no facts** (lengths,
+  formats), never error message text. Added to golden rule 2 in `CLAUDE.md`.
+- Also fixed on the way: the test-database guard now compares the project (user, host, port, database), not the
+  whole string, so tests can't run against the main project even if the passwords differ.
+- How I'd explain it in 30 seconds: "During setup an error message leaked my database password into the AI chat.
+  I rotated it straight away, nothing reached GitHub, and I changed the process so diagnostics only ever show
+  error codes. It's a good example of treating AI tools as part of the attack surface."

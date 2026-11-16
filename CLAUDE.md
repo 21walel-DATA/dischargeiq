@@ -43,7 +43,8 @@ security or testing.** Follow the sprint plan below.
 2. **Secrets only in `.env`** (never committed; `.env.example` lists names only). The frontend never sees an API key.
    Claude Code is blocked from reading `.env` files (`.claude/settings.json`, D-038). Never ask the owner to paste a
    secret into the chat or to run a secret-generating command with `!`: tell them the exact file + variable name and
-   to run any generator in a **separate PowerShell terminal**.
+   to run any generator in a **separate PowerShell terminal**. When diagnosing a connection, print **only error codes
+   and yes/no facts**, never error message text (it can contain parts of the connection string, D-041).
 3. **AI reads, code compares, pharmacist approves.** AI output never decides a clinical change on its own.
 4. **No AI-generated clinical advice.** No dose suggestions, no "switch to X". Signpost to pharmacist/prescriber.
 5. **Validate every AI response** with a Zod schema before using it. Fail gracefully if invalid.
