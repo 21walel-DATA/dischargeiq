@@ -76,7 +76,8 @@ a { color: var(--color-brand); text-underline-offset: 3px; }
 a:hover { color: var(--color-brand-dark); }
 :focus-visible { outline: 3px solid var(--color-brand); outline-offset: 2px; }
 
-.num { font-variant-numeric: tabular-nums; }
+/* One numeral style for every dose, strength, count, amount and time: Atkinson tabular, slashed zero. */
+.num { font-family: var(--font-body); font-variant-numeric: tabular-nums; }
 .muted { color: var(--color-ink-muted); }
 .small { font-size: var(--text-small); line-height: 20px; }
 .visually-hidden {
@@ -222,7 +223,7 @@ a.label:hover { border-color: var(--color-rule); }
   font-size: var(--text-drug); line-height: 26px;
 }
 .label__strength {
-  font-family: var(--font-label); font-stretch: 87.5%; font-weight: 600;
+  font-family: var(--font-body); font-weight: 700;
   font-size: var(--text-drug); line-height: 26px; font-variant-numeric: tabular-nums;
 }
 .label__directions { margin-top: var(--space-1); }

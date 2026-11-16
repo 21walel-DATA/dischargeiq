@@ -56,12 +56,15 @@ Their shape, fill and wording always tell them apart.
 ## 3. Typography
 | Role | Typeface | Why |
 |---|---|---|
-| Drug names, strengths, headings | **Archivo**, semi-condensed (`font-stretch: 87.5%`), 600/700 | Narrow like label print: long names (co-amoxiclav, levothyroxine) wrap less; strong figures |
-| Body, directions, UI, forms | **Atkinson Hyperlegible Next**, 400/700 | Designed by the Braille Institute so 1/l/I and 0/O are distinct: a safety argument for doses |
+| Drug names and headings | **Archivo**, semi-condensed (`font-stretch: 87.5%`), 600/700 | Narrow like label print: long names (co-amoxiclav, levothyroxine) wrap less |
+| Body, directions, UI, forms **and every number** | **Atkinson Hyperlegible Next**, 400/700 | Designed by the Braille Institute so 1/l/I and 0/O are distinct (slashed zero): a safety argument for doses |
 
 - Both are free on Google Fonts. Fallbacks: `"Arial Narrow", Arial, sans-serif` and `Verdana, sans-serif`.
-- **All doses, strengths, counts, money and times use `font-variant-numeric: tabular-nums`.** If a face's
-  tabular figures look wrong, numbers fall back to Archivo.
+- **One numeral style everywhere (owner decision, D-035):** every dose, strength, count, amount of money and
+  time uses **Atkinson Hyperlegible Next with tabular numerals** (`font-variant-numeric: tabular-nums`), which
+  has a **slashed zero** so 0 can never be read as O. This includes strengths printed on medicine labels, form
+  inputs, tables and summaries. Archivo is never used for numbers in data (headings such as "Case DMS-0042"
+  are names, not data).
 - Sentence case everywhere. **No all-caps labels**, no tracked eyebrows, no single-word colour accents in headings.
 
 ### Type scale (16 px base, ~1.25 ratio)
@@ -71,7 +74,7 @@ Their shape, fill and wording always tell them apart.
 | `--text-h1` | 31 / 36 | Archivo 700 | Page title |
 | `--text-h2` | 25 / 30 | Archivo 600 | Section title |
 | `--text-h3` | 20 / 26 | Archivo 600 | Sub-section |
-| `--text-drug` | 20 / 26 | Archivo 700 | Drug name on a label; strength in 600 |
+| `--text-drug` | 20 / 26 | Archivo 700 | Drug name on a label; the strength beside it is Atkinson 700, tabular |
 | `--text-body` | 16 / 24 | Atkinson 400 | Body, directions, form values |
 | `--text-small` | 14 / 20 | Atkinson 400/700 | Field labels, meta, status words. Nothing smaller than 14 px |
 
@@ -104,8 +107,8 @@ Line length: at most ~72 characters for running text.
 All six read correctly in greyscale and when printed. Screen readers get the word, never only the shape.
 
 ## 6. Component rules
-- **Medicine label:** white, `--radius-label`, padding 16. Line 1: drug name (Archivo 700) and strength (Archivo
-  600, tabular) on one line, wrapping, **never truncated**. Line 2: directions (Atkinson). Line 3: form/route
+- **Medicine label:** white, `--radius-label`, padding 16. Line 1: drug name (Archivo 700) and strength (Atkinson
+  700, tabular, slashed zero) on one line, wrapping, **never truncated**. Line 2: directions (Atkinson). Line 3: form/route
   in small text. A label is a link to the medicine detail page (whole label clickable, visible focus).
 - **Checked by box (signature):** the words "Checked by" in small text next to a 2-character box (44 × 44 px
   touch target, `--radius-box`, 2 px ink border). Empty and required: dashed border plus "Required".

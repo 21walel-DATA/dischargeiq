@@ -333,3 +333,11 @@ Template:
   work; the CSS doubles as a first draft of the component styles; nothing had to be installed.
 - Alternatives considered: Figma or draw.io mock-ups (not reusable as CSS); Playwright for screenshots
   (an extra install for the same result).
+
+## D-035 — One numeral style for every dose and strength (ACCEPTED, owner)
+- Date: 2026-11-16
+- Decision: Keep Atkinson Hyperlegible Next's slashed zero, and use Atkinson with tabular numerals for every
+  dose, strength, count, amount and time everywhere, including strengths on medicine labels (previously Archivo).
+- Why: One consistent numeral shape across the app; the slashed zero means 0 can't be misread as O; fixed-width
+  digits line up in columns.
+- Alternatives considered: Archivo figures on labels (inconsistent zero between screens).
