@@ -1,0 +1,10 @@
+.page {
+  max-width: var(--page-max);
+  margin: 0 auto;
+  padding: var(--space-5) var(--space-4);
+  min-height: 60vh;
+}
+
+@media (min-width: 900px) {
+  .page { padding: var(--space-6); }
+}

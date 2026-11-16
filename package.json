@@ -1,0 +1,30 @@
+{
+  "name": "dischargeiq",
+  "private": true,
+  "type": "module",
+  "description": "Helps community pharmacists complete NHS Discharge Medicines Service referrals (prototype, synthetic data only).",
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev:server": "npm run dev -w server",
+    "dev:client": "npm run dev -w client",
+    "build": "npm run build -w server && npm run build -w client",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "eslint .",
+    "test": "npm run test -w server",
+    "migrate": "npm run migrate -w server"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.5",
+    "eslint": "^9.39.5",
+    "globals": "^17.14.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.73.0"
+  }
+}

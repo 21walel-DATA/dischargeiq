@@ -1,0 +1,66 @@
+/* Design tokens: the ONLY place colours, fonts, sizes and spacing are defined.
+   Source: docs/design-system.md ("Dispensing label", D-033). Every other CSS file uses var(--…).
+   No hex value may appear anywhere else in the client's CSS. */
+
+:root {
+  /* Surfaces and text */
+  --color-label: #ffffff;        /* Label stock: medicine labels, inputs, panels */
+  --color-backing: #ecefea;      /* Backing sheet: page background */
+  --color-backing-edge: #c9cec6; /* Backing edge: label edges, dividers (decorative) */
+  --color-rule: #7a817a;         /* Rule: input and control borders (4.0:1) */
+  --color-ink: #20242a;          /* Thermal ink: all text */
+  --color-ink-muted: #565d64;    /* Faded ink: secondary text, Unchanged, placeholders (5.6:1 on backing) */
+  --color-on-dark: #ffffff;      /* Text on filled brand or status colours */
+
+  /* Brand and actions: never used for a status */
+  --color-brand: #8a4b0f;        /* Amber bottle: primary buttons, links, focus ring */
+  --color-brand-dark: #6b390b;   /* Bottle shadow: hover and pressed */
+  --color-brand-tint: #f6ebdd;   /* Bottle glass: current nav item, selected row */
+
+  /* Clinical status: used only for status, never for buttons or decoration */
+  --color-started: #1e6b45;
+  --color-started-tint: #e2f0e7;
+  --color-stopped: #a4262c;
+  --color-stopped-tint: #f8e2e3;
+  --color-changed: #5b3fa0;
+  --color-changed-tint: #ece7f6;
+  --color-unchanged: #565d64;
+  --color-review: #ffe066;       /* Highlighter */
+  --color-highrisk: #a4262c;     /* Cautionary red: always a filled band + octagon + words */
+
+  /* Typefaces */
+  --font-label: "Archivo", "Arial Narrow", Arial, sans-serif;  /* drug names, headings (semi-condensed) */
+  --font-body: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", Verdana, sans-serif; /* body AND every number */
+  --font-label-stretch: 87.5%;
+
+  /* Type scale (16 px base) */
+  --text-display: 2.4375rem; /* 39px home headline only */
+  --text-h1: 1.9375rem;      /* 31px */
+  --text-h2: 1.5625rem;      /* 25px */
+  --text-h3: 1.25rem;        /* 20px */
+  --text-drug: 1.25rem;      /* 20px drug name and strength on a label */
+  --text-body: 1rem;         /* 16px */
+  --text-small: 0.875rem;    /* 14px: nothing smaller */
+
+  /* Spacing (4 px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radii by meaning */
+  --radius-label: 8px;   /* medicine labels only */
+  --radius-control: 4px; /* buttons, inputs */
+  --radius-box: 2px;     /* initials box, status chips */
+
+  /* The one shadow: a label sitting on its backing sheet */
+  --shadow-label: 0 1px 0 var(--color-backing-edge);
+
+  /* Layout */
+  --page-max: 1200px;
+  --touch-min: 44px;
+}
