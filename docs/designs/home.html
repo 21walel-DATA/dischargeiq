@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DischargeIQ (wireframe): home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+<style>
+  .hero { display: grid; gap: var(--space-6); align-items: center; padding: var(--space-5) 0 var(--space-7); }
+  .hero h1 { font-size: 2rem; line-height: 38px; max-width: 18ch; }
+  .hero__lede { font-size: 1.125rem; line-height: 28px; }
+  .hero__labels { display: grid; gap: var(--space-3); }
+  .steps { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--space-4); counter-reset: s; }
+  .steps li { background: var(--color-label); border-top: 2px solid var(--color-ink); padding: var(--space-4); }
+  .steps h3 { margin-bottom: var(--space-2); }
+  .steps .fee { font-size: var(--text-small); color: var(--color-ink-muted); }
+  .principle { display: grid; gap: var(--space-4); margin: var(--space-7) 0; }
+  .principle p { margin: 0; }
+  @media (min-width: 900px) {
+    .hero { grid-template-columns: 1.1fr 1fr; padding: var(--space-7) 0 var(--space-8); }
+    .hero h1 { font-size: var(--text-display); line-height: 44px; }
+    .steps { grid-template-columns: repeat(3, 1fr); }
+    .principle { grid-template-columns: repeat(3, 1fr); gap: var(--space-6); }
+  }
+</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="demo-cases.html">Demo cases</a>
+    <a href="login.html">Log in</a>
+    <a class="btn" href="login.html" style="color:#fff;margin-left:var(--space-2)">Create an account</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <section class="hero">
+    <div>
+      <h1>See what changed in a discharge letter before the patient's next prescription</h1>
+      <p class="hero__lede">Paste the hospital letter and the patient's medicines from your PMR. DischargeIQ lists every medicine that was started, stopped or changed, shows the sentence it came from, and takes the referral through all three DMS stages to a claim-ready record.</p>
+      <div class="btn-row">
+        <a class="btn" href="demo-cases.html">Try a demo case</a>
+        <a class="btn btn--secondary" href="login.html">Log in</a>
+      </div>
+    </div>
+    <div class="hero__labels" aria-label="Example from a synthetic demo case">
+      <div class="label">
+        <div class="highrisk"><span class="octagon" aria-hidden="true">!</span>High-risk: anticoagulant</div>
+        <div class="label__line1"><span class="label__name">Warfarin</span><span class="label__strength"><span class="was">3 mg</span> <span class="now">2 mg</span></span></div>
+        <div class="label__directions">Take each evening. INR check in 5 days</div>
+        <div class="label__foot"><span class="status status--changed"><span class="mark" aria-hidden="true">Δ</span>Changed: dose</span><span class="small muted">“Warfarin dose reduced to 2 mg…”</span></div>
+      </div>
+      <div class="label label--band-stopped label--stopped">
+        <div class="label__line1"><span class="label__name">Naproxen</span><span class="label__strength">500 mg</span></div>
+        <div class="label__foot"><span class="status status--stopped"><span class="mark" aria-hidden="true">×</span>Stopped</span><span class="small muted">“Naproxen stopped following upper GI bleed.”</span></div>
+      </div>
+      <div class="label label--review">
+        <div class="label__line1"><span class="label__name">Zestril</span><span class="label__strength">10 mg</span></div>
+        <div class="label__foot"><span class="status status--review"><span class="mark" aria-hidden="true">?</span>Needs review</span><span class="checked-by">Checked by <span class="checked-by__box">DP</span></span></div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="how">
+    <h2 id="how">The three stages of the Discharge Medicines Service</h2>
+    <ol class="steps">
+      <li><h3>1. Review the discharge information</h3><p>AI reads the letter; plain code compares it with the pre-admission list. Aim to finish within 72 hours of the referral.</p><span class="fee">Fee £12</span></li>
+      <li><h3>2. Check the first new prescription</h3><p>The same comparison checks the GP's first prescription against the discharge list, so a missed change stands out.</p><span class="fee">Fee £11</span></li>
+      <li><h3>3. Talk to the patient or carer</h3><p>Record the consultation, then copy a claim-ready summary into Manage Your Service.</p><span class="fee">Fee £12</span></li>
+    </ol>
+  </section>
+
+  <section class="principle" aria-label="How the tool stays safe">
+    <div><h3>AI only reads</h3><p>It pulls medicines out of the letter and quotes the sentence each came from. It never suggests a dose or a switch.</p></div>
+    <div><h3>Code compares</h3><p>The started, stopped and changed list comes from tested rules, not from AI. If a match is uncertain, the line is marked for review.</p></div>
+    <div><h3>You approve</h3><p>A stage can't be completed until you've checked every flagged line and added your initials.</p></div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+</div></footer>
+</body>
+</html>

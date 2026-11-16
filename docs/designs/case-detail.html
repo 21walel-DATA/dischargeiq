@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Case DMS-0042 – DischargeIQ (wireframe)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="my-cases.html" aria-current="page">My cases</a>
+    <a href="claims.html">Claims and stats</a>
+    <a href="demo-cases.html">Demo cases</a>
+    <span class="nav__user">Demo Pharmacist</span>
+    <a href="login.html">Log out</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <a class="back-link" href="my-cases.html">Back to my cases</a>
+  <div class="page-head">
+    <div>
+      <h1>Case DMS-0042</h1>
+      <div class="page-head__meta small muted">
+        <span>Referral received <span class="num">14 Nov 09:10</span></span>
+        <span>Northfield General Hospital (synthetic)</span>
+      </div>
+    </div>
+    <div class="page-head__meta">
+      <span class="small"><strong>Stage 1:</strong> <span class="num">31 h</span> left of the 72-hour target</span>
+      <span class="autosave">Saved <span class="num">10:42</span></span>
+    </div>
+  </div>
+
+  <ol class="stages" aria-label="DMS stages">
+    <li class="stage stage--current"><span class="stage__num">1</span><span class="stage__title">Review discharge information</span><span class="stage__state">In progress</span></li>
+    <li class="stage"><span class="stage__num">2</span><span class="stage__title">Check first new prescription</span><span class="stage__state">Not started</span></li>
+    <li class="stage"><span class="stage__num">3</span><span class="stage__title">Consultation with patient or carer</span><span class="stage__state">Not started</span></li>
+  </ol>
+
+  <section aria-labelledby="recon-title">
+    <div class="btn-row" style="justify-content:space-between;margin-bottom:var(--space-4)">
+      <h2 id="recon-title" style="margin:0">Medicines compared</h2>
+      <div class="counts small">
+        <span class="status status--changed"><span class="mark" aria-hidden="true">Δ</span>1 changed</span>
+        <span class="status status--stopped"><span class="mark" aria-hidden="true">×</span>1 stopped</span>
+        <span class="status status--started"><span class="mark" aria-hidden="true">+</span>1 started</span>
+        <span class="status status--review"><span class="mark" aria-hidden="true">?</span>2 need review</span>
+        <span class="status status--unchanged"><span class="mark" aria-hidden="true">=</span>2 unchanged</span>
+      </div>
+    </div>
+
+    <div class="recon-head" aria-hidden="true"><span>Before admission (PMR)</span><span>Change</span><span>On discharge (letter)</span></div>
+
+    <div class="recon">
+      <!-- Changed + high-risk -->
+      <div class="recon-row">
+        <div><div class="side-tag">Before admission</div>
+          <a class="label" href="medicine-detail.html">
+            <div class="highrisk"><span class="octagon" aria-hidden="true">!</span>High-risk: anticoagulant</div>
+            <div class="label__line1"><span class="label__name">Warfarin</span><span class="label__strength">3 mg</span></div>
+            <div class="label__directions">Take each evening, or as directed by the anticoagulant clinic</div>
+            <div class="label__form">Tablets, oral</div>
+          </a></div>
+        <div class="recon-status">
+          <span class="status status--changed"><span class="mark" aria-hidden="true">Δ</span>Changed</span>
+          <span class="recon-status__detail">Dose <span class="was num">3 mg</span> <span class="now num">2 mg</span></span>
+          <a href="medicine-detail.html">See the letter sentence</a>
+        </div>
+        <div><div class="side-tag">On discharge</div>
+          <a class="label" href="medicine-detail.html">
+            <div class="highrisk"><span class="octagon" aria-hidden="true">!</span>High-risk: anticoagulant</div>
+            <div class="label__line1"><span class="label__name">Warfarin</span><span class="label__strength now">2 mg</span></div>
+            <div class="label__directions">Take each evening. INR check in 5 days</div>
+            <div class="label__form">Tablets, oral</div>
+          </a></div>
+      </div>
+
+      <!-- Stopped -->
+      <div class="recon-row">
+        <div><div class="side-tag">Before admission</div>
+          <a class="label label--band-stopped label--stopped" href="medicine-detail.html">
+            <div class="label__line1"><span class="label__name">Naproxen</span><span class="label__strength">500 mg</span></div>
+            <div class="label__directions">Take one tablet twice a day with food</div>
+            <div class="label__form">Tablets, oral</div>
+          </a></div>
+        <div class="recon-status">
+          <span class="status status--stopped"><span class="mark" aria-hidden="true">×</span>Stopped</span>
+          <span class="recon-status__detail">“Naproxen stopped following upper GI bleed.”</span>
+          <a href="medicine-detail.html">See the letter sentence</a>
+        </div>
+        <div><div class="side-tag">On discharge</div>
+          <div class="label label--empty">Not on discharge list</div></div>
+      </div>
+
+      <!-- Started -->
+      <div class="recon-row">
+        <div><div class="side-tag">Before admission</div>
+          <div class="label label--empty">Not on pre-admission list</div></div>
+        <div class="recon-status">
+          <span class="status status--started"><span class="mark" aria-hidden="true">+</span>Started</span>
+          <span class="recon-status__detail">New medicine on discharge</span>
+          <a href="medicine-detail.html">See the letter sentence</a>
+        </div>
+        <div><div class="side-tag">On discharge</div>
+          <a class="label label--band-started" href="medicine-detail.html">
+            <div class="label__line1"><span class="label__name">Lansoprazole</span><span class="label__strength">30 mg</span></div>
+            <div class="label__directions">Take one capsule each morning</div>
+            <div class="label__form">Gastro-resistant capsules, oral</div>
+          </a></div>
+      </div>
+
+      <!-- Needs review, not yet checked -->
+      <div class="recon-row">
+        <div><div class="side-tag">Before admission</div>
+          <a class="label label--review" href="medicine-detail.html">
+            <div class="label__line1"><span class="label__name">Lisinopril</span><span class="label__strength">10 mg</span></div>
+            <div class="label__directions">Take one tablet each morning</div>
+            <div class="label__form">Tablets, oral</div>
+          </a></div>
+        <div class="recon-status">
+          <span class="status status--review"><span class="mark" aria-hidden="true">?</span>Needs review</span>
+          <span class="recon-status__detail"><span class="highlight">Possible brand/generic match: Zestril is a brand of lisinopril. Check they are the same medicine.</span></span>
+        </div>
+        <div><div class="side-tag">On discharge</div>
+          <div class="label label--review">
+            <div class="label__line1"><span class="label__name">Zestril</span><span class="label__strength">10 mg</span></div>
+            <div class="label__directions">One tablet in the morning</div>
+            <div class="label__foot">
+              <span class="small">Paired as unchanged, not yet checked</span>
+              <span class="checked-by">Checked by <button class="checked-by__box checked-by__box--empty" type="button" aria-label="Acknowledge: add your initials"></button><span class="checked-by__required">Required</span></span>
+            </div>
+          </div></div>
+      </div>
+
+      <!-- Needs review, checked -->
+      <div class="recon-row">
+        <div><div class="side-tag">Before admission</div>
+          <a class="label" href="medicine-detail.html">
+            <div class="label__line1"><span class="label__name">Paracetamol</span><span class="label__strength">1 g</span></div>
+            <div class="label__directions">Take four times a day when required for pain</div>
+            <div class="label__form">Tablets, oral</div>
+          </a></div>
+        <div class="recon-status">
+          <span class="status status--review"><span class="mark" aria-hidden="true">?</span>Needs review</span>
+          <span class="recon-status__detail"><span class="highlight">Dose written differently: 1 g and two 500 mg tablets.</span></span>
+          <span class="recon-status__detail muted">Acknowledged: same dose</span>
+        </div>
+        <div><div class="side-tag">On discharge</div>
+          <div class="label">
+            <div class="label__line1"><span class="label__name">Paracetamol</span><span class="label__strength">500 mg</span></div>
+            <div class="label__directions">Two tablets up to four times a day when required</div>
+            <div class="label__foot">
+              <span class="small">Paired as unchanged</span>
+              <span class="checked-by">Checked by <span class="checked-by__box">DP</span><span class="checked-by__time num">10:41</span></span>
+            </div>
+          </div></div>
+      </div>
+
+      <!-- Unchanged -->
+      <div class="recon-row">
+        <div><div class="side-tag">Before admission</div>
+          <a class="label label--muted" href="medicine-detail.html">
+            <div class="label__line1"><span class="label__name">Atorvastatin</span><span class="label__strength">20 mg</span></div>
+            <div class="label__directions">Take one tablet at night</div>
+          </a></div>
+        <div class="recon-status"><span class="status status--unchanged"><span class="mark" aria-hidden="true">=</span>Unchanged</span></div>
+        <div><div class="side-tag">On discharge</div>
+          <a class="label label--muted" href="medicine-detail.html">
+            <div class="label__line1"><span class="label__name">Atorvastatin</span><span class="label__strength">20 mg</span></div>
+            <div class="label__directions">One tablet at night</div>
+          </a></div>
+      </div>
+      <div class="recon-row">
+        <div><div class="side-tag">Before admission</div>
+          <a class="label label--muted" href="medicine-detail.html">
+            <div class="label__line1"><span class="label__name">Amlodipine</span><span class="label__strength">5 mg</span></div>
+            <div class="label__directions">Take one tablet each morning</div>
+          </a></div>
+        <div class="recon-status"><span class="status status--unchanged"><span class="mark" aria-hidden="true">=</span>Unchanged</span></div>
+        <div><div class="side-tag">On discharge</div>
+          <a class="label label--muted" href="medicine-detail.html">
+            <div class="label__line1"><span class="label__name">Amlodipine</span><span class="label__strength">5 mg</span></div>
+            <div class="label__directions">One tablet in the morning</div>
+          </a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="panel" style="margin-top:var(--space-6)">
+    <h2>Stage 1 notes</h2>
+    <div class="field">
+      <label for="notes">Notes for this stage</label>
+      <span class="field__hint">Saved automatically. Don't enter names, addresses or NHS numbers.</span>
+      <textarea class="textarea" id="notes" style="min-height:96px">Warfarin dose reduced. Patient's anticoagulant clinic informed by the hospital.</textarea>
+    </div>
+    <div class="btn-row"><a class="btn btn--secondary" href="case-form.html">Edit medicines or letter</a></div>
+  </section>
+</main>
+
+<div class="action-bar"><div class="action-bar__inner">
+  <span class="status status--review"><span class="mark" aria-hidden="true">?</span>1 line still needs checking</span>
+  <button class="btn" type="button" disabled>Complete stage 1</button>
+</div></div>
+
+<footer class="site-footer" style="margin-top:0"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+</div></footer>
+</body>
+</html>

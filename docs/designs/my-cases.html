@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DischargeIQ (wireframe): my cases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+<style>
+  .progress { display: inline-flex; gap: var(--space-1); align-items: center; }
+  .pip { width: 26px; height: 26px; border: 2px solid var(--color-ink); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font: 700 13px/1 var(--font-label); }
+  .pip--done { background: var(--color-ink); color: #fff; }
+  .pip--na { border-style: dashed; color: var(--color-ink-muted); border-color: var(--color-ink-muted); }
+  .due-soon { font-weight: 700; }
+</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="my-cases.html" aria-current="page">My cases</a>
+    <a href="claims.html">Claims and stats</a>
+    <a href="demo-cases.html">Demo cases</a>
+    <span class="nav__user">Demo Pharmacist</span>
+    <a href="login.html">Log out</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <div class="page-head">
+    <div>
+      <h1>My cases</h1>
+      <p style="margin:var(--space-2) 0 0"><strong>2 cases</strong> need stage 1 within 24 hours. <strong>1 case</strong> is ready to claim.</p>
+    </div>
+    <a class="btn" href="case-form.html">New case</a>
+  </div>
+
+  <div class="chips" aria-label="Filter cases">
+    <a class="chip" href="#" aria-pressed="true">Open (5)</a>
+    <a class="chip" href="#" aria-pressed="false">Stage 1 due soon (2)</a>
+    <a class="chip" href="#" aria-pressed="false">Ready to claim (1)</a>
+    <a class="chip" href="#" aria-pressed="false">Claimed (8)</a>
+  </div>
+
+  <table class="table">
+    <thead><tr><th>Case</th><th>Referral received</th><th>Stage 1 target</th><th>Stages</th><th>Lines to review</th><th>Claim</th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="td-main" data-label="Case"><a href="case-detail.html"><strong>DMS-0042</strong></a></td>
+        <td class="num" data-label="Referral">14 Nov 09:10</td>
+        <td data-label="Stage 1 target"><span class="due-soon num">31 h left</span></td>
+        <td data-label="Stages"><span class="progress" aria-label="Stage 1 in progress"><span class="pip">1</span><span class="pip">2</span><span class="pip">3</span></span></td>
+        <td data-label="To review"><span class="status status--review"><span class="mark" aria-hidden="true">?</span>1 to check</span></td>
+        <td data-label="Claim">Not ready</td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><a href="case-detail.html"><strong>DMS-0051</strong></a></td>
+        <td class="num" data-label="Referral">15 Nov 16:45</td>
+        <td data-label="Stage 1 target"><span class="due-soon num">18 h left</span></td>
+        <td data-label="Stages"><span class="progress" aria-label="Not started"><span class="pip">1</span><span class="pip">2</span><span class="pip">3</span></span></td>
+        <td data-label="To review"><span class="muted">Letter not read yet</span></td>
+        <td data-label="Claim">Not ready</td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><a href="case-detail.html"><strong>DMS-0039</strong></a></td>
+        <td class="num" data-label="Referral">10 Nov 11:20</td>
+        <td data-label="Stage 1 target"><span class="muted">Completed 11 Nov</span></td>
+        <td data-label="Stages"><span class="progress" aria-label="Stage 1 complete, stage 2 in progress"><span class="pip pip--done">1</span><span class="pip">2</span><span class="pip">3</span></span></td>
+        <td data-label="To review"><span class="muted">None</span></td>
+        <td data-label="Claim">Not ready</td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><a href="case-detail.html"><strong>DMS-0036</strong></a></td>
+        <td class="num" data-label="Referral">6 Nov 08:55</td>
+        <td data-label="Stage 1 target"><span class="muted">Completed 6 Nov</span></td>
+        <td data-label="Stages"><span class="progress" aria-label="Stages 1 and 3 complete, stage 2 not applicable"><span class="pip pip--done">1</span><span class="pip pip--na">2</span><span class="pip pip--done">3</span></span></td>
+        <td data-label="To review"><span class="muted">None</span></td>
+        <td data-label="Claim"><strong>Ready to claim</strong></td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><a href="case-detail.html"><strong>DMS-0034</strong></a></td>
+        <td class="num" data-label="Referral">4 Nov 13:30</td>
+        <td data-label="Stage 1 target"><span class="muted">Completed 5 Nov</span></td>
+        <td data-label="Stages"><span class="progress" aria-label="Stages 1 and 2 complete"><span class="pip pip--done">1</span><span class="pip pip--done">2</span><span class="pip">3</span></span></td>
+        <td data-label="To review"><span class="muted">None</span></td>
+        <td data-label="Claim">Not ready</td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="small muted" style="margin-top:var(--space-4)">Stages key: filled circle completed, empty circle not done, dashed circle not applicable.</p>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+</div></footer>
+</body>
+</html>

@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DischargeIQ (wireframe): medicine detail</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+<style>
+  .pair { display: grid; gap: var(--space-3); }
+  @media (min-width: 900px) { .pair { grid-template-columns: 1fr 1fr; gap: var(--space-4); } }
+  .big .label__name, .big .label__strength { font-size: 1.5625rem; line-height: 30px; }
+  .source { background: var(--color-label); border-left: 4px solid var(--color-ink); padding: var(--space-4); font-size: 1.0625rem; line-height: 28px; }
+  .source mark { background: var(--color-review); color: var(--color-ink); padding: 0 var(--space-1); }
+  .fields td, .fields th { padding: var(--space-2) var(--space-3); }
+</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="my-cases.html" aria-current="page">My cases</a>
+    <a href="claims.html">Claims and stats</a>
+    <a href="demo-cases.html">Demo cases</a>
+    <span class="nav__user">Demo Pharmacist</span>
+    <a href="login.html">Log out</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <a class="back-link" href="case-detail.html">Back to case DMS-0042</a>
+  <div class="page-head">
+    <div>
+      <h1>Warfarin</h1>
+      <span class="status status--changed"><span class="mark" aria-hidden="true">Δ</span>Changed: dose <span class="was num">3 mg</span> <span class="now num">2 mg</span></span>
+    </div>
+    <span class="autosave">Saved <span class="num">10:44</span></span>
+  </div>
+
+  <div class="pair big">
+    <div>
+      <div class="side-tag" style="display:block">Before admission (PMR)</div>
+      <div class="label">
+        <div class="highrisk"><span class="octagon" aria-hidden="true">!</span>High-risk: anticoagulant</div>
+        <div class="label__line1"><span class="label__name">Warfarin</span><span class="label__strength">3 mg</span></div>
+        <div class="label__directions">Take each evening, or as directed by the anticoagulant clinic</div>
+        <div class="label__form">Tablets, oral</div>
+      </div>
+    </div>
+    <div>
+      <div class="side-tag" style="display:block">On discharge (letter)</div>
+      <div class="label">
+        <div class="highrisk"><span class="octagon" aria-hidden="true">!</span>High-risk: anticoagulant</div>
+        <div class="label__line1"><span class="label__name">Warfarin</span><span class="label__strength now">2 mg</span></div>
+        <div class="label__directions">Take each evening. INR check in 5 days</div>
+        <div class="label__form">Tablets, oral</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2 grid-2--wide-left" style="margin-top:var(--space-6)">
+    <section>
+      <h2>Where this came from in the letter</h2>
+      <div class="source">Discharge medications (synthetic example):
+        <mark>Warfarin dose reduced to 2 mg daily in the evening due to raised INR on admission. INR check in 5 days.</mark>
+        Naproxen stopped following upper GI bleed. …</div>
+      <p class="small muted" style="margin-top:var(--space-2)">The highlighted sentence was found word for word in the letter you pasted.</p>
+
+      <h2 style="margin-top:var(--space-6)">What was compared</h2>
+      <table class="table fields">
+        <thead><tr><th>Field</th><th>Before</th><th>Discharge</th><th>Result</th></tr></thead>
+        <tbody>
+          <tr><td data-label="Field"><strong>Name</strong></td><td data-label="Before">Warfarin</td><td data-label="Discharge">Warfarin</td><td data-label="Result">Same</td></tr>
+          <tr><td data-label="Field"><strong>Strength</strong></td><td data-label="Before" class="num">3 mg</td><td data-label="Discharge" class="num">2 mg</td><td data-label="Result"><span class="status status--changed"><span class="mark" aria-hidden="true">Δ</span>Different</span></td></tr>
+          <tr><td data-label="Field"><strong>Frequency</strong></td><td data-label="Before">Each evening</td><td data-label="Discharge">Each evening</td><td data-label="Result">Same</td></tr>
+          <tr><td data-label="Field"><strong>Form and route</strong></td><td data-label="Before">Tablets, oral</td><td data-label="Discharge">Tablets, oral</td><td data-label="Result">Same</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <aside class="stack">
+      <div class="panel">
+        <h3>Why it's flagged high-risk</h3>
+        <p>Warfarin is on the high-risk list (anticoagulants). Check the new dose with the patient and that an INR test is booked.</p>
+        <p class="small muted" style="margin:0">From the pharmacy's own rules list, not from AI.</p>
+      </div>
+      <div class="panel">
+        <div class="field" style="margin:0">
+          <label for="note">Pharmacist note</label>
+          <span class="field__hint">Saved automatically</span>
+          <textarea class="textarea" id="note" style="min-height:96px">Patient aware of new dose. INR booked for 19 Nov at the anticoagulant clinic.</textarea>
+        </div>
+      </div>
+      <div class="btn-row"><button class="btn btn--secondary" type="button">Edit this medicine</button></div>
+    </aside>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+</div></footer>
+</body>
+</html>

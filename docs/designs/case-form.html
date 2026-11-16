@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DischargeIQ (wireframe): new or edit case</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+<style>
+  .med-row { display: grid; gap: var(--space-2); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-backing-edge); }
+  .med-row .input { min-height: 44px; }
+  .med-row__actions { display: flex; gap: var(--space-2); }
+  .med-head { display: none; }
+  @media (min-width: 900px) {
+    .med-row, .med-head { grid-template-columns: 2fr 1fr 2.4fr auto; gap: var(--space-3); align-items: center; }
+    .med-head { display: grid; font-size: var(--text-small); font-weight: 700; color: var(--color-ink-muted); }
+  }
+  .meta-grid { display: grid; gap: 0 var(--space-4); }
+  @media (min-width: 900px) { .meta-grid { grid-template-columns: 1fr 1fr 1.4fr; } }
+  section.panel + section.panel { margin-top: var(--space-5); }
+</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="my-cases.html" aria-current="page">My cases</a>
+    <a href="claims.html">Claims and stats</a>
+    <a href="demo-cases.html">Demo cases</a>
+    <span class="nav__user">Demo Pharmacist</span>
+    <a href="login.html">Log out</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <a class="back-link" href="my-cases.html">Back to my cases</a>
+  <div class="page-head">
+    <h1>New case DMS-0052</h1>
+    <span class="autosave">Saved <span class="num">11:05</span></span>
+  </div>
+
+  <div class="notice"><strong>Synthetic data only.</strong> Don't enter names, addresses, dates of birth or NHS numbers. A real NHS number will be rejected.</div>
+
+  <section class="panel">
+    <h2>Referral</h2>
+    <div class="meta-grid">
+      <div class="field"><label for="ref">Case reference</label><span class="field__hint">Made for you; never a patient's name</span><input class="input num" id="ref" value="DMS-0052" readonly></div>
+      <div class="field field--error"><label for="rec">Referral received</label><span class="field__hint">Starts the 72-hour stage 1 target</span><input class="input num" id="rec" value=""><span class="field__error"><span class="mark" aria-hidden="true">×</span>Enter the date and time the referral arrived</span></div>
+      <div class="field"><label for="hosp">Hospital (optional)</label><span class="field__hint">&nbsp;</span><input class="input" id="hosp" value="Northfield General Hospital (synthetic)"></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Medicines before admission</h2>
+    <p class="muted">Copy from the PMR. Type each medicine, or paste the list and check what's added.</p>
+    <div class="med-head"><span>Medicine</span><span>Strength</span><span>Directions</span><span></span></div>
+    <div class="med-row">
+      <input class="input" aria-label="Medicine" value="Warfarin">
+      <input class="input num" aria-label="Strength" value="3 mg">
+      <input class="input" aria-label="Directions" value="Each evening, or as directed by the anticoagulant clinic">
+      <div class="med-row__actions"><button class="btn btn--secondary btn--small" type="button">Delete warfarin</button></div>
+    </div>
+    <div class="med-row">
+      <input class="input" aria-label="Medicine" value="Naproxen">
+      <input class="input num" aria-label="Strength" value="500 mg">
+      <input class="input" aria-label="Directions" value="One tablet twice a day with food">
+      <div class="med-row__actions"><button class="btn btn--secondary btn--small" type="button">Delete naproxen</button></div>
+    </div>
+    <div class="med-row">
+      <input class="input" aria-label="Medicine" value="Lisinopril">
+      <input class="input num" aria-label="Strength" value="10 mg">
+      <input class="input" aria-label="Directions" value="One tablet each morning">
+      <div class="med-row__actions"><button class="btn btn--secondary btn--small" type="button">Delete lisinopril</button></div>
+    </div>
+    <div class="btn-row" style="margin-top:var(--space-4)">
+      <button class="btn btn--secondary" type="button">Add a medicine</button>
+      <button class="btn btn--secondary" type="button">Paste a list</button>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Discharge letter</h2>
+    <div class="field">
+      <label for="letter">Paste the medicines section of the letter</label>
+      <span class="field__hint">AI reads this to list the discharge medicines. You check every line before anything is compared.</span>
+      <textarea class="textarea" id="letter">Discharge medications (synthetic example):
+Warfarin dose reduced to 2 mg daily in the evening due to raised INR on admission. INR check in 5 days.
+Naproxen stopped following upper GI bleed.
+Lansoprazole 30 mg once daily started.
+Zestril 10 mg one tablet in the morning.
+Paracetamol 500 mg two tablets up to four times a day when required.
+Continue atorvastatin 20 mg at night and amlodipine 5 mg in the morning.</textarea>
+    </div>
+    <div class="btn-row">
+      <button class="btn" type="button">Extract medicines from letter</button>
+      <span class="small muted">Takes about 10 seconds. If it can't read the letter, you can add medicines by hand.</span>
+    </div>
+  </section>
+
+  <div class="btn-row" style="margin-top:var(--space-5);justify-content:space-between">
+    <a class="btn btn--secondary" href="case-detail.html">Go to comparison</a>
+    <button class="btn btn--secondary" type="button" style="border-color:var(--color-ink)">Delete this case…</button>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+</div></footer>
+</body>
+</html>

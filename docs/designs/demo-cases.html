@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DischargeIQ (wireframe): demo cases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="demo-cases.html" aria-current="page">Demo cases</a>
+    <a href="login.html">Log in</a>
+    <a class="btn" href="login.html" style="color:#fff;margin-left:var(--space-2)">Create an account</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <div class="page-head">
+    <div>
+      <h1>Demo cases</h1>
+      <p class="muted" style="margin:var(--space-2) 0 0">Six synthetic discharge referrals written for this prototype. Open one to see the comparison; you can't change them.</p>
+    </div>
+  </div>
+
+  <div class="chips" aria-label="Filter by scenario">
+    <a class="chip" href="#" aria-pressed="true">All</a>
+    <a class="chip" href="#" aria-pressed="false">Has high-risk medicines</a>
+    <a class="chip" href="#" aria-pressed="false">Has lines to review</a>
+  </div>
+
+  <table class="table">
+    <thead><tr><th>Case</th><th>Scenario</th><th>Changes found</th><th class="right">Medicines</th><th></th></tr></thead>
+    <tbody>
+      <tr>
+        <td class="td-main" data-label="Case"><strong>DMS-0042</strong></td>
+        <td data-label="Scenario">Upper GI bleed; warfarin dose reduced</td>
+        <td data-label="Changes"><span class="counts">
+          <span class="status status--changed"><span class="mark" aria-hidden="true">Δ</span>1</span>
+          <span class="status status--stopped"><span class="mark" aria-hidden="true">×</span>1</span>
+          <span class="status status--started"><span class="mark" aria-hidden="true">+</span>1</span>
+          <span class="status status--review"><span class="mark" aria-hidden="true">?</span>2</span></span></td>
+        <td class="num right" data-label="Medicines">7</td>
+        <td data-label=""><a href="case-detail.html">Open DMS-0042</a></td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><strong>DMS-0043</strong></td>
+        <td data-label="Scenario">Heart failure; furosemide increased, new bisoprolol</td>
+        <td data-label="Changes"><span class="counts">
+          <span class="status status--changed"><span class="mark" aria-hidden="true">Δ</span>1</span>
+          <span class="status status--started"><span class="mark" aria-hidden="true">+</span>2</span></span></td>
+        <td class="num right" data-label="Medicines">9</td>
+        <td data-label=""><a href="case-detail.html">Open DMS-0043</a></td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><strong>DMS-0044</strong></td>
+        <td data-label="Scenario">Fall; zopiclone and amitriptyline stopped</td>
+        <td data-label="Changes"><span class="counts">
+          <span class="status status--stopped"><span class="mark" aria-hidden="true">×</span>2</span></span></td>
+        <td class="num right" data-label="Medicines">6</td>
+        <td data-label=""><a href="case-detail.html">Open DMS-0044</a></td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><strong>DMS-0045</strong></td>
+        <td data-label="Scenario">Hyperglycaemia; basal insulin started, units written two ways</td>
+        <td data-label="Changes"><span class="counts">
+          <span class="status status--started"><span class="mark" aria-hidden="true">+</span>2</span>
+          <span class="status status--review"><span class="mark" aria-hidden="true">?</span>1</span></span></td>
+        <td class="num right" data-label="Medicines">5</td>
+        <td data-label=""><a href="case-detail.html">Open DMS-0045</a></td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><strong>DMS-0046</strong></td>
+        <td data-label="Scenario">Methotrexate written as daily on the letter</td>
+        <td data-label="Changes"><span class="counts">
+          <span class="status status--changed"><span class="mark" aria-hidden="true">Δ</span>1</span>
+          <span class="status status--review"><span class="mark" aria-hidden="true">?</span>1</span></span></td>
+        <td class="num right" data-label="Medicines">4</td>
+        <td data-label=""><a href="case-detail.html">Open DMS-0046</a></td>
+      </tr>
+      <tr>
+        <td class="td-main" data-label="Case"><strong>DMS-0047</strong></td>
+        <td data-label="Scenario">Short stay; no changes</td>
+        <td data-label="Changes"><span class="status status--unchanged"><span class="mark" aria-hidden="true">=</span>All unchanged</span></td>
+        <td class="num right" data-label="Medicines">3</td>
+        <td data-label=""><a href="case-detail.html">Open DMS-0047</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <p class="small muted" style="margin-top:var(--space-4)">Changes key: Δ changed, × stopped, + started, ? needs review, = unchanged.</p>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+</div></footer>
+</body>
+</html>

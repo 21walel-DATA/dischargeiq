@@ -302,3 +302,34 @@ Template:
 - How I'd explain it in 30 seconds: "When the engine isn't sure, for example a brand name that might be the same
   drug, it doesn't guess. It puts a 'Needs review' badge on the line with the reason, and the server won't let
   the pharmacist complete the stage until they've ticked every one of those lines."
+
+## D-033 — Design direction: "Dispensing label" (ACCEPTED, owner)
+- Date: 2026-11-16
+- Decision: Direction A from three proposals (dispensing label, prescription form, blister pack), used pure.
+  Every medicine line looks like a dispensing label; signature element is the **"Checked by" initials box**,
+  which shows the D-032 approval gate. Fonts: Archivo (semi-condensed) for drug names and headings, Atkinson
+  Hyperlegible Next for body. Full rules in `docs/design-system.md`.
+  **Owner's change:** the first draft's brand green (`#0F5C45`) was too close to the Started green, so the
+  brand/action colour is now **Amber bottle `#8A4B0F`** (a brown, the colour of a medicine bottle), and no
+  status colour is ever used for buttons or decoration. To keep every colour distinct, Changed became violet
+  (`#5B3FA0`) and Needs review became a highlighter yellow (`#FFE066`) with a dashed outline.
+- Why: The label is the object pharmacists check all day, so the design explains itself to the users; the
+  initials box turns a safety rule into a familiar professional gesture; cheapest of the three to build in
+  plain CSS.
+- Alternatives considered: B, prescription form (risk of looking like an official NHS form); C, blister pack
+  (close to the generic "identical cards" look, and loses the side-by-side comparison).
+- Later idea: B's **endorsement margin** (a right-hand column for status and acknowledgement), logged in
+  `design-system.md` section 8.
+- How I'd explain it in 30 seconds: "Each medicine looks like the dispensing label a pharmacist checks every day.
+  When the tool isn't sure about a line, the pharmacist initials it, just like at the accuracy check, and
+  only then can the stage be completed."
+
+## D-034 — Wireframes as static HTML, screenshotted with the installed Chrome (ACCEPTED)
+- Date: 2026-11-16
+- Decision: All 8 pages built as responsive static HTML in `docs/designs/` with one shared stylesheet, then
+  exported as PNGs at 1440 px and 375 px by `shoot.mjs` (plain Node driving the Chrome already installed,
+  no new packages). Committed before any app code.
+- Why: One file per page gives both sizes from the same mobile-first CSS, which is how the real app will
+  work; the CSS doubles as a first draft of the component styles; nothing had to be installed.
+- Alternatives considered: Figma or draw.io mock-ups (not reusable as CSS); Playwright for screenshots
+  (an extra install for the same result).

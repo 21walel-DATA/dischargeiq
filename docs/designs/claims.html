@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DischargeIQ (wireframe): claims and stats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+<style>
+  .summary-line { font-size: 1.125rem; line-height: 28px; max-width: 60ch; }
+  .summary-line strong { font-family: var(--font-label); font-stretch: 87.5%; font-size: 1.375rem; font-variant-numeric: tabular-nums; }
+  .copy { white-space: nowrap; }
+</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="my-cases.html">My cases</a>
+    <a href="claims.html" aria-current="page">Claims and stats</a>
+    <a href="demo-cases.html">Demo cases</a>
+    <span class="nav__user">Demo Pharmacist</span>
+    <a href="login.html">Log out</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <h1>Claims and stats</h1>
+  <p class="summary-line">November so far: <strong>£24</strong> ready to claim from 1 case. Another <strong>£35</strong> of completed stages sits in 2 open cases. Claimed this month: <strong>£280</strong> from 8 cases.</p>
+
+  <div class="grid-2 grid-2--wide-left" style="margin-top:var(--space-5)">
+    <section>
+      <h2>Claim work</h2>
+      <table class="table">
+        <thead><tr><th>Case</th><th>Stages completed</th><th class="right">Value</th><th>Claim by</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr aria-selected="true">
+            <td class="td-main" data-label="Case"><strong>DMS-0036</strong></td>
+            <td data-label="Stages">1 and 3 (2 not applicable)</td>
+            <td class="num right" data-label="Value">£24</td>
+            <td class="num" data-label="Claim by">31 Jan</td>
+            <td data-label="Status"><strong>Ready to claim</strong></td>
+          </tr>
+          <tr>
+            <td class="td-main" data-label="Case"><strong>DMS-0039</strong></td>
+            <td data-label="Stages">1</td>
+            <td class="num right" data-label="Value">£12</td>
+            <td class="num" data-label="Claim by">31 Jan</td>
+            <td data-label="Status">Stages 2 and 3 open</td>
+          </tr>
+          <tr>
+            <td class="td-main" data-label="Case"><strong>DMS-0034</strong></td>
+            <td data-label="Stages">1 and 2</td>
+            <td class="num right" data-label="Value">£23</td>
+            <td class="num" data-label="Claim by">31 Jan</td>
+            <td data-label="Status">Stage 3 open</td>
+          </tr>
+          <tr>
+            <td class="td-main" data-label="Case"><strong>DMS-0031</strong></td>
+            <td data-label="Stages">1, 2 and 3</td>
+            <td class="num right" data-label="Value">£35</td>
+            <td class="num" data-label="Claim by">31 Jan</td>
+            <td data-label="Status">Claimed 12 Nov</td>
+          </tr>
+        </tbody>
+      </table>
+      <p class="small muted" style="margin-top:var(--space-2)">Fees per stage: £12, £11, £12. Check the fees and the claim window against the current Drug Tariff.</p>
+    </section>
+
+    <section class="panel">
+      <h2>Claim summary: DMS-0036</h2>
+      <p class="small muted">Copy each field into the DMS claim in Manage Your Service, in this order.</p>
+      <dl class="dl">
+        <div><dt>Referral received</dt><dd class="num">6 Nov 2026</dd><button class="btn btn--secondary btn--small copy" type="button">Copy</button></div>
+        <div><dt>Referring hospital</dt><dd>Northfield General Hospital (synthetic)</dd><button class="btn btn--secondary btn--small copy" type="button">Copy</button></div>
+        <div><dt>Stage 1 completed</dt><dd class="num">6 Nov 2026</dd><button class="btn btn--secondary btn--small copy" type="button">Copy</button></div>
+        <div><dt>Stage 2</dt><dd>Not applicable: patient readmitted before the first prescription</dd><button class="btn btn--secondary btn--small copy" type="button">Copy</button></div>
+        <div><dt>Stage 3 completed</dt><dd class="num">13 Nov 2026</dd><button class="btn btn--secondary btn--small copy" type="button">Copy</button></div>
+      </dl>
+      <p class="small muted" style="margin-top:var(--space-3)">Fields to confirm against the current MYS claim form before go-live.</p>
+      <div class="btn-row"><button class="btn" type="button">Mark as claimed</button></div>
+    </section>
+  </div>
+
+  <section style="margin-top:var(--space-7)">
+    <h2>What the comparisons found</h2>
+    <p class="muted">Across your 13 cases this month (synthetic data).</p>
+    <div class="panel" style="max-width:640px">
+      <div class="bar"><span>Unchanged</span><span class="bar__track"><span class="bar__fill" style="display:block;width:100%"></span></span><span class="num">48</span></div>
+      <div class="bar"><span>Changed</span><span class="bar__track"><span class="bar__fill" style="display:block;width:31%"></span></span><span class="num">15</span></div>
+      <div class="bar"><span>Started</span><span class="bar__track"><span class="bar__fill" style="display:block;width:25%"></span></span><span class="num">12</span></div>
+      <div class="bar"><span>Stopped</span><span class="bar__track"><span class="bar__fill" style="display:block;width:19%"></span></span><span class="num">9</span></div>
+      <div class="bar"><span>Needed review</span><span class="bar__track"><span class="bar__fill" style="display:block;width:13%"></span></span><span class="num">6</span></div>
+      <p class="small muted" style="margin:var(--space-3) 0 0">Most common high-risk medicines: anticoagulants (4), insulin (2), methotrexate (1).</p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+</div></footer>
+</body>
+</html>
