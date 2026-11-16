@@ -1,7 +1,7 @@
 # Architecture — DischargeIQ (working title)
 
 *Status: v0.3 (16 Nov 2026). Updated with the owner's decisions on the expert review
-(`consult-review.md` → `decisions.md` D-016 to D-031). Will be updated again at the end of the sprint so it
+(`consult-review.md` → `decisions.md` D-016 to D-032). Will be updated again at the end of the sprint so it
 matches what was built. Log every change in `decisions.md`.*
 
 **Timeline:** planned from 3 Nov 2026; built in a two-day sprint, Mon 16 – Tue 17 Nov (about 30 working
@@ -102,6 +102,7 @@ flowchart LR
 - `id` PK, `case_id` FK, `stage` (1 | 2 | 3)
 - `status` (`pending` | `completed` | `not_applicable`), `not_applicable_reason` (required when not applicable)
 - `completed_at`, `completed_by` FK → users, `notes`, `updated_at`
+- `acknowledged_review_keys` (text array: keys of `needs_review` lines the pharmacist has acknowledged, autosaved; D-032)
 
 **medicines** (= TFS "things")
 - `id` PK, `case_id` FK → cases
@@ -113,7 +114,8 @@ flowchart LR
 **reconciliation_items** (computed result, stored when a stage is completed)
 - `id` PK, `case_id` FK, `stage` (1 | 2), `from_medicine_id` FK (nullable), `to_medicine_id` FK (nullable)
 - `change_type` (`started` | `stopped` | `changed` | `unchanged`), `change_detail` (e.g. "dose 2.5mg → 5mg")
-- `needs_review` (boolean), `review_reason` (e.g. "same drug listed twice", "strength missing")
+- `needs_review` (boolean), `review_reason` (e.g. "same drug listed twice", "strength missing"),
+  `review_acknowledged_by` FK → users (nullable), `review_acknowledged_at` (nullable)
 - `high_risk` (boolean), `pharmacist_note`
 
 **high_risk rules** — sprint: an owner-written list in `server/services/highrisk.rules.ts` (unit-tested).
@@ -167,6 +169,7 @@ erDiagram
     timestamptz completed_at
     uuid completed_by FK
     text notes
+    text_array acknowledged_review_keys
     timestamptz updated_at
   }
   medicines {
@@ -193,6 +196,8 @@ erDiagram
     text change_detail
     bool needs_review
     text review_reason
+    uuid review_acknowledged_by FK
+    timestamptz review_acknowledged_at
     bool high_risk
     text pharmacist_note
   }
@@ -208,8 +213,9 @@ erDiagram
 - `PATCH /cases/:id` (also used by autosave) · `DELETE /cases/:id`
 - `POST /cases/:id/extract` — letter text → AI extraction → discharge list
 - `GET /cases/:id/reconciliation?stage=1|2` — computed comparison
-- `PATCH /cases/:id/stages/:stage` — autosave notes / set status (`not_applicable` + reason)
-- `POST /cases/:id/stages/:stage/complete` — complete a stage and store the reconciliation result
+- `PATCH /cases/:id/stages/:stage` — autosave notes, review acknowledgements, set status (`not_applicable` + reason)
+- `POST /cases/:id/stages/:stage/complete` — re-run the comparison; **409 if any `needs_review` line is
+  unacknowledged**; otherwise complete the stage and store the reconciliation result
 - `GET /cases/:id/claim-summary` — claim-ready record
 - `POST /cases/:id/mark-claimed`
 
@@ -242,8 +248,18 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
   via a small hand-written list; salt names kept). **No fuzzy matching** (look-alike, sound-alike drug names).
 - Compare: strength (mg / micrograms / g / units normalised), dose, frequency (OD, BD, TDS, QDS, nocte, PRN
   synonyms normalised), form/release (MR vs IR), route.
-- Unpaired or ambiguous lines (same drug twice, missing strength, "withheld") → `needs_review` for the pharmacist.
-- Unit tests written first; they cover the 13 edge cases listed in `consult-review.md` (P7).
+- Unpaired or ambiguous lines (possible brand/generic match such as Zestril vs lisinopril, same drug twice,
+  missing strength, "withheld") → `needs_review` for the pharmacist.
+- **`needs_review` is a flag, not a fifth category (D-032).** Every line still has one of the four categories.
+  - **UI:** each flagged line shows a clearly visible **"Needs review" badge with its `review_reason`** and an
+    "Acknowledge" control (tick + optional note).
+  - **Approval gate:** a stage cannot be completed until every flagged line is acknowledged. The button is
+    disabled in the UI, and the **server enforces it** by re-running the comparison and returning 409 if any
+    flagged line's key is missing from `acknowledged_review_keys`.
+  - **Line key:** built from the paired medicine IDs (e.g. `from:<id>|to:<id>`), so editing a medicine produces
+    a new line that must be acknowledged again.
+- Unit tests written first. They cover the 13 edge cases listed in `consult-review.md` (P7) plus the gate:
+  completion is refused with an unacknowledged flag and allowed once all are acknowledged.
 
 ## 8. Security and privacy
 **Prototype controls (built)**
@@ -291,6 +307,7 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
 | AI misreads a medicine or dose | Source sentence shown for every line; pharmacist must approve; edits allowed; tests on sample letters |
 | AI invents a medicine (hallucination) | Require `source_text`; flag lines whose source text isn't in the document |
 | Engine pairs two different drugs | No fuzzy matching; unpaired/ambiguous lines go to `needs_review`; edge-case unit tests |
+| Pharmacist skips an uncertain line | "Needs review" badge + reason; stage completion blocked (server-side, 409) until every flagged line is acknowledged |
 | Prompt injection in a letter | Data-only schema, no tools, Zod validation, source-text check |
 | Real patient data entered by mistake | NHS number guard; clear warnings; synthetic-only policy |
 | Login fails on phones (third-party cookies blocked) | Vercel `/api` rewrite → first-party cookie; tested on a phone on day 1 |

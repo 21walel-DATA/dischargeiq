@@ -1,6 +1,6 @@
 # Project Brief — DischargeIQ (working title)
 
-*Route A brief for tutor approval. Status: DRAFT (to be refined after user research and a "grill me" session).*
+*Route A brief. Status: APPROVED by the tutor. Kept as approved; later technical and product decisions are in `decisions.md`.*
 
 ## The idea in one line
 A web app that turns a hospital discharge letter into a clear, reviewable list of medication changes,

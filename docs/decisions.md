@@ -284,3 +284,21 @@ Template:
   code file) → Swagger (hand-written endpoint table in the README instead) → high-risk flags → stage 2 re-check →
   claim summary (keep a simple "claim ready" status).
 - Why: The real build window is about 30 hours; the admin UI and Swagger add the least user value.
+
+## D-032 — "Needs review" is a flag on a line, not a fifth category, and it blocks approval (ACCEPTED, owner)
+- Date: 2026-11-16
+- Decision: Lines keep one of the four categories (STARTED / STOPPED / CHANGED / UNCHANGED) plus a
+  `needs_review` flag and a plain-English `review_reason` (e.g. "Possible brand/generic match: Zestril vs
+  lisinopril", "Same drug listed twice", "Strength missing"). Conditions set by the owner:
+  (a) the UI shows a clearly visible **"Needs review" badge with the reason** on every flagged line;
+  (b) **a stage cannot be completed until every flagged line has been acknowledged** by the pharmacist.
+  Acknowledgements are autosaved on the stage (`acknowledged_review_keys`), and the server re-runs the
+  comparison on completion and refuses (409) if any flagged line is unacknowledged. A line's key is built from
+  its medicine IDs, so editing a medicine resets its acknowledgement.
+- Why: Keeps the comparison simple to read (four categories) while making uncertainty impossible to miss or
+  skip. Enforcing it on the server means a UI bug can't bypass the check.
+- Alternatives considered: A fifth "needs review" category (hides what the change actually is); a warning
+  only, without blocking (easy to ignore); enforcing only in the browser (can be bypassed).
+- How I'd explain it in 30 seconds: "When the engine isn't sure, for example a brand name that might be the same
+  drug, it doesn't guess. It puts a 'Needs review' badge on the line with the reason, and the server won't let
+  the pharmacist complete the stage until they've ticked every one of those lines."

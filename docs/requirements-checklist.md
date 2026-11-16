@@ -37,7 +37,7 @@ Distinction in at least three. **We aim for Distinction in all five.**
 - [ ] Pass: demo within the time limit; covers architecture, design and reflection
 - [ ] Merit: planned demo journey; explains how the parts connect and why
 - [ ] Distinction: **confident answers on the tech used, including AI-written code; honest, specific reflection**
-- Brief format: 10 min max (6 presenting + 4 questions). Afternoon panel option: 5 + 2. Confirm which.
+- Format (confirmed): **afternoon panel of software engineers, Thu 19 Nov: 5 min presenting + 2 min questions**.
 - Must cover: demo journey · architecture (database, languages, API, hosting and why) ·
   design (how the layout became the app) · reflection (what went well, what didn't, what I learnt)
 

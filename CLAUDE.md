@@ -3,7 +3,7 @@
 Read this file first in every session. Then read the files in `docs/` before planning any work.
 
 > **Expert review done (16 Nov 2026):** `docs/consult-review.md` holds the review; the owner's decisions are
-> D-016 to D-031 in `docs/decisions.md`. The stack below is decided; change it only with a new decision entry.
+> D-016 to D-032 in `docs/decisions.md`. The stack below is decided; change it only with a new decision entry.
 
 ## What we're building
 A web app that helps community pharmacy teams handle **NHS Discharge Medicines Service (DMS)** referrals,
@@ -61,7 +61,7 @@ security or testing.** Follow the sprint plan below.
 16. **Keep the handover docs current:** add to `docs/ai-usage-log.md` when an AI suggestion mattered or was
     rejected; tick `docs/requirements-checklist.md` as items are met.
 
-## Tech stack (decided 16 Nov 2026, see `docs/decisions.md` D-007 to D-031)
+## Tech stack (decided 16 Nov 2026, see `docs/decisions.md` D-007 to D-032)
 - **Language:** **TypeScript** everywhere (strict mode), kept beginner-readable (D-016): explicit types on function
   inputs/outputs; no `any` (use `unknown` + Zod); `type` aliases and `z.infer` only (no classes, `enum`,
   hand-written generics, decorators); no non-null assertions (`value!`); one shared `tsconfig.base.json`
@@ -113,7 +113,7 @@ vercel.json        rewrites /api/* to the Render API
 
 ## Sprint plan (Mon 16 Nov → Wed 18 Nov 08:30). Deploy early, commit small and often.
 - **Phase 0, Mon afternoon (~2h): decide and design**
-  1. ~~Review `docs/consult-claude-code.md`~~ **Done 16 Nov** (`docs/consult-review.md`, D-016 to D-031).
+  1. ~~Review `docs/consult-claude-code.md`~~ **Done 16 Nov** (`docs/consult-review.md`, D-016 to D-032).
   2. `dischargeiq-design`: pick a direction → `docs/design-system.md`.
   3. Desktop + mobile layouts for all 8 pages → `docs/designs/` → **commit before any code**.
 - **Phase 1, Mon evening: foundation + go live early**
@@ -129,8 +129,9 @@ vercel.json        rewrites /api/* to the Render API
   claim-ready summary (copy buttons, no MYS submission), claims & stats page, rule-based high-risk flags
   (rules in a code file), NHS number guard, Swagger API docs.
 - **Phase 4, Tue 22:00 → ~01:00: test and hand over** (**feature freeze at 22:00**)
-  Security review (`security-review`), Lighthouse + axe, update `docs/hazard-log.md`, run `docs/test-sheet.md` on the live URL (desktop + phone, private
-  window), fix, retest, record pass rates. README, client guide, developer notes, AI usage log, update
+  Security review (`security-review`), Lighthouse + axe, **owner reviews and adjusts the hazard-log risk
+  scores** (`docs/hazard-log.md`; first draft by Claude Code) and updates the controls to match the build,
+  run `docs/test-sheet.md` on the live URL (desktop + phone, private window), fix, retest, record pass rates. README, client guide, developer notes, AI usage log, update
   `architecture.md` to match the build, clean code, tick `docs/requirements-checklist.md`.
 - **Phase 5, Wed 06:00 → 08:30: final checks only**
   Fresh-eyes run of the main demo journey on the live URL, check README and links, confirm no secrets in the
