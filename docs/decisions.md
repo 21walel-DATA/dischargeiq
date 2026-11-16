@@ -384,3 +384,22 @@ Template:
   stored data stay in Supabase London; the API only processes requests in transit, in the EU.
 - Why: Closest available region (low latency to London); EU processing is covered by UK adequacy regulations.
   Synthetic data only in the prototype. Production would use UK hosting (e.g. Cloud Run `europe-west2`).
+
+## D-040 — Scaffold choices made while building (Phase 1, steps 1–2)
+- Date: 2026-11-16
+- Decision:
+  - **Express 5** (not 4): errors thrown inside async route handlers reach the central error handler automatically.
+  - **TypeScript pinned to 5.9**: TypeScript 7 (the new native compiler) became `latest`, but typescript-eslint
+    supports only up to 6.0. 5.9 works with every tool we use.
+  - **vitest 4**: vitest 3 pulled in a dev-only package with a critical advisory. Production dependencies: 0 advisories.
+    One low dev-only advisory accepted (esbuild's own dev server on Windows, which we never run).
+  - **Verified SSL to Supabase:** the server checks the database's certificate against Supabase's public CA
+    certificate (committed at `server/db/certs/supabase-ca.crt`) instead of switching verification off.
+    `DATABASE_SSL=off` exists only for CI's throwaway Postgres container.
+  - **Tests can't touch the real database:** they read only `TEST_DATABASE_URL` and refuse to run if it's missing
+    or equal to `DATABASE_URL`. CI uses a Postgres 17 service container and runs every migration first.
+  - **Server bundled with tsup** using a small config file (`noExternal` for the shared package).
+  - **`.gitattributes`** stores text files with LF line endings so Windows, CI and hosts agree.
+- Why: Each removes a whole class of "works on my machine" or security problems before features arrive.
+- How I'd explain it in 30 seconds: "My tests run against a real Postgres in CI, never against live data, and
+  the connection to Supabase is encrypted and checks the server's certificate, so nobody can impersonate it."
