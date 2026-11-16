@@ -1,5 +1,8 @@
 # Consultation: proposed decisions for Claude Code to review
 
+**Timebox: 30–45 minutes.** The build sprint finishes Tue 17 Nov (see `CLAUDE.md`), so keep each answer
+short: verdict + one or two reasons + any risk. Flag anything that threatens the sprint.
+
 **Your role for this review:** act as a senior software developer and architect specialising in UK
 healthcare applications: NHS digital standards and assurance (DTAC, DSPT, DCB0129/DCB0160, FHIR UK Core,
 NHS CIS2, dm+d/SNOMED CT), UK GDPR for health data, and community pharmacy workflows (DMS, PMR systems,

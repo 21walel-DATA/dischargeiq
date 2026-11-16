@@ -28,7 +28,15 @@ Career changer: former community pharmacist, now NHS + data analysis (CompTIA Da
 cyber security fundamentals, 10-week software bootcamp (HTML, CSS, APIs; **very little JavaScript and
 new to TypeScript**). **The owner must be able to explain every part of the code in Q&A.** Teach as you build:
 keep TypeScript simple (no clever generics or advanced type tricks), and explain any type you introduce.
-Likely presentation format: 5 minutes + 2 minutes of questions from a panel of software engineers.
+Brief approved (Route A). Presentation: **Thu 19 Nov, afternoon panel of software engineers: 5 min + 2 min questions.**
+The demo shows a polished prototype, then explains how it would work in a real NHS pharmacy setting.
+
+## Timeline (overrides any dates in course files)
+**Ignore all course calendar dates and week numbers in the TFS files, lesson plans or README templates.**
+The owner's timeline: planning started 3 Nov 2026. **Submission deadline: Wed 18 Nov 2026, 09:00**
+(target: submit by 08:30). **Feature freeze: Tue 17 Nov, 22:00.** After the freeze: testing, fixes and
+handover docs only. Wed 06:00–08:30: final checks only, no new features. Work fast, but **never rush
+security or testing.** Follow the sprint plan below.
 
 ## Golden rules (non-negotiable)
 1. **No real patient data, ever.** Synthetic demo letters only. Never invent real NHS numbers (use the 999 test range).
@@ -42,6 +50,16 @@ Likely presentation format: 5 minutes + 2 minutes of questions from a panel of s
 8. **Plan before code.** For any non-trivial task, propose a plan and wait for approval.
 9. **Tests for logic.** The reconciliation (diff) engine and auth must have unit tests.
 10. **Ask, don't assume,** when a clinical or product decision is unclear. Check `docs/` first.
+11. **Designs before code.** Desktop and mobile layouts for every page go in `docs/designs/` and are committed
+    before any app code (it's a marking requirement; git history is the proof).
+12. **Users can only see and change their own data.** Check ownership on every case/medicine route (test it).
+13. **Errors show no details to users.** Central error handler: friendly message + status code; details only
+    in server logs. No stack traces, SQL or library errors in responses.
+14. **Collect only what's needed.** No real names, addresses or NHS numbers. Minimal user fields.
+15. **Never put a secret in a `VITE_` variable** (those are public in the browser). No `localhost` URLs in code;
+    use env vars.
+16. **Keep the handover docs current:** add to `docs/ai-usage-log.md` when an AI suggestion mattered or was
+    rejected; tick `docs/requirements-checklist.md` as items are met.
 
 ## Tech stack (proposed — review in the first session, see `docs/consult-claude-code.md`)
 - **Language:** **TypeScript** everywhere (strict mode), kept beginner-readable
@@ -78,21 +96,40 @@ Likely presentation format: 5 minutes + 2 minutes of questions from a panel of s
 /docs              brief, architecture, decisions, user research
 ```
 
-## Build tiers (finish and deploy each tier before starting the next)
-- **Tier 1 – Foundation:** CI/CD pipeline, auth + roles, cases & medicines CRUD, paste letter → AI extraction
-  → diff view, DMS stage tracker (3 stages, 72-hour stage 1 target) with autosave, responsive layout, deployed live.
-- **Tier 2 – Differentiators:** stage 2 re-check (new prescription vs discharge list, same engine),
-  claim-ready summary, PDF/photo upload (Claude vision + Supabase Storage), click-to-source traceability,
-  dm+d code matching, rule-based high-risk flags, letter-vs-list discrepancy alerts, audit log.
-- **Tier 3 – Polish:** claims & stats dashboard (claims ready, value, unclaimed), Swagger API docs,
-  FHIR (UK Core) export of a reconciliation, error monitoring, telemetry bar, redaction demo,
-  accessibility pass, Playwright E2E. **Feature freeze ~5 days before the deadline** (time to rehearse).
+## Sprint plan (Mon 16 Nov → Wed 18 Nov 08:30). Deploy early, commit small and often.
+- **Phase 0, Mon afternoon (~2h): decide and design**
+  1. Review `docs/consult-claude-code.md` (**timebox 30–45 min**; short answers; owner decides).
+  2. `dischargeiq-design`: pick a direction → `docs/design-system.md`.
+  3. Desktop + mobile layouts for all 8 pages → `docs/designs/` → **commit before any code**.
+- **Phase 1, Mon evening: foundation + go live early**
+  Scaffold monorepo (shared/client/server), CI on GitHub Actions, `.env.example`, Supabase DB + migrations,
+  deploy a "hello world" to Vercel + Render + Supabase **tonight** (find hosting problems early), then auth
+  (register/login/logout, httpOnly cookie, ownership middleware) with tests.
+- **Phase 2, Tue morning: core**
+  Cases + medicines CRUD (own data only), public demo cases (browse), seed synthetic data,
+  AI extraction (Zod-validated, source sentence) + reconciliation engine (unit-tested) + comparison view.
+- **Phase 3, Tue afternoon: DMS value**
+  DMS stage tracker + autosave, stage 2 re-check (same engine), claim-ready summary, claims & stats page,
+  rule-based high-risk flags, Swagger API docs.
+- **Phase 4, Tue 22:00 → ~01:00: test and hand over** (**feature freeze at 22:00**)
+  Security review (`security-review`), run `docs/test-sheet.md` on the live URL (desktop + phone, private
+  window), fix, retest, record pass rates. README, client guide, developer notes, AI usage log, update
+  `architecture.md` to match the build, clean code, tick `docs/requirements-checklist.md`.
+- **Phase 5, Wed 06:00 → 08:30: final checks only**
+  Fresh-eyes run of the main demo journey on the live URL, check README and links, confirm no secrets in the
+  repo, submit by 08:30. **No new features, no risky deploys.**
+
+**Cut order if behind schedule** (cut from the top): Swagger → high-risk flags → stage 2 re-check →
+claim summary (keep a simple "claim ready" status).
+**Never cut:** designs-before-code, auth + ownership checks, reconciliation tests, error handling, live deploy, README.
+**Later / "what's next" slide:** PDF/photo upload, dm+d matching, audit log, FHIR export, redaction demo,
+Agentation, error monitoring, Playwright E2E.
 
 ## Skills (use these, don't wait for auto-triggering)
 - **After every feature:** use `explain-and-log` (plain-English explanation + `docs/decisions.md` entry).
 - **Any UI or styling work:** use `dischargeiq-design` together with `frontend-design`.
   Follow `docs/design-system.md` once it exists.
-- **Browser testing (Tier 3):** use `webapp-testing`.
+- **Browser testing (Phase 4):** use `webapp-testing`.
 - **Before installing any third-party skill, plugin or MCP server:** use `skill-safety-check`.
 - **Planning a new project or big feature:** use `grill-plan`.
 
@@ -102,6 +139,10 @@ Likely presentation format: 5 minutes + 2 minutes of questions from a panel of s
 - `docs/decisions.md` — decision log (append only)
 - `docs/user-research.md` — pharmacist questionnaire + findings
 - `docs/consult-claude-code.md` — proposed decisions awaiting your expert review (first session)
+- `docs/requirements-checklist.md` — marking scheme + handover + go-live checklists (target: Distinction)
+- `docs/designs/` — desktop + mobile page layouts (before code)
+- `docs/ai-usage-log.md` — AI tools, important prompts, what was kept/changed/rejected, how checked
+- `docs/test-sheet.md` — live end-to-end tests and pass rate
 
 ## Commands (fill in once the project is scaffolded)
 - `npm run dev` —

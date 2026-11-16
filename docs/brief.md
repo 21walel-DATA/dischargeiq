@@ -70,16 +70,15 @@ I understand the clinical workflow and its safety risks, and I've designed the a
 - **NHS dm+d data** (via TRUD, free registration) — official medicine codes *(Tier 2)*
 
 ## Pages
-1. Home (problem, how it works, demo link)
+Each page has a desktop and a mobile layout, designed before coding.
+1. Home (problem, how it works, link to demo cases, prototype/safety notice)
 2. Log in / Register
-3. My cases (dashboard, with stage and claim status) — logged in
-4. New / edit case (pre-admission list + letter input)
-5. Case detail — the reconciliation view and DMS stages (the main screen)
-6. Medicine detail (source sentence, dm+d code, flags)
-7. Claims (claim-ready records, value, unclaimed)
-8. Demo case library (browse)
-9. Stats
-10. Security & safety (how data is protected; "not a medical device" prototype statement)
+3. Demo cases: browse all (public, synthetic)
+4. My cases (dashboard with stage and claim status): logged in
+5. New / edit case form (pre-admission list + discharge letter)
+6. Case detail: the reconciliation view and DMS stages (the main screen)
+7. Medicine detail (source sentence, change, flags)
+8. Claims & stats (claim-ready cases, value, unclaimed, app statistics)
 
 ## Safety & scope statement
 Prototype for education using **synthetic data only**. It supports, and never replaces, a pharmacist's
@@ -87,4 +86,5 @@ clinical judgement. A real deployment would require MHRA medical device assessme
 clinical safety, DSPT and DTAC.
 
 ## Timeline
-About 2.5 weeks from 12 Nov 2026 (exact deadline TBC). Feature freeze ~5 days before the deadline, to leave rehearsal time.
+Planning started 3 Nov 2026. Build sprint Mon 16 to Tue 17 Nov 2026: live and handed over by Tuesday night.
+Features beyond the sprint (PDF upload, dm+d matching, audit log, FHIR export) go on the "what's next" slide.
