@@ -169,8 +169,14 @@ MYS submission via the NHSBSA supplier API once available.
 - `docs/ai-usage-log.md` — AI tools, important prompts, what was kept/changed/rejected, how checked
 - `docs/test-sheet.md` — live end-to-end tests and pass rate
 
-## Commands (fill in once the project is scaffolded)
-- `npm run dev` —
-- `npm test` —
-- `npm run migrate` —
-- `npm run seed` —
+## Commands (run from the repo root)
+- `npm run dev:server` — API on port 3000 with auto-restart (reads `server/.env`)
+- `npm run dev:client` — React app (Vite); forwards `/api` to `API_PROXY_TARGET` from `client/.env`
+- `npm test` — server tests against `TEST_DATABASE_URL` only (refuses to touch the main database)
+- `npm run typecheck` / `npm run lint` / `npm run build` — the same checks CI runs
+- `npm run migrate` — apply new `server/db/migrations/*.sql`; for production use GitHub Actions → "Run migrations"
+- `npm run seed` — (Phase 2) synthetic demo cases
+
+## Live
+- API (Render, Frankfurt): https://dischargeiq-api-nr30.onrender.com/api/health
+- App (Vercel): to be added after the first deploy
