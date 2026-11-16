@@ -1,0 +1,4 @@
+# Store text files with LF line endings in the repo (same on Windows, CI and hosts).
+* text=auto eol=lf
+*.png binary
+*.crt text eol=lf
