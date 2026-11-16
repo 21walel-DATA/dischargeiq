@@ -179,4 +179,4 @@ MYS submission via the NHSBSA supplier API once available.
 
 ## Live
 - API (Render, Frankfurt): https://dischargeiq-api-nr30.onrender.com/api/health
-- App (Vercel): to be added after the first deploy
+- App (Vercel): https://dischargeiq-pied.vercel.app

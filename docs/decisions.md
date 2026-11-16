@@ -419,3 +419,18 @@ Template:
 - How I'd explain it in 30 seconds: "During setup an error message leaked my database password into the AI chat.
   I rotated it straight away, nothing reached GitHub, and I changed the process so diagnostics only ever show
   error codes. It's a good example of treating AI tools as part of the attack surface."
+
+## D-042 — First live deploy ("hello world") on day one
+- Date: 2026-11-16
+- Decision: Deployed the scaffold before any features: Vercel (client, root directory `client`,
+  `client/vercel.json` forwards `/api/*` to Render and serves `index.html` for app routes, plus security
+  headers) → Render (API, Frankfurt, build `npm ci --include=dev && npm run build -w server`, start
+  `npm run start -w server`, health check `/api/health`, deploys only after CI passes) → Supabase London
+  (tables created by the "Run migrations" GitHub job; RLS and revoked privileges verified on every table).
+- Why: Hosting problems (IPv4 pooler, SSL certificates, monorepo builds, connection-string format) surfaced
+  and were fixed on Monday night instead of the night before the deadline.
+- Checked: `/api/health` through Vercel returns ok; deep links fall back to the app; security headers present;
+  page renders at 375 px and 1440 px.
+- How I'd explain it in 30 seconds: "I put a tiny version live on the first evening. The browser only ever
+  talks to my Vercel site; Vercel quietly forwards API calls to my server in Frankfurt, which talks to the
+  database in London. Every push is tested by CI before the server redeploys."
