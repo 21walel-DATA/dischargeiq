@@ -633,3 +633,40 @@ Template:
   re-runs the comparison and refuses if any flagged line hasn't been initialled. Initialling records who, when and
   why. In stage 2 any difference between the hospital's list and the GP's first prescription must be checked,
   because that's exactly the error pharmacists told me they see."
+
+## D-049 — Stage tracker and claims pages (Phase 3, Checkpoints E and F)
+- Date: 2026-11-17
+- Decision:
+  - **"Checked by" box** (signature element, design-system.md) on every "Needs review" line: an empty dashed box marked
+    "Required". Clicking it opens a native `<dialog>` with the reasons and an optional note ("What you checked");
+    "Add my initials (DP)" fills the box with the initials and time (150 ms fade, off with reduced motion). "Undo"
+    removes it while the stage is open.
+  - **Resolved state (D-036):** a checked line loses the dashed border and highlighter, its reasons turn faded ink, and
+    it reads "✓ Checked: <note>". **The legend counts only unresolved lines**, so it always equals the sticky action
+    bar ("1 line still needs checking"); "Complete stage N" stays disabled until it reaches zero.
+  - **Stage strip = stage switcher:** three buttons with their state in words ("Completed 17 Nov 13:25",
+    "In progress", "Not started", "Not applicable: reason"). After completing a stage or marking it not applicable,
+    the page opens the next stage still to do. Stage 2 shows the same comparison (discharge → new prescription);
+    stage 3 shows guidance and notes.
+  - **Notes autosave** (D-021) per stage: saved 800 ms after typing stops and when leaving the box; the page header
+    shows "Saving…" / "Saved 13:25"; on failure "Couldn't save your notes" with a Retry button; the browser warns
+    before leaving with unsaved text.
+  - **Action bar:** "Mark as not applicable…" (dialog, reason required) and "Complete stage N"; once done, "Reopen
+    stage N". A claimed case shows "This case has been claimed" and no controls.
+  - **Changed values** are shown as the design system says: the old value struck through, the new one bold on a
+    violet tint. Form errors use the `×` marker.
+  - **Claims & stats page** (`/claims`, header link "Claims") per `claims.html`: a summary sentence (ready to claim,
+    completed stages in open cases, claimed this month), the claim work table (stages completed, value, claim by,
+    status), the claim summary with one **Copy** button per field in MYS order, "Claim by <date>" plus "Claim by
+    <5th of next month> for the earliest payment" and the source note (D-048), **Mark as claimed** (only when ready),
+    and "What the comparisons found" bars in ink only (counts, not clinical statuses) with high-risk groups.
+- Checked live (headless Chrome, 1440 px and 375/360 px): copy DMS-0042 → read → legend/bar 2 → 1 → 0 → complete
+  stage 1 → page moves to stage 2 → not applicable → stage 3 notes autosaved → complete → "Ready to claim" → claims
+  page £24, claim by 5 Mar 2027 → mark as claimed. Fixed on the way: the logged-in header was 20 px too wide on
+  phones (the nav couldn't wrap).
+- Why: the screen a pharmacist trusts must never disagree with itself (legend vs bar), and a finished check should
+  look finished. Claiming is the step one pharmacist told us they never get to, so it's one page with copy buttons.
+- How I'd explain it in 30 seconds: "Every flagged line has a box for the pharmacist's initials, like initialling a
+  dispensing label. Until every box is filled, the complete button stays off, and the server refuses anyway. When all
+  three stages are done, the claim page lays out the fields in the order Manage Your Service asks for them, each
+  with a copy button, and the deadline worked out from the Community Pharmacy England rule."
