@@ -41,14 +41,14 @@ Not run before this date (nothing in git history or this sheet).
 
 | Page | Form | Lighthouse a11y: first run → after fix | axe violations: first → after | Perf | Best practice | SEO |
 |---|---|---|---|---|---|---|
-| Home `/` | Mobile | 100 → 100 | 0 → 0 | 83 | 100 | 91 |
-| Home `/` | Desktop | 100 → 100 | 0 → 0 | 99 | 100 | 91 |
-| Demo cases `/demo` | Mobile | 100 → 100 | 0 → 0 | 79 | 100 | 91 |
-| Demo cases `/demo` | Desktop | 100 → 100 | 0 → 0 | 100 | 100 | 91 |
-| Case detail `/demo/:id` (DMS-0042) | Mobile | 100 → 100 | 0 → 0 | 78 | 100 | 91 |
-| Case detail `/demo/:id` (DMS-0042) | Desktop | 100 → 100 | 0 → 0 | 99 | 100 | 91 |
-| Claims `/claims` | Mobile | **95 → 100** | **1 → 0** | 75 → 80 | 100 | 91 |
-| Claims `/claims` | Desktop | **95 → 100** | **1 → 0** | 99 | 100 | 91 |
+| Home `/` | Mobile | 100 → 100 | 0 → 0 | 83 | 100 | 91 → 100 |
+| Home `/` | Desktop | 100 → 100 | 0 → 0 | 99 | 100 | 91 → 100 |
+| Demo cases `/demo` | Mobile | 100 → 100 | 0 → 0 | 79 | 100 | 91 → 100 |
+| Demo cases `/demo` | Desktop | 100 → 100 | 0 → 0 | 100 | 100 | 91 → 100 |
+| Case detail `/demo/:id` (DMS-0042) | Mobile | 100 → 100 | 0 → 0 | 78 | 100 | 91 → 100 |
+| Case detail `/demo/:id` (DMS-0042) | Desktop | 100 → 100 | 0 → 0 | 99 | 100 | 91 → 100 |
+| Claims `/claims` | Mobile | **95 → 100** | **1 → 0** | 75 → 80 | 100 | 91 → 100 |
+| Claims `/claims` | Desktop | **95 → 100** | **1 → 0** | 99 | 100 | 91 → 100 |
 
 - **Bug found:** `definition-list` (axe impact "serious"): the claim summary's `<dl>` held a Copy `<button>` directly
   inside each `<div>` group, which is invalid list structure for screen readers. **Fix:** the button moved inside the
@@ -56,8 +56,13 @@ Not run before this date (nothing in git history or this sheet).
 - **Checked by hand:** axe could not decide one colour-contrast item on the home page: the decorative "✓" glyph in a
   "Checked" mark (`aria-hidden`; axe can't measure non-standard characters). It uses `--color-ink-muted`
   (5.6:1 on the backing sheet) and the word "Checked" next to it carries the meaning. Not a failure.
-- Performance (mobile 75–83) and SEO (91) are reported for completeness; they are not accessibility items.
-  Performance varies between runs because of throttling and Render response time.
+- **SEO 91 → 100:** the only failing audit was `robots-txt`. There was no robots.txt, so the SPA rewrite served
+  `index.html` at `/robots.txt`. Added `client/public/robots.txt` (Vercel serves real files before rewrites) blocking
+  only `/api/` (commits `02957de`, `31d8dbd`; a first version also blocked `/cases` and `/claims`, which dropped
+  `/claims` to 63 for no gain, since crawlers are never logged in). The meta description was already present.
+  SEO rerun on the live site: 100 on all 8 (the `/claims` SEO rerun was logged out, so it audited the login redirect).
+- Performance (mobile 75–83) is reported for completeness; it is not an accessibility item and varies between runs
+  because of throttling and Render response time.
 
 ## Colour vision: case detail page, live site, 17 Nov 2026
 Chrome DevTools vision-deficiency emulation (`Emulation.setEmulatedVisionDeficiency`) on an owned copy of DMS-0042
