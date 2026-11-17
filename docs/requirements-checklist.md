@@ -33,7 +33,7 @@ Distinction in at least three. **We aim for Distinction in all five.**
 - [x] Pass: working app using an API; code in GitHub; live
 - [x] Merit: **own API and database; users, collections (cases) and items (medicines) all work;
       small, regular commits**
-- [x] Distinction: **live and reliable**; at least one extra → extras: 196 automated tests, Swagger API docs,
+- [x] Distinction: **live and reliable**; at least one extra → extras: 203 automated tests, Swagger API docs,
       claims and stats, PDF/photo upload. Reliable: an UptimeRobot monitor checks
       https://dischargeiq-pied.vercel.app/api/health every 5 minutes (status Up, set up by the owner 17 Nov). That
       route goes through Vercel to the API and runs `SELECT 1` on the database, so it keeps the free Render API and
@@ -69,13 +69,13 @@ Distinction in at least three. **We aim for Distinction in all five.**
       `docs/developer-handover.md`
 - [x] **AI usage log** → `docs/ai-usage-log.md` (including the AI's mistakes)
 - [x] **Test sheet with pass rate** → `docs/test-sheet.md`: owner's live run on 17 Nov (desktop private window +
-      phone) plus the upload checks: **42 / 42 = 100% on the first run, no fixes needed**. F7 is covered by
-      automated tests; F6 only partly (no automated test of the live AI's failure path, stated in the sheet).
+      phone) plus the upload checks: **42 / 42 = 100% on the first run, no fixes needed**. F6 and F7 are
+      covered by automated tests (`aiFailure.test.ts`, `errors.test.ts`).
       Accessibility, colour-vision and upload sections are filled in
 - [ ] Clean code: no `console.log` with data, no dead or commented-out code, no test accounts.
       Code: done 17 Nov (`ad0db86`: logs carry only safe error summaries; no TODOs or commented-out code; the unused
       `acknowledged_review_keys` column is documented). **Not yet met: no test accounts.** The owner deletes
-      their own test accounts on Wed 18 Nov morning before submitting
+      their own test accounts tonight (Tue 17 Nov), before submitting; tick this once the owner confirms
 - [x] Clean commit history; no key ever committed → full-history scan 17 Nov found no API keys or real connection
       strings (only made-up ones inside tests); secret scanning + push protection on. The 16 Nov password exposure
       was in a chat, not git, and the password was rotated (D-041)

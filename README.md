@@ -57,7 +57,7 @@ errors never show internal details. See [`docs/hazard-log.md`](docs/hazard-log.m
 | Validation | Zod schemas in `shared/`, used by the browser, the API and to check every AI answer |
 | Auth | Own: bcrypt password hashes + JWT in an `HttpOnly; Secure; SameSite=Lax` cookie |
 | AI | Anthropic Claude API, called only from the server; demo mode without a key |
-| Tests | Vitest + Supertest against a real Postgres (196 tests); Lighthouse + axe for accessibility |
+| Tests | Vitest + Supertest against a real Postgres (203 tests); Lighthouse + axe for accessibility |
 | Hosting | Vercel (client; forwards `/api/*` to the API) + Render (API, Frankfurt) + Supabase (database) |
 | CI | GitHub Actions on every push: typecheck → lint → test → build |
 

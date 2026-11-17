@@ -35,7 +35,7 @@ Final phone run, logged out and logged in: **Pass**.
 | F3 | Open or edit **another user's** case via its URL/API | Blocked (403/404) | Pass | Shows "Not found" (404 by design: doesn't confirm the case exists) |
 | F4 | Page or case that doesn't exist | Friendly 404 page | Pass | "Page not found" |
 | F5 | Logged-out user opens a logged-in page | Redirect to log in | Pass | |
-| F6 | AI returns invalid output / times out | Friendly message + manual entry fallback | Automated, partly | Not forced on the live site. Tests cover: an invalid or unreadable transcript is refused (`transcribe.test.ts`, `checkTranscript`); an unknown upload in demo mode gets a polite 422; a quoted sentence not in the letter is flagged (`cases.test.ts`). **No automated test** of the live reader's invalid-answer / timeout path (`ai.service.ts` retry → 503 "add the medicines by hand"): tests always use the mock. Checked by code review only |
+| F6 | AI returns invalid output / times out | Friendly message + manual entry fallback | Automated: Pass | Not forced on the live site. `aiFailure.test.ts` (test added 17 Nov evening; fake Anthropic SDK, app switched to live mode): a bad or cut-short answer is retried once, then 503 "Add the medicines by hand" with nothing saved; a good answer on the retry is used; a timeout or API error → 503 "isn't available right now… add the medicines by hand", and the error's message never reaches the log. Also: an invalid transcript is refused (`transcribe.test.ts`); a quoted sentence not in the letter is flagged (`cases.test.ts`) |
 | F7 | Server error | Generic message, no stack trace or details shown | Automated: Pass | `errors.test.ts`: unexpected error → generic 500 with no message or stack; broken JSON → friendly 400; unknown route → 404; logs never hold passwords or database details |
 
 ## Accessibility: Lighthouse + axe (D-027), live site, 17 Nov 2026
@@ -114,8 +114,7 @@ Live checks counted (each user flow counts once for desktop and once for mobile)
 
 - **First run: 42 / 42 passed = 100%.**
 - **After fixes: not needed** (no failures on the first run, so nothing to retest).
-- Not in the count: F6 and F7 were not forced on the live site. F7 is covered by automated tests; F6 only partly
-  (see the table above).
+- Not in the count: F6 and F7 were not forced on the live site; both are covered by automated tests instead.
 - Also passed: the final phone run, logged out and logged in.
 - Bugs found and fixing commits: none in this run. Found earlier the same day by the automated checks above: the
   claims `<dl>` structure (`4310782`) and the missing `robots.txt` (`02957de`, `31d8dbd`).

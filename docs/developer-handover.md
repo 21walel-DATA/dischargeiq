@@ -95,7 +95,7 @@ transaction and is recorded in `schema_migrations`.
   points at the same database as `DATABASE_URL`.
 - What is covered: the comparison engine (pure unit tests, written first), auth, **ownership on every case and
   medicine route** (another user → 404, logged out → 401), the NHS number guard, stages and the approval gate,
-  claims, the upload route, and error handling (users and logs never see internal details). 196 tests.
+  claims, the upload route, and error handling (users and logs never see internal details), and the live AI failing (a fake SDK, `aiFailure.test.ts`). 203 tests.
 - Not covered: no automated browser (end-to-end) tests and no client unit tests. Live end-to-end checks, Lighthouse,
   axe and colour-vision results are recorded by hand in `test-sheet.md`.
 

@@ -173,7 +173,7 @@ hazard log H1, H3, H4; D-055 smudged-dose test.
 ## Testing, CI/CD and accessibility
 
 **20. How did you test it?**
-> "196 automated tests against a real Postgres, not mocks, because ownership bugs live in SQL. The comparison
+> "203 automated tests against a real Postgres, not mocks, because ownership bugs live in SQL. The comparison
 > engine has 67 tests, written before the engine, covering edge cases like brand versus generic names and units.
 > Then manual end-to-end runs on the live site on desktop and a phone, recorded in a test sheet."
 
