@@ -8,6 +8,7 @@ import { AuthProvider } from "./auth/AuthContext";
 import { RequireAuth } from "./auth/RequireAuth";
 import { Layout } from "./components/Layout";
 import { HomePage } from "./pages/HomePage";
+import { StatusPage } from "./pages/StatusPage";
 import { LoginPage } from "./pages/LoginPage";
 import { MyCasesPage } from "./pages/MyCasesPage";
 import { CaseFormPage } from "./pages/CaseFormPage";
@@ -29,6 +30,7 @@ createRoot(rootElement).render(
         <Routes>
           <Route element={<Layout />}>
             <Route index element={<HomePage />} />
+            <Route path="status" element={<StatusPage />} />
             <Route path="login" element={<LoginPage mode="login" />} />
             <Route path="register" element={<LoginPage mode="register" />} />
 

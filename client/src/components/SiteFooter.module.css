@@ -20,3 +20,6 @@
 @media (min-width: 900px) {
   .inner { padding: var(--space-5) var(--space-6); }
 }
+
+.links { display: inline-flex; gap: var(--space-4); }
+.links a { color: var(--color-ink-muted); }
