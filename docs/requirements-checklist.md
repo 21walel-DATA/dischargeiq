@@ -72,10 +72,11 @@ Distinction in at least three. **We aim for Distinction in all five.**
       phone) plus the upload checks: **42 / 42 = 100% on the first run, no fixes needed**. F6 and F7 are
       covered by automated tests (`aiFailure.test.ts`, `errors.test.ts`).
       Accessibility, colour-vision and upload sections are filled in
-- [ ] Clean code: no `console.log` with data, no dead or commented-out code, no test accounts.
+- [x] Clean code: no `console.log` with data, no dead or commented-out code, no test accounts.
       Code: done 17 Nov (`ad0db86`: logs carry only safe error summaries; no TODOs or commented-out code; the unused
-      `acknowledged_review_keys` column is documented). **Not yet met: no test accounts.** The owner deletes
-      their own test accounts tonight (Tue 17 Nov), before submitting; tick this once the owner confirms
+      `acknowledged_review_keys` column is documented; the last two AI error logs made safe in `d143ebc`).
+      **Test accounts:** deleted by the owner on 17 Nov before submitting; only the synthetic demo-case owner
+      `demo-cases@dischargeiq.invalid` remains (owner confirmed in the Supabase SQL editor)
 - [x] Clean commit history; no key ever committed → full-history scan 17 Nov found no API keys or real connection
       strings (only made-up ones inside tests); secret scanning + push protection on. The 16 Nov password exposure
       was in a chat, not git, and the password was rotated (D-041)
