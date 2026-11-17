@@ -13,6 +13,7 @@ import { extractionSchema, UNCLEAR_MARKER, type AiMode, type ExtractedMedicine }
 import { DEMO_CASES } from "../db/demoCases";
 import { DEMO_LETTER_FILES } from "../db/demoLetterFiles";
 import { checkTranscript, fingerprint, type LetterFileKind } from "./letterFile.service";
+import { errorCode } from "./logSafe";
 
 export type ExtractionResult =
   | { ok: true; mode: AiMode; medicines: ExtractedMedicine[] }
@@ -127,7 +128,7 @@ async function extractWithClaude(letterText: string): Promise<ExtractionResult> 
       if (error instanceof Anthropic.APIError) {
         console.error(`AI request failed with status ${error.status}`);
       } else {
-        console.error("AI request failed:", error);
+        console.error("AI request failed:", errorCode(error)); // name / code only, never the message (D-056)
       }
       return { ok: false, mode: "live", reason: "unavailable" };
     }
@@ -211,7 +212,7 @@ async function transcribeWithClaude(bytes: Buffer, kind: LetterFileKind): Promis
       if (error instanceof Anthropic.APIError) {
         console.error(`AI transcription request failed with status ${error.status}`);
       } else {
-        console.error("AI transcription request failed:", error);
+        console.error("AI transcription request failed:", errorCode(error)); // never the message (D-056)
       }
       return { ok: false, mode: "live", reason: "unavailable" };
     }
