@@ -1,0 +1,7 @@
+# DischargeIQ prototype (synthetic data only). Public pages may be indexed; the API and logged-in pages are not
+# useful to search engines. This is a courtesy to crawlers, NOT security: the API checks login and ownership itself.
+User-agent: *
+Disallow: /api/
+Disallow: /cases
+Disallow: /claims
+Allow: /
