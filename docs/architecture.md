@@ -282,7 +282,8 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
 - Clinical hazard log: `docs/hazard-log.md` (D-029)
 
 **Production path (slide, not built)**
-- Identity: NHS Care Identity Service 2 (CIS2) instead of our own login
+- Identity: NHS Care Identity Service 2 (CIS2) instead of our own login; until then, token revocation on
+  logout (a server-side denylist or session table, so a copied token stops working at once, D-043)
 - Integration: receive referrals electronically from referral platforms (e.g. PharmOutcomes), PMR integration,
   FHIR UK Core data exchange, MYS claim submission via the NHSBSA supplier API once available
 - Data protection: UK GDPR special category data → DPIA, lawful basis, data processing agreements,

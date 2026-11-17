@@ -6,9 +6,9 @@ Then fix, retest, and record both pass rates.*
 ## User flows
 | # | Flow | Desktop | Mobile | Notes |
 |---|---|---|---|---|
-| 1 | Register a new account | | | |
-| 2 | Log in | | | |
-| 3 | Log out | | | |
+| 1 | Register a new account | | Pass (early check 17 Nov) | Owner's phone, private tab |
+| 2 | Log in | | Pass (early check 17 Nov) | Stayed logged in after refresh (cookie test) |
+| 3 | Log out | | Pass (early check 17 Nov) | |
 | 4 | Browse demo cases (logged out) | | | |
 | 5 | View a demo case detail | | | |
 | 6 | Create a case | | | |
