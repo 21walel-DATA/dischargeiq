@@ -595,3 +595,41 @@ Template:
 - How I'd explain it in 30 seconds: "I wrote six synthetic cases, each showing one rule: a withheld anticoagulant,
   a switch between two anticoagulants that must never be paired, an insulin dose change, a medicine the hospital
   forgot to mention, a frequency change, and a short opioid course. Each one has its own test."
+
+## D-048 — Stage tracker, approval gate and claims API (Phase 3, Checkpoint D; owner decisions 17 Nov)
+- Date: 2026-11-17
+- Owner decisions (asked before building):
+  1. **"Checked by" stored in a new table** `review_acknowledgements` (case, stage, line key, who, when, optional note;
+     one row per line; migration 003). It replaces `dms_stages.acknowledged_review_keys` as the place the gate reads
+     (that column stays, unused). D-032's rule is unchanged.
+  2. **Stage 2 flags every difference.** When the first new prescription differs from the discharge list (CHANGED,
+     STARTED or STOPPED), the line needs review: "The new prescription differs from the discharge list: check with the
+     prescriber." This catches the user-research error (GP prescription ignoring the hospital's change). Same engine,
+     one option (`flagEveryDifference`), unit-tested.
+  3. **Claim-by date:** the final deadline is the 5th of the fourth calendar month after the month the final stage was
+     completed (normal deadline 5th of the next month + three months), matching the owner's example: completed in
+     July → claim by 5 November. The page also shows "Claim by the 5th of next month for the earliest payment".
+     Source: Community Pharmacy England (claim period extended to three months from July 2024); check the current
+     Drug Tariff. Rule lives in `shared/src/stages.ts` (`claimByDate`), unit-tested.
+  4. **Stats show only your own cases** (logged in), matching the claims wireframe and golden rule 12.
+     `architecture.md` changed from "Public" to "own cases".
+- Built:
+  - `PATCH /cases/:id/stages/:stage`: notes (autosave), acknowledge/un-acknowledge a flagged line (only lines that
+    need review right now), "not applicable" with a required reason, reopen ("pending").
+  - `POST /cases/:id/stages/:stage/complete`: re-runs the comparison on the server and returns **409 with the number of
+    unchecked lines**; needs a discharge list (stage 1) or a new prescription (stage 2, otherwise mark it not
+    applicable); stores the approved comparison in `reconciliation_items` with who checked each line.
+  - Claim status recalculated on every stage change: ready = no stage pending AND stage 1 completed (D-021). Value =
+    £12 / £11 / £12 per completed stage (CPE, checked Nov 2026; `STAGE_FEES`). `GET /cases/:id/claim-summary`,
+    `POST /cases/:id/mark-claimed` (409 unless ready), `GET /claims`, `GET /stats`. A claimed case is locked.
+  - Engine lines now carry `highRiskCategory` (for the stats page).
+  - **Migration 004:** "completed by" and "acknowledged by" become empty if a user is deleted, instead of blocking the
+    deletion (found by the tests: Postgres refused to delete a user who had completed a stage on their own case).
+- Tests: 24 new (176 in total): gate 409 → acknowledge → 200; acknowledgement shows initials, time and note; an
+  edited medicine must be checked again; stage 2 GP-prescription error blocks until checked; not applicable needs
+  a reason; claim-ready rule; claim-by dates; own-only claims and stats; 404/401 on every new route; demo cases
+  locked. Live check through Vercel: 409 → checked → completed.
+- How I'd explain it in 30 seconds: "The server, not the page, decides whether a stage can be completed. It
+  re-runs the comparison and refuses if any flagged line hasn't been initialled. Initialling records who, when and
+  why. In stage 2 any difference between the hospital's list and the GP's first prescription must be checked,
+  because that's exactly the error pharmacists told me they see."

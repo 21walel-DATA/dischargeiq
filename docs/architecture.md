@@ -227,7 +227,8 @@ erDiagram
 - `GET /demo-cases` · `GET /demo-cases/:id` · `GET /demo-cases/:id/reconciliation` (synthetic only, read-only)
 - `POST /demo-cases/:id/copy` (logged in: copies the letter + pre-admission list into your own cases)
 - `GET /ai/status` (`mock` or `live`; drives the "Demo mode: sample extraction" label, D-045)
-- `GET /stats` (counts, most common changes, claims ready/value — no personal data)
+- `GET /stats` (logged in, own cases only, D-048: counts, high-risk groups, claim value)
+- `GET /claims` (logged in: claim record for each of your cases)
 
 **Utility**
 - `GET /health` (runs `SELECT 1`, so pings also keep Supabase awake) · `GET /docs` (Swagger, cut second)
