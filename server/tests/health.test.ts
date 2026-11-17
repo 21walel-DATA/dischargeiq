@@ -19,3 +19,20 @@ describe("GET /api/health", () => {
     expect(res.headers["x-content-type-options"]).toBe("nosniff");
   });
 });
+
+describe("API documentation", () => {
+  it("serves the OpenAPI file, with shapes generated from the shared schemas", async () => {
+    const res = await request(app).get("/api/docs.json");
+    expect(res.status).toBe(200);
+    expect(res.body.openapi).toBe("3.0.3");
+    expect(Object.keys(res.body.paths)).toContain("/cases/{id}/stages/{stage}/complete");
+    // The password rule in the docs comes straight from the Zod schema the server checks.
+    expect(res.body.components.schemas.RegisterRequest.properties.password.minLength).toBe(12);
+  });
+
+  it("serves the Swagger page", async () => {
+    const res = await request(app).get("/api/docs/");
+    expect(res.status).toBe(200);
+    expect(res.text).toContain("swagger-ui");
+  });
+});
