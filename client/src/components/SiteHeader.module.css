@@ -36,10 +36,14 @@
 
 .nav {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
   gap: var(--space-1);
 }
 
-.nav a {
+.nav a,
+.navButton {
   color: var(--color-ink);
   text-decoration: none;
   padding: var(--space-2) var(--space-3);
@@ -47,6 +51,24 @@
   min-height: var(--touch-min);
   display: inline-flex;
   align-items: center;
+}
+
+/* "Log out" is a button (it changes something), styled to sit in the nav like a link. */
+.navButton {
+  background: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.navButton:hover { background: var(--color-backing); }
+
+/* The logged-in pharmacist's name: desktop only, to keep the phone header on one line. */
+.user {
+  display: none;
+  color: var(--color-ink-muted);
+  font-size: var(--text-small);
+  padding-left: var(--space-3);
 }
 
 /* NavLink adds aria-current="page" to the link for the page you're on. */
@@ -57,4 +79,5 @@
 
 @media (min-width: 900px) {
   .inner { padding: var(--space-3) var(--space-6); }
+  .user { display: inline; }
 }

@@ -2,6 +2,7 @@
 // The full home page (docs/designs/home-desktop.png) replaces it in Phase 2.
 import { useEffect, useState } from "react";
 import { fetchHealth } from "../api/health";
+import { useAuth } from "../auth/AuthContext";
 import styles from "./HomePage.module.css";
 
 // The three things the status box can show.
@@ -10,6 +11,7 @@ type Status = "checking" | "ok" | "problem";
 export function HomePage() {
   const [apiStatus, setApiStatus] = useState<Status>("checking");
   const [databaseStatus, setDatabaseStatus] = useState<Status>("checking");
+  const { user, checking } = useAuth();
 
   useEffect(() => {
     fetchHealth()
@@ -38,6 +40,11 @@ export function HomePage() {
           <div>
             <dt>Database</dt>
             <dd>{describe(databaseStatus)}</dd>
+          </div>
+          {/* Proves the login cookie works: refresh the page and you should still be logged in. */}
+          <div>
+            <dt>Login</dt>
+            <dd>{checking ? "Checking…" : user ? `Logged in as ${user.displayName}` : "Not logged in"}</dd>
           </div>
         </dl>
       </section>

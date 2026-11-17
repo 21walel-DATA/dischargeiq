@@ -1,0 +1,55 @@
+.wrap {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.auth { max-width: 440px; }
+
+/* Two joined buttons: the page you're on is filled with ink. */
+.segmented {
+  display: inline-flex;
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-control);
+  overflow: hidden;
+  margin-bottom: var(--space-5);
+}
+
+.segmented a {
+  min-height: var(--touch-min);
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-4);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.segmented a[aria-current="page"] {
+  background: var(--color-ink);
+  color: var(--color-on-dark);
+  font-weight: 700;
+}
+
+.panel {
+  background: var(--color-label);
+  border: 1px solid var(--color-backing-edge);
+  padding: var(--space-5) var(--space-4);
+}
+
+.switch {
+  margin-top: var(--space-4);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.aside > * + * { margin-top: var(--space-3); }
+
+@media (min-width: 900px) {
+  .wrap {
+    grid-template-columns: 440px 1fr;
+    gap: var(--space-8);
+    align-items: start;
+    padding-top: var(--space-5);
+  }
+  .segmented a { padding: 0 var(--space-5); }
+  .panel { padding: var(--space-5); }
+}
