@@ -37,7 +37,7 @@
 
 .nav {
   display: flex;
-  flex-shrink: 0;
+  max-width: 100%; /* never wider than the screen: links wrap instead */
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;
