@@ -549,3 +549,31 @@ Template:
   my demo letter, so the app and all my tests work without calling a paid API. With a key it calls Claude. Either
   way, the answer has to pass my own schema check before it's saved, and every line must quote a sentence that
   really is in the letter, or it gets flagged."
+
+## D-046 — Case pages built to the wireframes (Phase 2, Checkpoint C)
+- Date: 2026-11-17
+- Decision:
+  - **Pages:** My cases (`/cases`), new/edit case (`/cases/new`, `/cases/:id/edit`), comparison (`/cases/:id`),
+    medicine detail (`/cases/:id/medicines/:medicineId`), demo cases (`/demo`, `/demo/:id`, read-only, same
+    components as your own cases). Logged-out visitors to `/cases…` are sent to log in and brought back afterwards.
+  - **Comparison view** follows `case-detail-desktop.png`: medicine labels side by side (stacked on phones), status as
+    word + shape + colour, needs-review reasons in highlighter yellow, high-risk band on every high-risk label (D-044),
+    the letter's own sentence quoted under each line. A stage 1 / stage 2 switch appears once a new prescription exists.
+  - **Medicine detail** shows the whole letter with the source sentence highlighted (found by the same
+    whitespace-insensitive match as the server's hallucination check; the box scrolls to it), the fields compared,
+    why it needs review or is high-risk ("from the pharmacy's own rules list, not from AI"), and an edit form.
+  - **Case form:** referral details, the letter, "Save and read the letter", the three medicine lists (add/delete;
+    edit on the medicine page). "Demo mode: sample extraction" label when the server has no AI key. "Delete this
+    case…" uses a native `<dialog>` confirmation.
+  - **Differences from the wireframes, on purpose:** the pre-admission list is a list + an "add a medicine" row
+    (not editable rows in place; editing is on the medicine page); "Paste a list", filter chips, notes, "Checked by"
+    initials and autosave come later (Phase 3, with the stage tracker); the nav drops "Home" (the wordmark links home)
+    and wraps below the wordmark on narrow phones instead of a Menu button.
+- Checked: live in headless Chrome at 1440 px and 375 px: demo list → demo case (logged out) → register → copy demo →
+  read letter (mock) → comparison (1 changed, 2 stopped, 1 started, 2 need review, 4 unchanged) → medicine page with the
+  sentence highlighted. No horizontal scrolling, no console errors.
+- Why: The comparison is the hero, so the boldness (labels, bands, highlighter) is spent there; every other page is a
+  quiet table or form (design-system.md).
+- How I'd explain it in 30 seconds: "Each medicine is drawn like a dispensing label. Before admission is on the left,
+  discharge on the right, and the middle says what changed in a word, a shape and a colour, so it works for
+  colour-blind users and in greyscale. Click any line and you see the exact sentence highlighted in the letter."
