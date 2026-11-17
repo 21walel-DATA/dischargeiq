@@ -1,4 +1,5 @@
-import { Router } from "express";
+import express, { Router } from "express";
+import { MAX_UPLOAD_BYTES, UPLOAD_MEDIA_TYPES } from "@dischargeiq/shared";
 import {
   addMyMedicine,
   copyDemo,
@@ -11,6 +12,7 @@ import {
   getReconciliation,
   listDemo,
   listMyCases,
+  transcribeUpload,
   updateMyCase,
   updateMyMedicine,
 } from "../controllers/cases.controller";
@@ -34,6 +36,16 @@ export function createCasesRouter(): Router {
   router.post("/cases/:id/medicines", requireAuth, loadOwnedCase, addMyMedicine);
   router.post("/cases/:id/extract", requireAuth, createExtractLimiter(), loadOwnedCase, extractFromLetter);
   router.get("/cases/:id/reconciliation", requireAuth, loadOwnedCase, getReconciliation);
+  // Letter upload (D-054): login and ownership are checked BEFORE the file is read. express.raw reads only a PDF,
+  // PNG or JPEG body, up to MAX_UPLOAD_BYTES, into memory (never to disk).
+  router.post(
+    "/cases/:id/transcribe",
+    requireAuth,
+    createExtractLimiter(),
+    loadOwnedCase,
+    express.raw({ type: [...UPLOAD_MEDIA_TYPES], limit: MAX_UPLOAD_BYTES }),
+    transcribeUpload,
+  );
 
   // DMS stage tracker and claims (Phase 3, D-048). Own cases only.
   router.patch("/cases/:id/stages/:stage", requireAuth, loadOwnedCase, patchStage);

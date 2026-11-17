@@ -20,6 +20,7 @@ import {
   registerRequestSchema,
   stageUpdateSchema,
   statsSchema,
+  transcribeResponseSchema,
   aiStatusSchema,
   dmsStageSchema,
 } from "@dischargeiq/shared";
@@ -41,6 +42,7 @@ const schemas: Record<string, Record<string, unknown>> = {
   MedicineUpdate: shape(medicineUpdateSchema, "input"),
   MedicineResponse: shape(medicineResponseSchema, "output"),
   ExtractResponse: shape(extractResponseSchema, "output"),
+  TranscribeResponse: shape(transcribeResponseSchema, "output"),
   Reconciliation: shape(reconciliationResponseSchema, "output"),
   StageUpdate: shape(stageUpdateSchema, "input"),
   Stages: shape(z.object({ stages: z.array(dmsStageSchema) }), "output"),
@@ -117,7 +119,17 @@ export const openApiDocument = {
     },
     "/cases/{id}/extract": {
       parameters: [caseId],
-      post: { tags: ["Comparison"], summary: "Read the letter (AI extracts only; replaces the discharge list)", security: loggedIn, responses: { "200": ok("ExtractResponse"), "400": error("No letter yet"), "429": error("Rate limited"), "503": error("Letter reader unavailable or answer unusable: add medicines by hand"), ...common } },
+      post: { tags: ["Comparison"], summary: "Read the letter (AI extracts only; replaces the discharge list)", security: loggedIn, responses: { "200": ok("ExtractResponse"), "400": error("No letter yet, or it still has [unclear] parts"), "429": error("Rate limited"), "503": error("Letter reader unavailable or answer unusable: add medicines by hand"), ...common } },
+    },
+    "/cases/{id}/transcribe": {
+      parameters: [caseId, { name: "synthetic", in: "query", required: true, description: "Must be \"confirmed\": the user ticked \"this is a synthetic letter\"", schema: { type: "string", enum: ["confirmed"] } }],
+      post: {
+        tags: ["Comparison"],
+        summary: "Upload a PDF or photo of the letter; the AI copies it out as text (nothing is saved; the file is held in memory only)",
+        security: loggedIn,
+        requestBody: { required: true, content: { "application/pdf": { schema: { type: "string", format: "binary" } }, "image/png": { schema: { type: "string", format: "binary" } }, "image/jpeg": { schema: { type: "string", format: "binary" } } } },
+        responses: { "200": ok("TranscribeResponse"), "400": error("Synthetic tick box not confirmed"), "413": error("File over 4 MB"), "415": error("Not a PDF, PNG or JPEG (checked from the file's bytes)"), "422": error("Real NHS number in the letter, or (demo mode) not a sample file"), "429": error("Rate limited"), "503": error("Couldn't read the file, or the reader is unavailable: paste the text"), ...common },
+      },
     },
     "/cases/{id}/reconciliation": {
       parameters: [caseId, { name: "stage", in: "query", schema: { type: "integer", enum: [1, 2], default: 1 } }],

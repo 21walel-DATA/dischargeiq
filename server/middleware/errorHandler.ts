@@ -17,7 +17,7 @@ export function errorHandler(error: unknown, _req: Request, res: Response, _next
     return;
   }
   if (details.type === "entity.too.large") {
-    res.status(413).json({ error: "That's too much text to send at once. Shorten it and try again." });
+    res.status(413).json({ error: "That's too much to send at once. Use shorter text or a file under 4 MB." });
     return;
   }
 

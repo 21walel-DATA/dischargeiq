@@ -6,15 +6,19 @@ import {
   caseUpdateSchema,
   medicineCreateSchema,
   medicineUpdateSchema,
+  countUnclear,
+  REAL_NHS_NUMBER_MESSAGE,
   type ExtractResponse,
   type ReconciliationResponse,
+  type TranscribeResponse,
 } from "@dischargeiq/shared";
+import { detectLetterFile } from "../services/letterFile.service";
 import { getCurrentUser } from "../middleware/requireAuth";
 import { getOwnedCaseId } from "../middleware/loadOwnedCase";
 import { getOwnedMedicineId } from "../middleware/loadOwnedMedicine";
 import { copyDemoCase, createCase, deleteCase, getCaseDetail, listCases, listDemoCases, updateCase } from "../services/case.service";
 import { addMedicine, deleteMedicine, replaceDischargeList, updateMedicine } from "../services/medicine.service";
-import { aiMode, extractMedicines } from "../services/ai.service";
+import { aiMode, extractMedicines, transcribeLetter } from "../services/ai.service";
 import { compareCase } from "../services/comparison.service";
 import { sendValidationError } from "./validation";
 
@@ -117,6 +121,14 @@ export async function extractFromLetter(_req: Request, res: Response): Promise<v
     res.status(400).json({ error: "Paste the discharge letter into the case first, then read it." });
     return;
   }
+  // D-054: an uploaded letter may still have parts the AI couldn't read. Checked HERE, so a page bug can't skip it.
+  const unclear = countUnclear(detail.letterText);
+  if (unclear > 0) {
+    res.status(400).json({
+      error: `The letter still has ${unclear} [unclear] ${unclear === 1 ? "part" : "parts"}. Check them against the letter, type what it says, then read it.`,
+    });
+    return;
+  }
   const result = await extractMedicines(detail.letterText);
   if (!result.ok) {
     // Friendly message + a way forward (manual entry). Details are in the server log only.
@@ -129,6 +141,43 @@ export async function extractFromLetter(_req: Request, res: Response): Promise<v
   }
   const medicines = await replaceDischargeList(caseId, result.medicines);
   const body: ExtractResponse = { mode: result.mode, medicines };
+  res.json(body);
+}
+
+// POST /cases/:id/transcribe (D-054). The body is the file itself (PDF, PNG or JPEG), held in memory only and never
+// stored. Gives back the letter as TEXT for the pharmacist to check; nothing is saved to the case here.
+const TRANSCRIBE_FAILED: Record<"unreadable" | "unavailable" | "unknownDemoFile", { status: number; error: string }> = {
+  unreadable: { status: 503, error: "We couldn't read this file. Try a clearer photo or the PDF, or paste the letter text." },
+  unavailable: { status: 503, error: "The letter reader isn't available right now. Try again in a minute, or paste the letter text." },
+  unknownDemoFile: {
+    status: 422,
+    error: "Demo mode can only read the sample letter files. Download one from the upload box, or paste the letter text.",
+  },
+};
+
+export async function transcribeUpload(req: Request, res: Response): Promise<void> {
+  if (req.query.synthetic !== "confirmed") {
+    res.status(400).json({ error: "Tick the box to confirm this is a synthetic letter, not a real patient's." });
+    return;
+  }
+  // express.raw only fills req.body (as bytes) for a PDF, PNG or JPEG upload; anything else leaves no Buffer.
+  const bytes: unknown = req.body;
+  const kind = Buffer.isBuffer(bytes) ? detectLetterFile(bytes) : null;
+  if (!Buffer.isBuffer(bytes) || kind === null) {
+    res.status(415).json({ error: "Upload a PDF, PNG or JPEG of the letter." });
+    return;
+  }
+  const result = await transcribeLetter(bytes, kind);
+  if (!result.ok) {
+    if (result.reason === "realNhsNumber") {
+      res.status(422).json({ error: REAL_NHS_NUMBER_MESSAGE });
+      return;
+    }
+    const failure = TRANSCRIBE_FAILED[result.reason];
+    res.status(failure.status).json({ error: failure.error });
+    return;
+  }
+  const body: TranscribeResponse = { mode: result.mode, letterText: result.letterText, unclearCount: result.unclearCount };
   res.json(body);
 }
 
