@@ -18,9 +18,10 @@ Distinction in at least three. **We aim for Distinction in all five.**
 ## 2. Design
 - [x] Pass: layouts for the main pages, **made before coding** → `8ee43d7` (16 Nov 18:00) before the first app
       code `b9065e1` (16 Nov 21:25)
-- [x] Merit: **desktop AND mobile layouts for every page**; the app follows them → 8 pages × 2 in `docs/designs/`.
-      Note: three small screens were added later without a wireframe: `/status`, the 404 page and the letter-upload
-      check view (D-054); they reuse the same components and tokens
+- [x] Merit: **desktop AND mobile layouts for every page**; the app follows them → 11 screens × 2 in
+      `docs/designs/`. The 8 planned pages were designed before any code; 3 small screens added during the build
+      (`/status`, the 404 page, the letter-upload check view) got their wireframes **after** the code, labelled as
+      such in `docs/designs/README.md` (D-057)
 - [x] Distinction: consistent, polished design; works well on any screen size → one token file
       (`tokens.css`); Lighthouse accessibility 100 and 0 axe violations on 4 pages × phone and desktop; checked at
       360/375/390 px and desktop; every status readable under colour-blindness emulation (`docs/test-sheet.md`).

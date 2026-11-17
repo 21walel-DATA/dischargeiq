@@ -809,3 +809,20 @@ Template:
 - How I'd explain it in 30 seconds: "Users never see error details, but I also checked what my server writes to its
   own logs. Some errors carried the request body, which could be a password, so now the log records only the type
   of error and where it happened, and a test proves a password can't end up there."
+
+## D-057 — Wireframes for the three screens built without one (drawn after the code)
+- Date: 2026-11-17
+- Decision: Added desktop + mobile wireframes for `/status` (D-052), the 404 page and the letter-upload check view
+  (D-054) to `docs/designs/` (`status.html`, `not-found.html`, `letter-upload.html` + PNGs), in the same style and
+  stylesheet as the original eight, exported with the same `shoot.mjs`.
+- **Honest note:** these three were **drawn after the code**, during the build, from the screens as built. The
+  original eight pages were designed before any app code (`8ee43d7` before `b9065e1`); these three were not. The
+  designs README lists them separately under "Added after the code", and git history shows the order.
+- Why: the Design Merit criterion asks for desktop and mobile layouts for every page; the gap was found while
+  ticking the requirements checklist. Documenting the screens is better than leaving them out, but presenting them
+  as up-front design would be untrue.
+- Alternatives considered: leave the gap and explain it (weaker evidence); redesign the screens first and rebuild
+  them (no time after the feature freeze, and no design problem to solve).
+- How I'd explain it in 30 seconds: "I designed all eight planned pages before writing any code; git shows that.
+  During the build I added three small screens (a status page, a 404 and the upload check view) without designing
+  them first, so I drew their wireframes afterwards and labelled them honestly as after-the-code."

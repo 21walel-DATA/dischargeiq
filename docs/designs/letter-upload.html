@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DischargeIQ (wireframe): checking an uploaded letter</title>
+<!-- Drawn AFTER the code, on 17 Nov 2026, to document a screen added during the build (D-054, D-057).
+     Shows the edit-case page's letter section after a photo was uploaded: one [unclear] left, box not yet ticked,
+     so "Save and read the letter" is still locked. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+<style>
+  .check-view { display: grid; gap: var(--space-4); align-items: start; }
+  @media (min-width: 900px) { .check-view { grid-template-columns: 1fr 1fr; } }
+  .preview { margin: 0; display: grid; gap: var(--space-2); }
+  /* A stand-in for the photo: a slightly rotated page on a dark desk. */
+  .photo { height: 380px; border: 1px solid var(--color-backing-edge); border-radius: var(--radius-control); background: #6b635a; display: grid; place-items: center; overflow: hidden; }
+  .photo__paper { width: 78%; background: #fbfaf6; padding: 18px 20px; transform: rotate(-2deg); box-shadow: 0 10px 24px rgba(0,0,0,.35); font: 11px/1.5 Arial, sans-serif; color: #222; }
+  .photo__paper .smudge { filter: blur(2.5px); background: #c9c2b0; padding: 0 3px; }
+  .tall { min-height: 380px; }
+  .tick { display: flex; gap: var(--space-3); align-items: flex-start; min-height: 44px; padding: var(--space-2) 0; }
+  .tick input { width: 22px; height: 22px; margin: 1px 0 0; accent-color: var(--color-brand); }
+  .btn[disabled] { background: var(--color-backing); color: var(--color-ink-muted); border-color: var(--color-backing-edge); }
+  .upload { margin-top: var(--space-5); padding-top: var(--space-4); border-top: 1px solid var(--color-backing-edge); }
+  .upload h3 { margin: 0 0 var(--space-1); font-size: var(--text-h3); }
+</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="demo-cases.html">Demo cases</a>
+    <a href="my-cases.html" aria-current="page">My cases</a>
+    <a href="claims.html">Claims</a>
+    <span class="nav__user">Demo Pharmacist</span>
+    <a href="login.html">Log out</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <a class="back-link" href="case-detail.html">Back to the comparison</a>
+  <div class="page-head"><h1>Edit case DMS-0099</h1></div>
+
+  <div class="notice"><strong>Synthetic data only.</strong> Don't enter names, addresses, dates of birth or NHS numbers. A real NHS number will be rejected.</div>
+
+  <section class="panel" aria-labelledby="letter-title">
+    <h2 id="letter-title">Discharge letter</h2>
+    <div class="notice"><strong>Copied out from your file.</strong> Check every line against the letter, especially medicine names, doses and units, before reading it. The file itself is not saved.</div>
+
+    <div class="check-view">
+      <figure class="preview">
+        <div class="photo" role="img" aria-label="The uploaded photo of a synthetic letter">
+          <div class="photo__paper">
+            NORTHFIELD GENERAL HOSPITAL (SYNTHETIC)<br>Discharge summary. Prototype demo letter: not a real patient.<br><br>
+            Patient reference: DMS-0099<br>NHS number: 999 000 0018 (test range)<br><br>Medication changes:<br>
+            Naproxen stopped following upper GI bleed.<br>Amlodipine increased to <span class="smudge">10</span> mg once daily.<br>
+            Lansoprazole 30 mg once daily started.
+          </div>
+        </div>
+        <figcaption class="small muted">Your file, shown in this browser only. (For a PDF: "Open the PDF in a new tab".)</figcaption>
+      </figure>
+
+      <div class="field">
+        <label for="letter">Check the copied-out letter</label>
+        <span class="field__hint">Correct anything that differs from the letter. Where it says [unclear], type what the letter says.</span>
+        <span class="status status--review"><span class="mark" aria-hidden="true">?</span>1 part unclear</span>
+        <textarea class="textarea tall" id="letter">NORTHFIELD GENERAL HOSPITAL (SYNTHETIC)
+Discharge summary. Prototype demo letter: not a real patient.
+
+Patient reference: DMS-0099
+NHS number: 999 000 0018 (test range)
+
+Medication changes:
+Naproxen stopped following upper GI bleed.
+Amlodipine increased to [unclear] mg once daily.
+Lansoprazole 30 mg once daily started.</textarea>
+      </div>
+    </div>
+
+    <label class="tick"><input type="checkbox"><span>I've checked this text against the uploaded letter.</span></label>
+    <div class="btn-row">
+      <button class="btn" type="button" disabled>Save and read the letter</button>
+      <button class="btn btn--secondary" type="button">Save changes</button>
+    </div>
+    <p class="small" style="margin:var(--space-3) 0 0">Replace each [unclear] with what the letter says (1 left).</p>
+
+    <div class="upload" role="group" aria-labelledby="upload-title">
+      <h3 id="upload-title">Or upload the letter</h3>
+      <p class="small muted">A PDF or a photo, up to 4 MB. The letter is copied out as text for you to check, replacing the text above. The file is not kept.</p>
+      <div class="field"><label for="file">Letter file</label><input class="input" id="file" type="file"></div>
+      <label class="tick"><input type="checkbox"><span><strong>This is a synthetic demo letter,</strong> not a real patient's. Real letters must not be uploaded to this prototype.</span></label>
+      <div class="btn-row"><button class="btn btn--secondary" type="button">Upload and copy out</button></div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+  <span><a href="status.html">System status</a> · <a href="#">API docs</a></span>
+</div></footer>
+</body>
+</html>

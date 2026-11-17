@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DischargeIQ (wireframe): system status</title>
+<!-- Drawn AFTER the code, on 17 Nov 2026, to document a screen added during the build (D-057). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@87.5,400;87.5,600;87.5,700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;700&display=swap">
+<link rel="stylesheet" href="wireframes.css">
+<style>
+  .checks { display: grid; gap: 0; margin: 0; max-width: 560px; }
+  .checks div { display: grid; grid-template-columns: 7em 1fr; gap: var(--space-3); padding: var(--space-3) 0; border-bottom: 1px solid var(--color-backing-edge); }
+  .checks dt { font-weight: 700; }
+  .checks dd { margin: 0; }
+</style>
+</head>
+<body>
+<header class="site-header"><div class="site-header__inner">
+  <a class="wordmark" href="home.html"><span class="wordmark__mark" aria-hidden="true"></span>DischargeIQ</a>
+  <nav class="nav" aria-label="Main">
+    <a href="demo-cases.html">Demo cases</a>
+    <a href="my-cases.html">My cases</a>
+    <a href="claims.html">Claims</a>
+    <span class="nav__user">Demo Pharmacist</span>
+    <a href="login.html">Log out</a>
+  </nav>
+  <button class="btn btn--secondary btn--small menu-button" type="button">Menu</button>
+</div></header>
+
+<main class="page">
+  <div class="page-head"><h1>System status</h1></div>
+  <p>This page checks that every part of DischargeIQ is connected: the app, the API and the database.</p>
+
+  <section class="panel" aria-labelledby="check-title">
+    <h2 id="check-title">System check</h2>
+    <dl class="checks">
+      <div><dt>API</dt><dd>Connected</dd></div>
+      <div><dt>Database</dt><dd>Connected</dd></div>
+      <div><dt>Login</dt><dd>Logged in as Demo Pharmacist</dd></div>
+    </dl>
+    <p class="small muted" style="margin-top:var(--space-4)">If a part isn't reachable it says "Not reachable. Try again in a minute." The free API host can take up to a minute to wake up.</p>
+  </section>
+</main>
+
+<footer class="site-footer"><div class="site-footer__inner">
+  <span><strong>Prototype.</strong> Synthetic data only. Not a medical device.</span>
+  <span>Supports the pharmacist's decision; never makes it.</span>
+  <span><a href="status.html">System status</a> · <a href="#">API docs</a></span>
+</div></footer>
+</body>
+</html>

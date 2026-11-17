@@ -14,6 +14,16 @@ Design system: `docs/design-system.md` ("Dispensing label", D-033). All data sho
 | 7 | Medicine detail | `medicine-detail.html` | `medicine-detail-desktop.png` | `medicine-detail-mobile.png` |
 | 8 | Claims and stats | `claims.html` | `claims-desktop.png` | `claims-mobile.png` |
 
+### Added after the code (17 Nov 2026, D-057)
+Three small screens were added **during the build without a wireframe first**. These wireframes were drawn
+afterwards, from the built screens, to complete the set; they are documentation, not up-front design.
+
+| # | Screen | Wireframe | Desktop (1440 px) | Mobile (375 px) |
+|---|---|---|---|---|
+| 9 | System status (`/status`, D-052) | `status.html` | `status-desktop.png` | `status-mobile.png` |
+| 10 | Page not found (404) | `not-found.html` | `not-found-desktop.png` | `not-found-mobile.png` |
+| 11 | Checking an uploaded letter (edit case, D-054) | `letter-upload.html` | `letter-upload-desktop.png` | `letter-upload-mobile.png` |
+
 ## How these were made
 - Static HTML + one shared stylesheet (`wireframes.css`), no framework and no app code. Each page is one
   responsive file, so the desktop and mobile images show the same page at two widths (mobile-first CSS,
