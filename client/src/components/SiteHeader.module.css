@@ -8,6 +8,7 @@
   margin: 0 auto;
   padding: var(--space-3) var(--space-4);
   display: flex;
+  flex-wrap: wrap; /* on narrow phones the nav drops below the wordmark instead of squashing */
   align-items: center;
   justify-content: space-between;
   gap: var(--space-4);
@@ -36,6 +37,7 @@
 
 .nav {
   display: flex;
+  flex-shrink: 0;
   flex-wrap: wrap;
   justify-content: flex-end;
   align-items: center;

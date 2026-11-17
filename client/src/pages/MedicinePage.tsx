@@ -1,6 +1,6 @@
 // Medicine detail (docs/designs/medicine-detail-desktop.png): one comparison line in full. The two labels, the
 // letter with the source sentence highlighted, what was compared, why it's flagged, and (own cases) an edit form.
-import { useEffect, useState, type FormEvent, type ReactElement } from "react";
+import { useEffect, useRef, useState, type FormEvent, type ReactElement } from "react";
 import { Link, useNavigate, useParams } from "react-router";
 import { medicineUpdateSchema, type CaseDetail, type Medicine, type ReconciliationLine } from "@dischargeiq/shared";
 import { getCase, getReconciliation, updateMedicine } from "../api/cases";
@@ -43,6 +43,14 @@ export function MedicinePage({ demo }: { demo: boolean }) {
   const [draft, setDraft] = useState<Record<string, string>>({});
   const [fields, setFields] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
+  const letterBox = useRef<HTMLDivElement>(null);
+
+  // Scroll the letter box (not the whole page) so the highlighted sentence is in view.
+  useEffect(() => {
+    const box = letterBox.current;
+    const mark = box?.querySelector("mark");
+    if (box && mark) box.scrollTop = Math.max(0, mark.offsetTop - box.offsetTop - 48);
+  });
 
   useEffect(() => {
     async function load(): Promise<void> {
@@ -183,7 +191,7 @@ export function MedicinePage({ demo }: { demo: boolean }) {
           {!sourceText && <p className={page.muted}>This line was typed in, not read from the letter.</p>}
           {sourceText && highlighted && (
             <>
-              <div className={styles.letter}>
+              <div className={styles.letter} ref={letterBox}>
                 {highlighted.before}
                 <mark className={styles.mark}>{highlighted.match}</mark>
                 {highlighted.after}
@@ -218,7 +226,13 @@ export function MedicinePage({ demo }: { demo: boolean }) {
               <p className={page.small}>
                 <strong>Result:</strong>{" "}
                 {[...line.changeDetails, line.timingNote].filter(Boolean).join("; ") ||
-                  (line.changeType === "unchanged" ? "No change found." : line.changeType === "started" ? "New on this list." : "Not on the later list.")}
+                  (line.changeType === "unchanged"
+                    ? "No change found."
+                    : line.changeType === "started"
+                      ? "New on this list."
+                      : line.letterStatus
+                        ? `Stopped: the letter says ${line.letterStatus}.`
+                        : "Not on the later list.")}
               </p>
             </>
           )}
