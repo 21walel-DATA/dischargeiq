@@ -72,6 +72,15 @@ export function CaseDetailPage({ demo }: { demo: boolean }) {
     navigate(`/cases/${result.case.id}/edit`);
   }
 
+  // After a stage is finished, move on to the next stage still open (if any).
+  function goToNextOpenStage(loaded: CaseDetail | null): void {
+    const next = loaded?.stages.find((s) => s.status === "pending")?.stage;
+    if (next === 1 || next === 2 || next === 3) {
+      setSaveText("");
+      setActive(next);
+    }
+  }
+
   // Every stage change returns the three stages as they now are.
   function applyStages(stages: DmsStage[]): void {
     setCaseDetail((current) => (current ? { ...current, stages } : current));
@@ -102,7 +111,7 @@ export function CaseDetailPage({ demo }: { demo: boolean }) {
       setMessage(result.message);
       return;
     }
-    await loadCase(); // claim status may have changed
+    goToNextOpenStage(await loadCase()); // claim status may have changed too
   }
 
   async function markNotApplicable(reason: string): Promise<void> {
@@ -114,7 +123,7 @@ export function CaseDetailPage({ demo }: { demo: boolean }) {
     }
     setNaOpen(false);
     setNaError("");
-    await loadCase();
+    goToNextOpenStage(await loadCase());
   }
 
   async function reopen(): Promise<void> {
