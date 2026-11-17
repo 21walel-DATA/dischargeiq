@@ -4,7 +4,7 @@ import type { ComparedMedicine } from "@dischargeiq/shared";
 import { directions } from "../format";
 import styles from "./Label.module.css";
 
-export type LabelLook = "plain" | "started" | "stopped" | "changed" | "muted" | "review";
+export type LabelLook = "plain" | "started" | "stopped" | "changed" | "muted" | "review" | "resolved";
 
 type Props = {
   medicine: ComparedMedicine;
@@ -20,6 +20,7 @@ const LOOK_CLASS: Record<LabelLook, string> = {
   changed: styles.bandChanged,
   muted: styles.muted,
   review: styles.review,
+  resolved: styles.muted, // checked review line: solid thin border, faded ink (D-036)
 };
 
 export function MedicineLabel({ medicine, look, highRiskReason, to }: Props) {

@@ -122,7 +122,7 @@ export function MedicineListEditor({ caseId, listType, title, hint, medicines, o
             {fields[key] && (
               <span className={form.error} id={`${idPrefix}-${key}-error`}>
                 <span className={form.errorMark} aria-hidden="true">
-                  !
+                  ×
                 </span>
                 {fields[key]}
               </span>

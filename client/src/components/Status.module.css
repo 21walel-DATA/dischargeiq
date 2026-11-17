@@ -44,3 +44,7 @@
   flex-wrap: wrap;
   gap: var(--space-1) var(--space-3);
 }
+
+/* A checked "Needs review" line (D-036): calm, faded, outlined tick. */
+.resolved { color: var(--color-ink-muted); }
+.resolved .mark { background: transparent; color: var(--color-ink-muted); border: 1px solid var(--color-ink-muted); }

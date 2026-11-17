@@ -196,7 +196,7 @@ function Field(props: { id: string; label: string; hint?: string; error?: string
       {props.error && (
         <span className={form.error} id={`${props.id}-error`}>
           <span className={form.errorMark} aria-hidden="true">
-            !
+            ×
           </span>
           {props.error}
         </span>

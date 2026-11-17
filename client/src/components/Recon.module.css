@@ -86,3 +86,58 @@
 
 /* The stage 1 / stage 2 switch above the comparison. */
 .toggle { margin-bottom: var(--space-4); }
+
+/* Changed values: old struck through, new bold on a violet tint (design-system.md). */
+.was { text-decoration: line-through; color: var(--color-ink-muted); }
+.now { font-weight: 700; background: var(--color-changed-tint); color: var(--color-changed); padding: 0 var(--space-1); }
+
+/* Signature element: the "Checked by" initials box (design-system.md, D-036). */
+.checkedBy {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-small);
+  margin-top: var(--space-1);
+}
+
+.box {
+  width: 52px;
+  height: var(--touch-min);
+  border: 2px solid var(--color-ink);
+  border-radius: var(--radius-box);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-label);
+  font-stretch: var(--font-label-stretch);
+  font-weight: 700;
+  font-size: var(--text-h3);
+  background: var(--color-label);
+  color: var(--color-ink);
+  animation: ink-in 150ms ease-out; /* the only motion: initials appearing (reduced motion turns it off) */
+}
+
+.boxEmpty { border-style: dashed; cursor: pointer; animation: none; }
+.boxEmpty:hover { background: var(--color-review); }
+.required { font-weight: 700; }
+.time { color: var(--color-ink-muted); }
+
+.undo {
+  background: none;
+  border: 0;
+  padding: var(--space-2);
+  min-height: var(--touch-min);
+  font: inherit;
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+@keyframes ink-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.notesGap { margin-top: var(--space-6); }

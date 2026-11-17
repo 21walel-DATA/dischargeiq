@@ -152,6 +152,11 @@
 }
 
 .stage {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--color-ink);
+  cursor: pointer;
   display: grid;
   grid-template-columns: 32px 1fr;
   gap: var(--space-1) var(--space-3);
@@ -176,6 +181,8 @@
 
 .stageDone .stageNum { background: var(--color-ink); color: var(--color-on-dark); }
 .stageCurrent { border: 2px solid var(--color-ink); }
+.stage:hover { border-color: var(--color-rule); }
+.stages li { display: flex; }
 .stageTitle { font-weight: 700; }
 .stageState { font-size: var(--text-small); color: var(--color-ink-muted); }
 

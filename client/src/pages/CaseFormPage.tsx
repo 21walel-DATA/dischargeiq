@@ -302,7 +302,7 @@ function FieldError({ id, text }: { id: string; text: string }) {
   return (
     <span className={form.error} id={id}>
       <span className={form.errorMark} aria-hidden="true">
-        !
+        ×
       </span>
       {text}
     </span>
