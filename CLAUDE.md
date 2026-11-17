@@ -33,7 +33,7 @@ The demo shows a polished prototype, then explains how it would work in a real N
 ## Timeline (overrides any dates in course files)
 **Ignore all course calendar dates and week numbers in the TFS files, lesson plans or README templates.**
 The owner's timeline: planning started 3 Nov 2026. **Submission deadline: Wed 18 Nov 2026, 09:00**
-(target: submit by 08:30). **Feature freeze: Tue 17 Nov, 22:00.** After the freeze: testing, fixes and
+(target: submit by 08:30). **Feature freeze: Tue 17 Nov, 23:00** (moved from 22:00, D-054). After the freeze: testing, fixes and
 handover docs only. Wed 06:00–08:30: final checks only, no new features. Work fast, but **never rush
 security or testing.** Follow the sprint plan below.
 
@@ -132,8 +132,12 @@ security or testing.** Follow the sprint plan below.
   DMS stage tracker (status per stage, incl. "not applicable") + autosave, stage 2 re-check (same engine),
   claim-ready summary (copy buttons, no MYS submission), claims & stats page, rule-based high-risk flags
   (rules in a code file), NHS number guard, Swagger API docs.
-- **Phase 4, Tue 22:00 → ~01:00: test and hand over** (**feature freeze at 22:00**)
-  Security review (`security-review`), Lighthouse + axe, **owner reviews and adjusts the hazard-log risk
+- **Optional extra, Tue 15:30 → 21:00 (D-054): PDF/photo letter upload** on branch `feat/letter-upload`.
+  Upload → AI transcribes to text only → pharmacist checks the text (`[unclear]` blocks reading) → existing
+  letter save (NHS guard) and "Read letter". File held in memory only, never stored. **Hard stop 21:00:** if it
+  isn't working on the live site by then, it stays on the branch and goes on the "what's next" slide.
+- **Phase 4, Tue 23:00 → ~01:30: test and hand over** (**feature freeze at 23:00**, D-054)
+  Security review (`security-review`, done 17 Nov), Lighthouse + axe (done 17 Nov, D-053), **owner reviews and adjusts the hazard-log risk
   scores** (`docs/hazard-log.md`; first draft by Claude Code) and updates the controls to match the build,
   run `docs/test-sheet.md` on the live URL (desktop + phone, private window), fix, retest, record pass rates. README, client guide, developer notes, AI usage log, update
   `architecture.md` to match the build, clean code, tick `docs/requirements-checklist.md`.
@@ -145,7 +149,7 @@ security or testing.** Follow the sprint plan below.
 (hand-written endpoint table in the README) → high-risk flags → stage 2 re-check → claim summary
 (keep a simple "claim ready" status).
 **Never cut:** designs-before-code, auth + ownership checks, reconciliation tests, error handling, live deploy, README.
-**Later / "what's next" slide:** PDF/photo upload, dm+d matching, audit log, FHIR export, redaction demo,
+**Later / "what's next" slide:** PDF/photo upload (only if it misses the 21:00 hard stop), dm+d matching, audit log, FHIR export, redaction demo,
 Agentation, error monitoring, Playwright E2E, Google Cloud Run, electronic referral intake (PharmOutcomes),
 MYS submission via the NHSBSA supplier API once available.
 

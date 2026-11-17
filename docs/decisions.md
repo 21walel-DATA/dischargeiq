@@ -736,3 +736,25 @@ Template:
 - How I'd explain it in 30 seconds: "I ran Google's Lighthouse and the axe checker on every main page on phone and
   desktop. One real issue: a button in the wrong place inside a list. I fixed it and reran: 100 on all of them. I also
   simulated colour blindness: every status has a word and a shape, so it never relies on colour."
+
+## D-054 — PDF/photo letter upload approved (hard stop 21:00); feature freeze moved to 23:00
+- Date: 2026-11-17
+- Decision (owner): Build the brief's Tier 2 "upload PDF or photo of the letter" as the one optional extra, as
+  **upload → AI transcribes to text only → pharmacist checks the text → existing letter save and "Read letter"**.
+  - The AI answer is `{ letter_text }`, checked with a shared Zod schema (max 20,000 characters, like a pasted letter).
+  - The NHS number guard runs on the transcript on the server (real number → discarded) and again on save.
+  - Anything the AI can't read is written as `[unclear]`; "Read letter" is blocked until none remain.
+  - The file is held in memory only (never stored), max 5 MB, type checked from its first bytes (PDF, PNG, JPEG),
+    behind login + ownership + the extract rate limit, with a "this letter is synthetic" tick box.
+  - Mock mode recognises synthetic demo letter files by their SHA-256 fingerprint; any other file is refused politely.
+  - Built on branch `feat/letter-upload`; server changes are additive.
+- **Hard stop 21:00:** if it isn't working on the live site by then, it stays on the branch and goes on the
+  "what's next" slide.
+- **Feature freeze moved from 22:00 to 23:00** (owner); Phase 4 now runs 23:00 → ~01:30. Submission deadline unchanged.
+- Hazard log: new H10 "real letter uploaded by mistake" (privacy).
+- Why: Pharmacists receive letters as PDFs and printouts, so typing or pasting is the slowest step left. Reusing
+  the paste path means every existing safety check still applies, and the pharmacist approves the text first.
+- Alternatives considered: AI reads medicines straight from the image (skips the text check, and the
+  source-sentence check would have nothing to compare against); a local PDF text library for typed PDFs (a second
+  code path and a dependency, and scanned PDFs still need AI); storing files in Supabase Storage (not needed, and more
+  patient data at rest).
