@@ -23,7 +23,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.16.0",
-    "swagger-ui-express": "^5.0.1",
+    "swagger-ui-dist": "^5.35.0",
     "zod": "^4.1.0"
   },
   "devDependencies": {
@@ -33,7 +33,6 @@
     "@types/node": "^24.0.0",
     "@types/pg": "^8.15.0",
     "@types/supertest": "^6.0.3",
-    "@types/swagger-ui-express": "^4.1.8",
     "supertest": "^7.1.0",
     "tsup": "^8.5.0",
     "tsx": "^4.20.0",

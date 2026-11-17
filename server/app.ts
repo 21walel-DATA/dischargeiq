@@ -2,9 +2,8 @@
 import express from "express";
 import helmet from "helmet";
 import cookieParser from "cookie-parser";
-import swaggerUi from "swagger-ui-express";
 import { createApiRouter } from "./routes";
-import { openApiDocument } from "./docs/openapi";
+import { createDocsRouter } from "./docs/docs.routes";
 import { notFound } from "./middleware/notFound";
 import { errorHandler } from "./middleware/errorHandler";
 
@@ -21,10 +20,7 @@ export function createApp(): express.Express {
   app.use(cookieParser()); // reads the login cookie
 
   // API documentation (D-050): the interactive Swagger page and the raw OpenAPI file.
-  app.get("/api/docs.json", (_req, res) => {
-    res.json(openApiDocument);
-  });
-  app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(openApiDocument, { customSiteTitle: "DischargeIQ API" }));
+  app.use("/api", createDocsRouter());
 
   app.use("/api", createApiRouter());
 

@@ -31,8 +31,11 @@ describe("API documentation", () => {
   });
 
   it("serves the Swagger page", async () => {
-    const res = await request(app).get("/api/docs/");
+    // No trailing slash and no redirect: Vercel's /api rewrite doesn't forward "/api/docs/".
+    const res = await request(app).get("/api/docs");
     expect(res.status).toBe(200);
     expect(res.text).toContain("swagger-ui");
+    const assets = await request(app).get("/api/docs/assets/swagger-ui-bundle.js");
+    expect(assets.status).toBe(200);
   });
 });
