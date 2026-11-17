@@ -14,6 +14,7 @@ import { CaseFormPage } from "./pages/CaseFormPage";
 import { CaseDetailPage } from "./pages/CaseDetailPage";
 import { MedicinePage } from "./pages/MedicinePage";
 import { DemoCasesPage } from "./pages/DemoCasesPage";
+import { ClaimsPage } from "./pages/ClaimsPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 const rootElement = document.getElementById("root");
@@ -41,6 +42,7 @@ createRoot(rootElement).render(
             <Route path="cases/new" element={<RequireAuth><CaseFormPage /></RequireAuth>} />
             <Route path="cases/:id" element={<RequireAuth><CaseDetailPage demo={false} /></RequireAuth>} />
             <Route path="cases/:id/edit" element={<RequireAuth><CaseFormPage /></RequireAuth>} />
+            <Route path="claims" element={<RequireAuth><ClaimsPage /></RequireAuth>} />
             <Route path="cases/:id/medicines/:medicineId" element={<RequireAuth><MedicinePage demo={false} /></RequireAuth>} />
 
             <Route path="*" element={<NotFoundPage />} />

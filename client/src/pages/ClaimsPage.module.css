@@ -1,0 +1,63 @@
+.summary { font-size: var(--text-h3); line-height: 1.5; max-width: 60ch; }
+
+.columns {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-5);
+  align-items: start;
+}
+
+.selected td { background: var(--color-brand-tint); }
+
+/* The case name in the table selects that case's claim summary. */
+.rowButton {
+  background: none;
+  border: 0;
+  padding: 0;
+  min-height: var(--touch-min);
+  font: inherit;
+  font-weight: 700;
+  color: var(--color-brand);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.copyList { margin: 0 0 var(--space-4); }
+
+.copyRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0 var(--space-3);
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-backing-edge);
+}
+
+.copyRow dt { font-size: var(--text-small); color: var(--color-ink-muted); }
+.copyRow dd { margin: 0; font-weight: 700; }
+.copyRow button { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+
+.deadline { margin-bottom: var(--space-2); }
+
+.found { margin-top: var(--space-7); }
+
+.bars { max-width: 640px; }
+
+/* Bars use ink only: these are counts, not clinical statuses, so no status colours (design-system.md). */
+.bar {
+  display: grid;
+  grid-template-columns: 7.5em 1fr 2.5em;
+  gap: var(--space-3);
+  align-items: center;
+  margin-bottom: var(--space-2);
+  font-size: var(--text-small);
+}
+
+.track { height: 14px; background: var(--color-backing); }
+.fill { display: block; height: 14px; background: var(--color-ink); }
+.count { text-align: right; }
+.highRisk { margin: var(--space-3) 0 0; }
+
+@media (min-width: 900px) {
+  .columns { grid-template-columns: 3fr 2fr; }
+}

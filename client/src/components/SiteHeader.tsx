@@ -18,10 +18,11 @@ export function SiteHeader() {
           <span className={styles.mark} aria-hidden="true" />
           DischargeIQ
         </Link>
-        {/* Claims & stats arrives in Phase 3. The wordmark links home. */}
+        {/* The wordmark links home. */}
         <nav className={styles.nav} aria-label="Main">
           <NavLink to="/demo">Demo cases</NavLink>
           {user && <NavLink to="/cases">My cases</NavLink>}
+          {user && <NavLink to="/claims">Claims</NavLink>}
           {/* While the first /me check runs, show neither option so the header doesn't flicker. */}
           {!checking && !user && <NavLink to="/login">Log in</NavLink>}
           {user && (
