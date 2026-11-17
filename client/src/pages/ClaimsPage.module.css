@@ -26,16 +26,21 @@
 .copyList { margin: 0 0 var(--space-4); }
 
 .copyRow {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 0 var(--space-3);
   padding: var(--space-3) 0;
   border-bottom: 1px solid var(--color-backing-edge);
 }
 
 .copyRow dt { font-size: var(--text-small); color: var(--color-ink-muted); }
-.copyRow dd { margin: 0; font-weight: 700; }
-.copyRow button { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+/* Value on the left, its Copy button on the right of the same line. */
+.copyRow dd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin: 0;
+  font-weight: 700;
+}
+.copyRow button { flex: none; }
 
 .deadline { margin-bottom: var(--space-2); }
 

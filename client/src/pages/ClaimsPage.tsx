@@ -53,10 +53,13 @@ function CopyRow({ label, value }: { label: string; value: string }) {
   return (
     <div className={styles.copyRow}>
       <dt>{label}</dt>
-      <dd className="num">{value}</dd>
-      <button className={`${form.buttonSecondary} ${form.buttonSmall}`} type="button" onClick={copy} aria-label={`Copy ${label}`}>
-        {copied ? "Copied" : "Copy"}
-      </button>
+      {/* The button sits INSIDE the <dd>: a <dl> group may only hold <dt> and <dd> (axe "definition-list"). */}
+      <dd>
+        <span className="num">{value}</span>
+        <button className={`${form.buttonSecondary} ${form.buttonSmall}`} type="button" onClick={copy} aria-label={`Copy ${label}`}>
+          {copied ? "Copied" : "Copy"}
+        </button>
+      </dd>
     </div>
   );
 }
