@@ -789,3 +789,23 @@ Template:
   out as text, and if it can't read something, like a smudged dose, it writes 'unclear' instead of guessing. You
   see the photo next to the text, fix anything, tick that you've checked it, and only then does the normal
   letter reader run. The file is never stored."
+
+## D-056 — Server logs carry only safe error summaries
+- Date: 2026-11-17
+- Decision: Found in the clean-code pass: `errorHandler.ts` logged whole error objects, and the health check and
+  `migrate.ts` printed full database errors. A broken-JSON request carries its raw body (a mistyped login could put
+  a password in the log, and Node's JSON error message quotes it); a database error's `detail` can quote values such
+  as an email; a connection error's text can include parts of the connection string (D-041). Now a small helper,
+  `server/services/logSafe.ts` (`errorCode`), logs the error's name and code; the error handler adds the route and
+  the stack frames (not the message); broken-JSON and too-large requests are logged by type only; `migrate.ts`
+  prints only our own "Migration … failed" message plus the code.
+- Checked: 3 new tests (196 in total) prove a password in a broken body and an email in a database error never
+  reach the log, and that `errorCode` never includes a message.
+- Why: golden rules 2, 13 and 14: users already saw no details; the server log must not become a second place where
+  passwords, personal data or connection details end up.
+- Alternatives considered: a logging library with redaction rules (pino) — more to configure and explain for three
+  call sites; keep logging everything and rely on Render's logs being private (they are, but the GitHub Actions
+  log of a public repository is not).
+- How I'd explain it in 30 seconds: "Users never see error details, but I also checked what my server writes to its
+  own logs. Some errors carried the request body, which could be a password, so now the log records only the type
+  of error and where it happened, and a test proves a password can't end up there."
