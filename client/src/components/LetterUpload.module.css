@@ -1,0 +1,15 @@
+/* Letter upload (D-054). Quiet on purpose: the check view on the case form is the important part. Tokens only. */
+
+.upload {
+  margin-top: var(--space-5);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-backing-edge);
+}
+
+.title { margin: 0 0 var(--space-1); font-size: var(--text-h3); }
+
+/* The browser's own file button, given our control height. */
+.file { padding: var(--space-2); }
+
+.live { margin: var(--space-2) 0 0; font-size: var(--text-small); color: var(--color-ink-muted); }
+.live:empty { margin: 0; } /* stays in the page (not display: none) so screen readers still announce it */

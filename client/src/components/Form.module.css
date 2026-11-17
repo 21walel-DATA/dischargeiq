@@ -94,6 +94,26 @@
 
 .fullWidth { width: 100%; }
 
+/* A tick box with its words (D-054). The whole row is the 44 px touch target; the box itself is drawn larger
+   than the browser default and takes the brand colour when ticked. */
+.check {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  min-height: var(--touch-min);
+  padding: var(--space-2) 0;
+  cursor: pointer;
+}
+
+.check input {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin: 1px 0 0;
+  accent-color: var(--color-brand);
+  cursor: pointer;
+}
+
 /* A whole-form message at the top, e.g. "Email or password is incorrect". */
 .alert {
   border-left: 4px solid var(--color-stopped);

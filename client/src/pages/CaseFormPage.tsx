@@ -2,9 +2,11 @@
 // New: referral details + letter → "Create case". Edit: the same, plus the three medicine lists and "Read the letter".
 import { useCallback, useEffect, useRef, useState, type FormEvent, type ReactElement } from "react";
 import { Link, useNavigate, useParams } from "react-router";
-import { caseCreateSchema, type AiMode, type CaseCreate, type CaseDetail } from "@dischargeiq/shared";
+import { caseCreateSchema, countUnclear, type AiMode, type CaseCreate, type CaseDetail } from "@dischargeiq/shared";
 import { createCase, deleteCase, extractFromLetter, getAiMode, getCase, updateCase } from "../api/cases";
 import { MedicineListEditor } from "../components/MedicineListEditor";
+import { LetterUpload, type Transcribed } from "../components/LetterUpload";
+import { StatusMark } from "../components/StatusMark";
 import { fromLocalInputValue, toLocalInputValue } from "../format";
 import form from "../components/Form.module.css";
 import page from "../components/Page.module.css";
@@ -34,7 +36,35 @@ export function CaseFormPage() {
   const [saved, setSaved] = useState("");
   const [busy, setBusy] = useState<"" | "saving" | "reading">("");
   const [aiMode, setAiMode] = useState<AiMode | null>(null);
+  // Letter upload (D-054): the file shown beside the copied-out text, and whether the pharmacist has checked it.
+  const [uploaded, setUploaded] = useState<{ previewUrl: string; isPdf: boolean } | null>(null);
+  const [textChecked, setTextChecked] = useState(false);
   const deleteDialog = useRef<HTMLDialogElement>(null);
+
+  // The preview lives only in this browser tab (an "object URL"); free it when it's replaced or the page closes.
+  useEffect(() => {
+    return () => {
+      if (uploaded) URL.revokeObjectURL(uploaded.previewUrl);
+    };
+  }, [uploaded]);
+
+  function handleTranscribed(result: Transcribed): void {
+    setDraft({ ...draft, letterText: result.letterText });
+    setUploaded({ previewUrl: result.previewUrl, isPdf: result.isPdf });
+    setTextChecked(false);
+    setMessage("");
+    setSaved("");
+  }
+
+  // Reading is blocked until every [unclear] is replaced and an uploaded letter's text has been checked.
+  // The server refuses [unclear] too; the tick box is the pharmacist's own confirmation.
+  const unclear = countUnclear(draft.letterText);
+  const readBlockedBecause =
+    unclear > 0
+      ? `Replace each [unclear] with what the letter says (${unclear} left).`
+      : uploaded && !textChecked
+        ? "Tick the box to confirm you've checked the text against the letter."
+        : "";
 
   // Loads (or reloads) the case. useCallback keeps the same function between renders, so useEffect runs once.
   const load = useCallback(async (): Promise<void> => {
@@ -198,24 +228,54 @@ export function CaseFormPage() {
 
         <section className={page.panel} aria-labelledby="letter-title">
           <h2 id="letter-title">Discharge letter</h2>
-          <div className={form.field}>
-            <label className={form.label} htmlFor="letterText">
-              Paste the discharge letter
-            </label>
-            <span className={form.hint} id="letterText-hint">
-              The letter reader lists the discharge medicines and quotes the sentence each one came from. You check every
-              line before anything is approved.
-            </span>
-            <textarea
-              className={`${form.input} ${styles.letter}`}
-              id="letterText"
-              value={draft.letterText}
-              onChange={(event) => setDraft({ ...draft, letterText: event.target.value })}
-              aria-invalid={fields.letterText ? true : undefined}
-              aria-describedby={`letterText-hint${fields.letterText ? " letterText-error" : ""}`}
-            />
-            {fields.letterText && <FieldError id="letterText-error" text={fields.letterText} />}
+          {uploaded && (
+            <div className={page.notice} role="status">
+              <strong>Copied out from your file.</strong> Check every line against the letter, especially medicine names,
+              doses and units, before reading it. The file itself is not saved.
+            </div>
+          )}
+          <div className={uploaded ? styles.checkView : undefined}>
+            {uploaded && (
+              <figure className={styles.preview}>
+                {uploaded.isPdf ? (
+                  <object className={styles.previewPdf} data={uploaded.previewUrl} type="application/pdf" aria-label="The uploaded letter">
+                    <a href={uploaded.previewUrl} target="_blank" rel="noreferrer">
+                      Open the uploaded PDF
+                    </a>
+                  </object>
+                ) : (
+                  <img className={styles.previewImage} src={uploaded.previewUrl} alt="The uploaded letter" />
+                )}
+                <figcaption className={`${page.small} ${page.muted}`}>Your file, shown in this browser only</figcaption>
+              </figure>
+            )}
+            <div className={form.field}>
+              <label className={form.label} htmlFor="letterText">
+                {uploaded ? "Check the copied-out letter" : "Paste the discharge letter"}
+              </label>
+              <span className={form.hint} id="letterText-hint">
+                {uploaded
+                  ? "Correct anything that differs from the letter. Where it says [unclear], type what the letter says."
+                  : "The letter reader lists the discharge medicines and quotes the sentence each one came from. You check every line before anything is approved."}
+              </span>
+              {unclear > 0 && <StatusMark kind="review" text={`${unclear} ${unclear === 1 ? "part" : "parts"} unclear`} />}
+              <textarea
+                className={`${form.input} ${styles.letter} ${uploaded ? styles.letterTall : ""}`}
+                id="letterText"
+                value={draft.letterText}
+                onChange={(event) => setDraft({ ...draft, letterText: event.target.value })}
+                aria-invalid={fields.letterText ? true : undefined}
+                aria-describedby={`letterText-hint${fields.letterText ? " letterText-error" : ""}`}
+              />
+              {fields.letterText && <FieldError id="letterText-error" text={fields.letterText} />}
+            </div>
           </div>
+          {uploaded && (
+            <label className={form.check}>
+              <input type="checkbox" checked={textChecked} onChange={(event) => setTextChecked(event.target.checked)} />
+              <span>I&apos;ve checked this text against the uploaded letter.</span>
+            </label>
+          )}
           <div className={page.btnRow}>
             {isNew ? (
               <button className={form.button} type="submit" disabled={busy !== ""}>
@@ -223,7 +283,13 @@ export function CaseFormPage() {
               </button>
             ) : (
               <>
-                <button className={form.button} type="button" onClick={handleRead} disabled={busy !== ""}>
+                <button
+                  className={form.button}
+                  type="button"
+                  onClick={handleRead}
+                  disabled={busy !== "" || readBlockedBecause !== ""}
+                  aria-describedby={readBlockedBecause ? "read-blocked" : undefined}
+                >
                   {busy === "reading" ? "Reading the letter…" : "Save and read the letter"}
                 </button>
                 <button className={form.buttonSecondary} type="submit" disabled={busy !== ""}>
@@ -235,11 +301,21 @@ export function CaseFormPage() {
               </>
             )}
           </div>
+          {readBlockedBecause && (
+            <p className={`${page.small} ${styles.after}`} id="read-blocked">
+              {readBlockedBecause}
+            </p>
+          )}
           {!isNew && (
             <p className={`${page.small} ${page.muted} ${styles.after}`}>
               Reading replaces the discharge list below. If the letter can't be read, add the discharge medicines by hand.
               {aiMode === "mock" && " Demo mode recognises the synthetic demo letter only; for other letters, add medicines by hand."}
             </p>
+          )}
+          {isNew ? (
+            <p className={`${page.small} ${page.muted} ${styles.after}`}>To upload a PDF or photo instead, create the case first.</p>
+          ) : (
+            id && <LetterUpload caseId={id} aiMode={aiMode} hasText={draft.letterText !== ""} onTranscribed={handleTranscribed} />
           )}
         </section>
       </form>

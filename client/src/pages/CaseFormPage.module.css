@@ -11,6 +11,35 @@
 
 .after { margin: var(--space-3) 0 0; }
 
+/* Letter upload check view (D-054): the file beside its copied-out text, like checking a label against the
+   prescription. Stacked on phones (file first), side by side on desktop. */
+.checkView {
+  display: grid;
+  gap: var(--space-4);
+  align-items: start;
+}
+
+.preview {
+  margin: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.previewImage,
+.previewPdf {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--color-backing-edge);
+  border-radius: var(--radius-control);
+  background: var(--color-backing);
+}
+
+.previewImage { max-height: 70vh; object-fit: contain; }
+.previewPdf { height: 60vh; }
+
+.letterTall { min-height: 60vh; }
+
 @media (min-width: 900px) {
   .metaGrid { grid-template-columns: 1fr 1fr 1.5fr; }
+  .checkView { grid-template-columns: 1fr 1fr; }
 }

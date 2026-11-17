@@ -7,6 +7,8 @@ import {
   extractResponseSchema,
   medicineResponseSchema,
   reconciliationResponseSchema,
+  transcribeResponseSchema,
+  type TranscribeResponse,
   type AiMode,
   type CaseCreate,
   type CaseDetail,
@@ -35,10 +37,12 @@ async function send(
 ): Promise<{ ok: true; status: number; body: unknown } | Failure> {
   let response: Response;
   try {
+    // A file (Blob) is sent as it is, labelled with its own type; anything else is sent as JSON.
+    const isFile = body instanceof Blob;
     response = await fetch(url, {
       method,
-      headers: body === undefined ? undefined : { "Content-Type": "application/json" },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      headers: body === undefined ? undefined : { "Content-Type": isFile ? body.type : "application/json" },
+      body: body === undefined ? undefined : isFile ? body : JSON.stringify(body),
     });
   } catch {
     return { ok: false, status: 0, message: CANT_CONNECT, fields: {} };
@@ -116,6 +120,15 @@ export async function extractFromLetter(caseId: string): Promise<({ ok: true } &
   const result = await send("POST", `/api/cases/${encodeURIComponent(caseId)}/extract`);
   if (!result.ok) return result;
   const parsed = extractResponseSchema.safeParse(result.body);
+  return parsed.success ? { ok: true, ...parsed.data } : badAnswer;
+}
+
+// Letter upload (D-054): sends the PDF or photo; gets back the letter as text to check. Nothing is saved yet.
+// `synthetic=confirmed` records that the user ticked "this is a synthetic letter" (the server refuses without it).
+export async function transcribeLetter(caseId: string, file: Blob): Promise<({ ok: true } & TranscribeResponse) | Failure> {
+  const result = await send("POST", `/api/cases/${encodeURIComponent(caseId)}/transcribe?synthetic=confirmed`, file);
+  if (!result.ok) return result;
+  const parsed = transcribeResponseSchema.safeParse(result.body);
   return parsed.success ? { ok: true, ...parsed.data } : badAnswer;
 }
 
