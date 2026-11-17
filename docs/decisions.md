@@ -434,3 +434,42 @@ Template:
 - How I'd explain it in 30 seconds: "I put a tiny version live on the first evening. The browser only ever
   talks to my Vercel site; Vercel quietly forwards API calls to my server in Frankfurt, which talks to the
   database in London. Every push is tested by CI before the server redeploys."
+
+## D-043 — Own auth: bcrypt + JWT cookie, 404 for other users' cases, login rate limit
+- Date: 2026-11-17
+- Decision:
+  - **Passwords:** `bcryptjs` (pure JavaScript, nothing to compile on Windows or Render), cost 10. Minimum 12
+    characters; at most 72 bytes, because bcrypt ignores anything longer, so we refuse it instead of cutting it.
+  - **Session:** a JWT (HS256 only, 8 hours, holds just the user id and role) in a cookie called `diq_session`
+    with `HttpOnly; Secure; SameSite=Lax; Path=/`. `/api/auth/me` checks the user still exists in the database.
+    The server won't start without a `JWT_SECRET` of at least 32 characters.
+  - **Login:** one message for a wrong email or a wrong password, and a dummy bcrypt comparison when the email
+    doesn't exist, so neither the answer nor the response time shows who has an account. Registering logs you
+    in, and the role is always `pharmacist`: a `role` sent from the browser is ignored.
+  - **Rate limits (per IP address, kept in memory):** 10 failed logins per 15 minutes, 10 registrations per hour.
+    `trust proxy` is set to 2 hops (Vercel, then Render) so the limiter sees the visitor's real address.
+  - **Ownership:** `loadOwnedCase` looks the case up with `WHERE id = $1 AND user_id = $2`. If it's someone
+    else's case, or doesn't exist, or the id is malformed, the answer is the same 404. Admins get no way round it.
+  - **Client:** a small React context (`AuthProvider` / `useAuth`) asks `/api/auth/me` when the page loads, so a
+    login survives a refresh. The forms check the same shared Zod schemas as the server.
+- Why: We own every part and can explain it. The cookie flags protect against stolen tokens (XSS) and
+  cross-site requests (CSRF). Answering 404 instead of 403 means nobody can find out whether a case exists.
+  Cost 10 keeps login under 1 s on Render's free CPU (live: about 0.7–1.1 s through Vercel).
+- Alternatives considered: Supabase Auth (less to explain about our own design; D-008); a token in
+  `localStorage` (any XSS bug could read it); server-side sessions in a table (logout takes effect at once, but
+  it's another table and a database lookup on every request; for the sprint, the 8-hour expiry plus the `/me`
+  user check is enough); native `bcrypt` or Argon2id (stronger or faster, but needs native builds; the
+  production path); 403 for other users' cases (it confirms the case exists).
+- Known limits: logging out deletes the cookie, but a copied token stays valid until it expires (up to 8 h).
+  Rate-limit counters reset when the server restarts and aren't shared between instances. Register says when
+  an email is already taken (normal for sign-up; the rate limit slows down anyone trying to collect emails).
+  If the proxy hop count changes, the limiter could count every visitor as one address: retest after any
+  hosting change.
+- Tests: 19 auth tests and 5 ownership tests run against the test database (bad tokens: edited, wrong secret,
+  `alg: none`, expired, deleted user; cookie flags; 429 on the 11th failed login; 403 for the wrong role;
+  404 for another user's case or a malformed id). Live checks: register → /me → wrong password → login →
+  logout → /me returns 401; headless Chrome register → refresh → still logged in; `document.cookie` can't see it.
+- How I'd explain it in 30 seconds: "Passwords are stored only as bcrypt hashes. When you log in, the server
+  puts a signed token in a cookie that JavaScript can't read and that only travels over HTTPS to my own site.
+  Every case route looks up the case together with your user id, so another pharmacist's case simply doesn't
+  exist for you: you get a 404, not 'forbidden'. Login is rate-limited, and tests prove each of these rules."
