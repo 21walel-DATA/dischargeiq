@@ -758,3 +758,34 @@ Template:
   source-sentence check would have nothing to compare against); a local PDF text library for typed PDFs (a second
   code path and a dependency, and scanned PDFs still need AI); storing files in Supabase Storage (not needed, and more
   patient data at rest).
+
+## D-055 — Letter upload built and live (upload → text → pharmacist checks → read)
+- Date: 2026-11-17
+- Decision: Built D-054 as planned and merged it at 15:38, inside the 21:00 hard stop.
+  - API: `POST /api/cases/:id/transcribe` (`server/services/letterFile.service.ts`, `ai.service.ts`
+    `transcribeLetter`). Login, ownership and rate limit run before the file is read; `express.raw` holds the
+    file in memory (4 MB cap, under Vercel's forwarding limit); the type comes from the file's first bytes;
+    Claude gets a `document` block (PDF) or `image` block (photo) with a transcribe-only prompt and must answer
+    `{ letter_text }`; `checkTranscript` applies Zod, the NHS number guard and counts `[unclear]`.
+  - `/extract` refuses a letter that still contains `[unclear]` (server-side, so a page bug can't skip it).
+  - Page: an "Or upload the letter" group under the letter box; after upload the letter section shows the file
+    beside the editable text; "Save and read" stays locked until no `[unclear]` remains AND the pharmacist ticks
+    "I've checked this text against the uploaded letter". Large or HEIC photos are redrawn in the browser as a JPEG
+    (max 2000 px), which also drops hidden photo details such as location. PDFs always get an "Open in a new tab" link
+    (Android Chrome can't show a PDF inside a page).
+  - Demo mode: two synthetic sample files (`client/public/demo-letters/`) recognised by SHA-256; a test keeps the
+    fingerprints in step with the files.
+- Checked: 15 new tests (193 in total). Live site, live Claude: sample PDF copied out in 5.0 s and photo in 4.5 s,
+  word-for-word on every medicine line; reading gave the agreed DMS-0042 comparison. A synthetic photo with the
+  amlodipine dose smudged came back as "Amlodipine increased to [unclear] mg once daily." and reading was refused
+  (400). axe: 0 violations on the check view, phone and desktop; no sideways scrolling at 390 px.
+- Why: The text step keeps every existing safety check (source-sentence check, NHS guard on save, approval gate)
+  working on text the pharmacist has approved, and `[unclear]` turns "the AI guessed a dose" into "the pharmacist
+  types what the letter says".
+- Alternatives considered: AI reads medicines straight from the image (no text for the source-sentence check to
+  compare against); multipart upload with `multer` (a new dependency for one file); base64 inside JSON (a third
+  bigger, and would need the JSON limit raised everywhere).
+- How I'd explain it in 30 seconds: "You can now upload a PDF or a photo of the letter. The AI only copies it
+  out as text, and if it can't read something, like a smudged dose, it writes 'unclear' instead of guessing. You
+  see the photo next to the text, fix anything, tick that you've checked it, and only then does the normal
+  letter reader run. The file is never stored."

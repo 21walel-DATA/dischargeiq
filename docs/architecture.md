@@ -212,7 +212,10 @@ erDiagram
 **Cases** (logged in, own cases only)
 - `GET /cases` (filter by stage/claim status, pagination) · `POST /cases` (also creates the 3 stage rows) · `GET /cases/:id`
 - `PATCH /cases/:id` (also used by autosave) · `DELETE /cases/:id`
-- `POST /cases/:id/extract` — letter text → AI extraction → discharge list
+- `POST /cases/:id/extract` — letter text → AI extraction → discharge list (refused while the letter has `[unclear]` parts)
+- `POST /cases/:id/transcribe?synthetic=confirmed` — PDF/PNG/JPEG body (max 4 MB, memory only, type checked from the
+  file's bytes) → AI copies it out as text → Zod + NHS number guard → text returned for the pharmacist to check;
+  nothing saved (D-054, D-055)
 - `GET /cases/:id/reconciliation?stage=1|2` — computed comparison
 - `PATCH /cases/:id/stages/:stage` — autosave notes, review acknowledgements, set status (`not_applicable` + reason)
 - `POST /cases/:id/stages/:stage/complete` — re-run the comparison; **409 if any `needs_review` line is

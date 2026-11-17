@@ -79,6 +79,23 @@ Started, Stopped, Changed, Unchanged, Needs review, Checked, plus the high-risk 
 Result: no status depends on colour alone (design-system.md rule: word + shape + colour). Stage strip states are
 words ("In progress", "Not started"), so they are unaffected.
 
+## Letter upload (D-054, D-055), live site, 17 Nov 2026
+Run by Claude Code with headless Chrome against the live URL (live Claude), on a copy of DMS-0042 with its letter
+removed. Sample files: `client/public/demo-letters/`.
+
+| # | Check | Expected | Result |
+|---|---|---|---|
+| U1 | Upload without ticking "synthetic" | Refused with a clear message | Pass |
+| U2 | Upload the sample PDF (desktop) | Text copied out; file shown beside it; "Save and read" locked | Pass (5.0 s; every medicine line word for word) |
+| U3 | Tick "I've checked this text", save and read | Comparison as agreed for DMS-0042 | Pass (1 changed, 2 stopped, 1 started, 2 need review, 4 unchanged) |
+| U4 | Upload the sample photo (phone, 390 px) | Same as U2, stacked, no sideways scroll | Pass (4.5 s) |
+| U5 | Synthetic photo with the amlodipine dose smudged | AI writes `[unclear]`; reading refused | Pass ("Amlodipine increased to [unclear] mg once daily."; extract → 400) |
+| U6 | axe on the check view | 0 violations | Pass (desktop and phone) |
+| U7 | Owner: real phone, own photo of a printed sample letter | Works end to end | _to do (owner)_ |
+
+Covered by automated tests instead (`server/tests/transcribe.test.ts`): logged out → 401; another user's case →
+404; wrong type or fake bytes → 415; over 4 MB → 413; real NHS number in a transcript → discarded; nothing saved.
+
 ## Results
 - First run: __ / __ passed = __%
 - After fixes: __ / __ passed = __%
