@@ -79,7 +79,13 @@
   font-weight: 700;
 }
 
-@media (min-width: 900px) {
+@media/* Phones: slightly tighter links so four of them fit a 360 px screen (still 44 px tall). */
+@media (max-width: 899px) {
+  .nav a,
+  .navButton { padding: var(--space-2); }
+}
+
+ (min-width: 900px) {
   .inner { padding: var(--space-3) var(--space-6); }
   .user { display: inline; }
 }
