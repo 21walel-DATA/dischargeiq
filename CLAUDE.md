@@ -33,7 +33,7 @@ The demo shows a polished prototype, then explains how it would work in a real N
 ## Timeline (overrides any dates in course files)
 **Ignore all course calendar dates and week numbers in the TFS files, lesson plans or README templates.**
 The owner's timeline: planning started 3 Nov 2026. **Submission deadline: Wed 18 Nov 2026, 09:00**
-(target: submit by 08:30). **Feature freeze: Tue 17 Nov, 23:00** (moved from 22:00, D-054). After the freeze: testing, fixes and
+(target: submit by 08:30; **brought forward: submitted Tue 17 Nov evening, D-058**). **Feature freeze: Tue 17 Nov, 23:00** (moved from 22:00, D-054). After the freeze: testing, fixes and
 handover docs only. Wed 06:00–08:30: final checks only, no new features. Work fast, but **never rush
 security or testing.** Follow the sprint plan below.
 

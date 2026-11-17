@@ -826,3 +826,18 @@ Template:
 - How I'd explain it in 30 seconds: "I designed all eight planned pages before writing any code; git shows that.
   During the build I added three small screens (a status page, a 404 and the upload check view) without designing
   them first, so I drew their wireframes afterwards and labelled them honestly as after-the-code."
+
+## D-058 — Submit on Tue 17 Nov evening, with a PDF submission pack
+- Date: 2026-11-17
+- Decision: the owner submits on Google Classroom tonight (Tue 17 Nov) instead of Wed 08:30. A submission pack
+  goes in `docs/submission/`: a 2-page summary, and PDFs of the brief, the architecture and all page designs
+  (one page per screen; the three screens drawn after the code are labelled as such, D-057). The owner deletes
+  their own test accounts from the live database before submitting. The Wed 06:00–08:30 slot is no longer needed.
+- Why: everything was tested on the live site (42 / 42 first run) and the last fix (safe AI logs + the F6 test) is
+  green in CI. Submitting early removes the risk of a morning problem; PDFs let a marker read the key documents
+  without opening the repository.
+- Alternatives considered: keep the Wednesday slot for a fresh-eyes check (safer for typos, but the risk of a
+  last-minute change is higher than the benefit); link to the Markdown files only (fine on GitHub, but tables and
+  diagrams are harder to read for a marker working from Classroom).
+- How I'd explain it in 30 seconds: "Once the live tests all passed I froze it and submitted, with a short summary
+  and PDFs of the brief, architecture and designs, so the marker can see everything without cloning the repo."
