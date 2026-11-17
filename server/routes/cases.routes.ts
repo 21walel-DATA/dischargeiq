@@ -19,6 +19,7 @@ import { loadOwnedCase } from "../middleware/loadOwnedCase";
 import { loadOwnedMedicine } from "../middleware/loadOwnedMedicine";
 import { loadDemoCase } from "../middleware/loadDemoCase";
 import { createExtractLimiter } from "../middleware/rateLimit";
+import { getMyClaimSummary, getMyClaims, getMyStats, patchStage, postCompleteStage, postMarkClaimed } from "../controllers/stages.controller";
 
 // Golden rule 12: every route with a case or medicine id passes through requireAuth THEN an ownership check.
 export function createCasesRouter(): Router {
@@ -33,6 +34,14 @@ export function createCasesRouter(): Router {
   router.post("/cases/:id/medicines", requireAuth, loadOwnedCase, addMyMedicine);
   router.post("/cases/:id/extract", requireAuth, createExtractLimiter(), loadOwnedCase, extractFromLetter);
   router.get("/cases/:id/reconciliation", requireAuth, loadOwnedCase, getReconciliation);
+
+  // DMS stage tracker and claims (Phase 3, D-048). Own cases only.
+  router.patch("/cases/:id/stages/:stage", requireAuth, loadOwnedCase, patchStage);
+  router.post("/cases/:id/stages/:stage/complete", requireAuth, loadOwnedCase, postCompleteStage);
+  router.get("/cases/:id/claim-summary", requireAuth, loadOwnedCase, getMyClaimSummary);
+  router.post("/cases/:id/mark-claimed", requireAuth, loadOwnedCase, postMarkClaimed);
+  router.get("/claims", requireAuth, getMyClaims);
+  router.get("/stats", requireAuth, getMyStats);
 
   router.patch("/medicines/:id", requireAuth, loadOwnedMedicine, updateMyMedicine);
   router.delete("/medicines/:id", requireAuth, loadOwnedMedicine, deleteMyMedicine);

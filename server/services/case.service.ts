@@ -1,7 +1,7 @@
 // Cases (the brief's "collections"): create, read, update, delete, plus the public demo cases.
 // Ownership is checked BEFORE these functions run (loadOwnedCase, D-043), so they take an already-checked case id.
 // Every query is parameterised ($1, $2…): values never become part of the SQL text.
-import type { CaseCreate, CaseDetail, CaseSummary, CaseUpdate, DmsStage, Medicine } from "@dischargeiq/shared";
+import { initials, type CaseCreate, type CaseDetail, type CaseSummary, type CaseUpdate, type DmsStage, type Medicine } from "@dischargeiq/shared";
 import { getPool } from "../db/pool";
 
 // `AS "camelCase"` renames each column so the rows already match the shared types.
@@ -14,10 +14,6 @@ export const MEDICINE_COLUMNS = `
   id, case_id AS "caseId", list_type AS "listType", name, strength, form, dose, frequency, route,
   source_text AS "sourceText", letter_status AS "letterStatus", ai_confidence AS "aiConfidence",
   edited_by_user AS "editedByUser"`;
-
-const STAGE_COLUMNS = `
-  stage, status, not_applicable_reason AS "notApplicableReason", completed_at AS "completedAt", notes,
-  acknowledged_review_keys AS "acknowledgedReviewKeys"`;
 
 // One row per case, with its three stage statuses gathered into a small JSON list.
 const SUMMARY_QUERY = `
@@ -56,10 +52,7 @@ export async function getCaseDetail(caseId: string): Promise<CaseDetail | null> 
     `SELECT ${MEDICINE_COLUMNS} FROM medicines WHERE case_id = $1 ORDER BY list_type, created_at, name`,
     [caseId],
   );
-  const stages = await pool.query<DmsStage>(`SELECT ${STAGE_COLUMNS} FROM dms_stages WHERE case_id = $1 ORDER BY stage`, [
-    caseId,
-  ]);
-  return { ...row, medicines: medicines.rows, stages: stages.rows };
+  return { ...row, medicines: medicines.rows, stages: await getStages(caseId) };
 }
 
 // The result of creating a case: its id, or "referenceTaken" (the same user already used that reference).
@@ -163,4 +156,30 @@ export async function copyDemoCase(demoCaseId: string, userId: string): Promise<
     }
   }
   return null;
+}
+
+// The three stages with who completed them and who checked each "Needs review" line (D-048).
+export async function getStages(caseId: string): Promise<DmsStage[]> {
+  const pool = getPool();
+  type StageRow = Omit<DmsStage, "completedByInitials" | "acknowledgements"> & { completedByName: string | null };
+  const stages = await pool.query<StageRow>(
+    `SELECT s.stage, s.status, s.not_applicable_reason AS "notApplicableReason", s.completed_at AS "completedAt",
+            s.notes, u.display_name AS "completedByName"
+     FROM dms_stages s LEFT JOIN users u ON u.id = s.completed_by
+     WHERE s.case_id = $1 ORDER BY s.stage`,
+    [caseId],
+  );
+  const acks = await pool.query<{ stage: number; key: string; byName: string; at: string; note: string | null }>(
+    `SELECT a.stage, a.review_key AS key, u.display_name AS "byName", a.acknowledged_at AS at, a.note
+     FROM review_acknowledgements a JOIN users u ON u.id = a.acknowledged_by
+     WHERE a.case_id = $1 ORDER BY a.acknowledged_at`,
+    [caseId],
+  );
+  return stages.rows.map(({ completedByName, ...stage }) => ({
+    ...stage,
+    completedByInitials: completedByName ? initials(completedByName) : null,
+    acknowledgements: acks.rows
+      .filter((a) => a.stage === stage.stage)
+      .map((a) => ({ key: a.key, byInitials: initials(a.byName), byName: a.byName, at: a.at, note: a.note })),
+  }));
 }

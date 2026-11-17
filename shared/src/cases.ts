@@ -2,6 +2,7 @@ import { z } from "zod";
 import { containsRealNhsNumber, REAL_NHS_NUMBER_MESSAGE } from "./nhsNumber";
 import { letterStatusSchema, reconciliationLineSchema } from "./reconciliation";
 import { aiModeSchema } from "./extraction";
+import { acknowledgementSchema } from "./stages";
 
 // ---- Field rules shared by the forms and the server -----------------------------------------------------------
 
@@ -96,7 +97,8 @@ export const dmsStageSchema = z.object({
   notApplicableReason: z.string().nullable(),
   completedAt: z.string().nullable(),
   notes: z.string().nullable(),
-  acknowledgedReviewKeys: z.array(z.string()),
+  completedByInitials: z.string().nullable(),
+  acknowledgements: z.array(acknowledgementSchema), // "Checked by" for this stage's review lines (D-048)
 });
 export type DmsStage = z.infer<typeof dmsStageSchema>;
 

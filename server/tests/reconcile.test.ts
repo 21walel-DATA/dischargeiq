@@ -612,3 +612,40 @@ describe("DMS-0047 post-operative opioid", () => {
     expect(named(lines, "Atorvastatin").changeType).toBe("unchanged");
   });
 });
+
+// ---- Stage 2 re-check (owner decision D-048): every difference needs the pharmacist ---------------------------------
+
+describe("stage 2: new prescription vs discharge list", () => {
+  const STAGE_2 = { beforeListName: "discharge list", afterListName: "new prescription", flagEveryDifference: true } as const;
+  const DIFFERS = "The new prescription differs from the discharge list: check with the prescriber.";
+
+  it("catches the GP prescription that ignores the hospital's change (amlodipine 10 mg back to 5 mg)", () => {
+    const line = only(
+      reconcile(
+        [med("Amlodipine", { strength: "10 mg", frequency: "once daily" })],
+        [med("Amlodipine", { strength: "5 mg", frequency: "once daily" })],
+        STAGE_2,
+      ),
+    );
+    expect(line.changeType).toBe("changed");
+    expect(line.changeDetails).toEqual(["Strength 10 mg → 5 mg"]);
+    expect(line.needsReview).toBe(true);
+    expect(line.reviewReasons).toContain(DIFFERS);
+  });
+
+  it("a stopped medicine that reappears on the prescription is flagged", () => {
+    const line = only(reconcile([], [med("Naproxen", { strength: "500 mg" })], STAGE_2));
+    expect(line.changeType).toBe("started");
+    expect(line.reviewReasons).toContain(DIFFERS);
+  });
+
+  it("a matching prescription has nothing to check", () => {
+    const line = only(reconcile([med("Lansoprazole", { strength: "30 mg" })], [med("Lansoprazole", { strength: "30 mg" })], STAGE_2));
+    expect(line.needsReview).toBe(false);
+  });
+
+  it("stage 1 does not use this rule", () => {
+    const line = only(reconcile([med("Amlodipine", { strength: "5 mg" })], [med("Amlodipine", { strength: "10 mg" })]));
+    expect(line.needsReview).toBe(false);
+  });
+});

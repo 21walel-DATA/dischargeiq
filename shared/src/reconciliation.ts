@@ -39,5 +39,6 @@ export const reconciliationLineSchema = z.object({
   reviewReasons: z.array(z.string()),
   highRisk: z.boolean(),
   highRiskReason: z.string().nullable(),
+  highRiskCategory: z.string().nullable(), // e.g. "Anticoagulant" (APINCHS group), for the stats page
 });
 export type ReconciliationLine = z.infer<typeof reconciliationLineSchema>;

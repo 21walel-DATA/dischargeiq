@@ -342,9 +342,13 @@ export type ReconcileOptions = {
   // What the "after" list is called in messages. Stage 1: "discharge letter"; stage 2: "new prescription".
   afterListName?: "discharge letter" | "new prescription";
   beforeListName?: "pre-admission list" | "discharge list";
+  // Stage 2 (owner decision D-048): any difference between the discharge list and the new prescription may be a
+  // prescribing error (e.g. the GP ignored the hospital's change), so every non-UNCHANGED line needs review.
+  flagEveryDifference?: boolean;
 };
 
 const LOW_CONFIDENCE = 0.7;
+const DIFFERS_REASON = "The new prescription differs from the discharge list: check with the prescriber.";
 const DUPLICATE_REASON = "Same medicine listed more than once: check which lines go together.";
 const ORDER = { stopped: 0, started: 1, changed: 2, unchanged: 3 };
 
@@ -385,6 +389,9 @@ export function reconcile(
     extraReasons: string[],
   ): void {
     const reasons = [...comparison.reviewReasons, ...extraReasons];
+    if (options.flagEveryDifference && changeType !== "unchanged") {
+      reasons.unshift(DIFFERS_REASON);
+    }
     if (to && !to.med.sourceFound) {
       reasons.push("The quoted sentence isn't in the letter: check this line against the letter.");
     }
@@ -405,6 +412,7 @@ export function reconcile(
       reviewReasons: reasons,
       highRisk: category !== null,
       highRiskReason: category ? `High-risk medicine (${category})` : null,
+      highRiskCategory: category,
     });
   }
 

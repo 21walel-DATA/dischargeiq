@@ -33,5 +33,6 @@ export function compareCase(detail: CaseDetail, stage: 1 | 2): ReconciliationLin
   return reconcile(stillTaking, list("new_prescription"), {
     beforeListName: "discharge list",
     afterListName: "new prescription",
+    flagEveryDifference: true,
   });
 }
