@@ -63,8 +63,9 @@ Everything deploys from `main`.
 4. Check: https://dischargeiq-pied.vercel.app/api/health returns `{"status":"ok","database":"ok"}`.
 
 The free Render instance sleeps when idle (first request up to a minute) and the free Supabase project pauses after
-a week without activity. `/api/health` runs `SELECT 1`, so pinging it keeps both awake; open the app a few minutes
-before a demo.
+a week without activity. `/api/health` runs `SELECT 1`, so pinging it keeps both awake: an **UptimeRobot** monitor
+(owner's account) calls https://dischargeiq-pied.vercel.app/api/health every 5 minutes and alerts if it fails.
+Still open the app a few minutes before a demo.
 
 **Rolling back:** redeploy the previous deploy in the Render / Vercel dashboards, or `git revert` the commit and
 push. Migrations are forward-only, so a rollback must not depend on undoing one (see below).

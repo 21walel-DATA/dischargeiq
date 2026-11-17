@@ -17,7 +17,7 @@ claim process was too convoluted.
 - **API docs (Swagger):** https://dischargeiq-pied.vercel.app/api/docs (OpenAPI file: `/api/docs.json`)
 - **API health:** https://dischargeiq-api-nr30.onrender.com/api/health
 
-The free API host sleeps when idle: the first request after a quiet spell can take up to a minute.
+An uptime monitor calls `/api/health` every 5 minutes, which keeps the free API host and database awake.
 
 ## Screenshots
 

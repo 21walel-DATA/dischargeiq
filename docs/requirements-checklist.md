@@ -33,9 +33,11 @@ Distinction in at least three. **We aim for Distinction in all five.**
 - [x] Pass: working app using an API; code in GitHub; live
 - [x] Merit: **own API and database; users, collections (cases) and items (medicines) all work;
       small, regular commits**
-- [ ] Distinction: **live and reliable**; at least one extra → extras done: 196 automated tests, Swagger API docs,
-      claims and stats, PDF/photo upload. **Not yet met: "reliable".** The free Render API sleeps when idle (first
-      request up to a minute) and the planned uptime ping on `/api/health` has not been confirmed as set up
+- [x] Distinction: **live and reliable**; at least one extra → extras: 196 automated tests, Swagger API docs,
+      claims and stats, PDF/photo upload. Reliable: an UptimeRobot monitor checks
+      https://dischargeiq-pied.vercel.app/api/health every 5 minutes (status Up, set up by the owner 17 Nov). That
+      route goes through Vercel to the API and runs `SELECT 1` on the database, so it keeps the free Render API and
+      Supabase awake and alerts if any part goes down; CI must pass before every deploy
 
 ## 4. Security and data
 - [x] Pass: no API keys in front-end code or GitHub

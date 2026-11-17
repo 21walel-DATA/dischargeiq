@@ -34,7 +34,7 @@ flowchart LR
   V -->|"rewrite /api/*"| R[Render: Express API]
   R -->|"pg, session pooler, SSL"| S[(Supabase Postgres, London)]
   R -->|"letter text, or an uploaded PDF/photo"| C[Claude API]
-  U[Uptime ping, planned] -.->|"/api/health"| V
+  U[UptimeRobot] -->|"every 5 min: /api/health"| V
 ```
 
 **Core principle — "AI reads, code compares, pharmacist approves":**
@@ -370,9 +370,10 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
   additive changes only.
 - **Hosts:** both install from the repo root (workspaces) and build one package. `client/vercel.json` (Vercel root directory = `client`) rewrites
   `/api/*` to the Render URL.
-- **Keep-alive (planned, not confirmed set up):** an uptime monitor calling `/api/health` every 10 minutes would
-  avoid Render cold starts and Supabase pausing. Until then: open the app 10 minutes before presenting; backup demo
-  video.
+- **Keep-alive:** an UptimeRobot monitor calls `https://dischargeiq-pied.vercel.app/api/health` every 5 minutes
+  (running since 17 Nov). Because it goes through Vercel to the API and the database, it avoids Render cold starts
+  and Supabase pausing, and it alerts if any of the three is down. Still: open the app 10 minutes before presenting;
+  backup demo video.
 
 ## 10. Risks and mitigations
 | Risk | Mitigation |
