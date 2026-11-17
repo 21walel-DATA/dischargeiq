@@ -3,35 +3,40 @@
 *Run on the live URL, on desktop and on a phone, in a private window. Mark Pass/Fail with a note.
 Then fix, retest, and record both pass rates.*
 
+**Owner's run, 17 Nov 2026 (evening):** live URL (live AI), desktop Chrome in a private window + the owner's
+phone, after the feature freeze. First run; no fixes were needed.
+
 ## User flows
 | # | Flow | Desktop | Mobile | Notes |
 |---|---|---|---|---|
-| 1 | Register a new account | | Pass (early check 17 Nov) | Owner's phone, private tab |
-| 2 | Log in | | Pass (early check 17 Nov) | Stayed logged in after refresh (cookie test) |
-| 3 | Log out | | Pass (early check 17 Nov) | |
-| 4 | Browse demo cases (logged out) | | | |
-| 5 | View a demo case detail | | | |
-| 6 | Create a case | | | |
-| 7 | Add, edit and delete a pre-admission medicine | | | |
-| 8 | Paste a discharge letter → AI extraction → comparison shown | | | |
-| 9 | Click a medicine → see its source sentence | | | |
-| 10 | Complete DMS stage 1 (approve) | | | |
-| 11 | Stage 2 re-check with a new prescription | | | |
-| 12 | Complete stage 3 → claim summary shown | | | |
-| 13 | Autosave: edit, refresh the page, change is still there | | | |
-| 14 | Edit and delete a case | | | |
-| 15 | Claims & stats page shows correct numbers | | | |
+| 1 | Register a new account | Pass | Pass | Also passed in an early phone check on 17 Nov (private tab) |
+| 2 | Log in | Pass | Pass | Stayed logged in after refresh (cookie test) |
+| 3 | Log out | Pass | Pass | |
+| 4 | Browse demo cases (logged out) | Pass | Pass | |
+| 5 | View a demo case detail | Pass | Pass | |
+| 6 | Create a case | Pass | Pass | |
+| 7 | Add, edit and delete a pre-admission medicine | Pass | Pass | |
+| 8 | Paste a discharge letter → AI extraction → comparison shown | Pass | Pass | |
+| 9 | Click a medicine → see its source sentence | Pass | Pass | |
+| 10 | Complete DMS stage 1 (approve) | Pass | Pass | |
+| 11 | Stage 2 re-check with a new prescription | Pass | Pass | |
+| 12 | Complete stage 3 → claim summary shown | Pass | Pass | |
+| 13 | Autosave: edit, refresh the page, change is still there | Pass | Pass | |
+| 14 | Edit and delete a case | Pass | Pass | |
+| 15 | Claims & stats page shows correct numbers | Pass | Pass | |
+
+Final phone run, logged out and logged in: **Pass**.
 
 ## Failure cases
 | # | Case | Expected | Result | Notes |
 |---|---|---|---|---|
-| F1 | Wrong password | Clear message, no detail about which part was wrong | | |
-| F2 | Empty or invalid form | Field-level messages, nothing saved | | |
-| F3 | Open or edit **another user's** case via its URL/API | Blocked (403/404) | | |
-| F4 | Page or case that doesn't exist | Friendly 404 page | | |
-| F5 | Logged-out user opens a logged-in page | Redirect to log in | | |
-| F6 | AI returns invalid output / times out | Friendly message + manual entry fallback | | |
-| F7 | Server error | Generic message, no stack trace or details shown | | |
+| F1 | Wrong password | Clear message, no detail about which part was wrong | Pass | Generic message |
+| F2 | Empty or invalid form | Field-level messages, nothing saved | Pass | Form blocked |
+| F3 | Open or edit **another user's** case via its URL/API | Blocked (403/404) | Pass | Shows "Not found" (404 by design: doesn't confirm the case exists) |
+| F4 | Page or case that doesn't exist | Friendly 404 page | Pass | "Page not found" |
+| F5 | Logged-out user opens a logged-in page | Redirect to log in | Pass | |
+| F6 | AI returns invalid output / times out | Friendly message + manual entry fallback | Automated, partly | Not forced on the live site. Tests cover: an invalid or unreadable transcript is refused (`transcribe.test.ts`, `checkTranscript`); an unknown upload in demo mode gets a polite 422; a quoted sentence not in the letter is flagged (`cases.test.ts`). **No automated test** of the live reader's invalid-answer / timeout path (`ai.service.ts` retry → 503 "add the medicines by hand"): tests always use the mock. Checked by code review only |
+| F7 | Server error | Generic message, no stack trace or details shown | Automated: Pass | `errors.test.ts`: unexpected error → generic 500 with no message or stack; broken JSON → friendly 400; unknown route → 404; logs never hold passwords or database details |
 
 ## Accessibility: Lighthouse + axe (D-027), live site, 17 Nov 2026
 Tools: Lighthouse 13.6.0 (mobile = default Moto G emulation with throttling; desktop = desktop preset) and
@@ -91,12 +96,26 @@ removed. Sample files: `client/public/demo-letters/`.
 | U4 | Upload the sample photo (phone, 390 px) | Same as U2, stacked, no sideways scroll | Pass (4.5 s) |
 | U5 | Synthetic photo with the amlodipine dose smudged | AI writes `[unclear]`; reading refused | Pass ("Amlodipine increased to [unclear] mg once daily."; extract → 400) |
 | U6 | axe on the check view | 0 violations | Pass (desktop and phone) |
-| U7 | Owner: real phone, own photo of a printed sample letter | Works end to end | _to do (owner)_ |
+| U7 | Owner: real phone, own photo of a printed sample letter | Works end to end | Pass (owner, 17 Nov: clear photo copied out correctly, no `[unclear]`, comparison correct) |
 
 Covered by automated tests instead (`server/tests/transcribe.test.ts`): logged out → 401; another user's case →
 404; wrong type or fake bytes → 415; over 4 MB → 413; real NHS number in a transcript → discarded; nothing saved.
 
 ## Results
-- First run: __ / __ passed = __%
-- After fixes: __ / __ passed = __%
-- Bugs found and fixing commits:
+Live checks counted (each user flow counts once for desktop and once for mobile):
+
+| Group | Run by | First run |
+|---|---|---|
+| User flows 1–15, desktop + mobile | Owner | 30 / 30 |
+| Failure cases F1–F5 | Owner | 5 / 5 |
+| Upload U7 (real phone photo) | Owner | 1 / 1 |
+| Upload U1–U6 | Claude Code (headless Chrome) | 6 / 6 |
+| **Total** | | **42 / 42 = 100%** |
+
+- **First run: 42 / 42 passed = 100%.**
+- **After fixes: not needed** (no failures on the first run, so nothing to retest).
+- Not in the count: F6 and F7 were not forced on the live site. F7 is covered by automated tests; F6 only partly
+  (see the table above).
+- Also passed: the final phone run, logged out and logged in.
+- Bugs found and fixing commits: none in this run. Found earlier the same day by the automated checks above: the
+  claims `<dl>` structure (`4310782`) and the missing `robots.txt` (`02957de`, `31d8dbd`).

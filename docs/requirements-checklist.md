@@ -68,13 +68,14 @@ Distinction in at least three. **We aim for Distinction in all five.**
 - [x] Client guide (plain English, how to use the app) and developer handover notes → `docs/client-guide.md`,
       `docs/developer-handover.md`
 - [x] **AI usage log** → `docs/ai-usage-log.md` (including the AI's mistakes)
-- [ ] **Test sheet with pass rate** → `docs/test-sheet.md`. **Not yet met:** the user-flow and failure-case rows
-      and the pass-rate lines are still empty (owner's live run in progress). Accessibility, colour-vision and
-      upload sections are filled in
+- [x] **Test sheet with pass rate** → `docs/test-sheet.md`: owner's live run on 17 Nov (desktop private window +
+      phone) plus the upload checks: **42 / 42 = 100% on the first run, no fixes needed**. F7 is covered by
+      automated tests; F6 only partly (no automated test of the live AI's failure path, stated in the sheet).
+      Accessibility, colour-vision and upload sections are filled in
 - [ ] Clean code: no `console.log` with data, no dead or commented-out code, no test accounts.
       Code: done 17 Nov (`ad0db86`: logs carry only safe error summaries; no TODOs or commented-out code; the unused
-      `acknowledged_review_keys` column is documented). **Not yet confirmed: no test accounts** in the live
-      database (see below)
+      `acknowledged_review_keys` column is documented). **Not yet met: no test accounts.** The owner deletes
+      their own test accounts on Wed 18 Nov morning before submitting
 - [x] Clean commit history; no key ever committed → full-history scan 17 Nov found no API keys or real connection
       strings (only made-up ones inside tests); secret scanning + push protection on. The 16 Nov password exposure
       was in a chat, not git, and the password was rotated (D-041)
@@ -85,6 +86,6 @@ Distinction in at least three. **We aim for Distinction in all five.**
 - [x] No `localhost` URLs left in code (the only mention is a code comment); database URL set; CORS allows the live
       front end (not needed: the browser only talks to one origin through the Vercel rewrite); correct build
       command and output folder (both hosts deploy from `main`)
-- [ ] Live URL works in a **private window** and **on a phone**, logged out and logged in → register, log in and log
-      out passed on the owner's phone on 17 Nov (before most features); automated private-window runs passed today.
-      **Needs the owner's final phone run** (part of the test-sheet run now in progress)
+- [x] Live URL works in a **private window** and **on a phone**, logged out and logged in → owner's final run on
+      17 Nov: every user flow passed in a desktop private window and on the owner's phone, logged out and logged in
+      (`docs/test-sheet.md`)
