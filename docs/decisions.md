@@ -721,3 +721,18 @@ Template:
   `/status`, linked from the footer next to "API docs".
 - Checked: live at 1440 px and 375 px, no horizontal scrolling; `/status` shows API, database and login state.
 - Why: The home page is the first thing the panel sees, and the design marks need the app to follow the wireframes.
+
+## D-053 — Claim summary list fixed for screen readers; first Lighthouse + axe run
+- Date: 2026-11-17
+- Decision: In the claim summary, each Copy button now sits inside the `<dd>` beside the value it copies, instead of
+  directly inside the `<dt>`/`<dd>` group. Visually the value and its button share one line.
+- Checked: Lighthouse and axe on the live site (home, demo cases, case detail, claims; mobile and desktop). First run:
+  claims scored 95 with one serious axe issue (`definition-list`); after the fix all eight runs score 100 with 0 axe
+  violations. Colour-vision emulation (deuteranopia, protanopia, achromatopsia) on the case detail page: every status
+  still distinguishable by word and shape. Full results in `docs/test-sheet.md`.
+- Why: A `<dl>` may only hold `<dt>`/`<dd>` pairs; a stray button makes screen readers announce the list wrongly, so
+  the claim fields a pharmacist copies into MYS could be read out of order. Alternatives: an ARIA table (heavier, no
+  gain) or dropping the `<dl>` for plain `<div>`s (loses the label/value meaning).
+- How I'd explain it in 30 seconds: "I ran Google's Lighthouse and the axe checker on every main page on phone and
+  desktop. One real issue: a button in the wrong place inside a list. I fixed it and reran: 100 on all of them. I also
+  simulated colour blindness: every status has a word and a shape, so it never relies on colour."
