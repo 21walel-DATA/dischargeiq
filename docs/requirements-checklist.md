@@ -13,21 +13,21 @@ Distinction in at least three. **We aim for Distinction in all five.**
       at the end to match what was built; every change logged in `docs/decisions.md`
 
 ## 2. Design
-- [ ] Pass: layouts for the main pages, **made before coding**
+- [x] Pass: layouts for the main pages, **made before coding**
 - [ ] Merit: **desktop AND mobile layouts for every page**; the app follows them
 - [ ] Distinction: consistent, polished design; works well on any screen size
 - How we prove "before coding": layouts saved in `docs/designs/` and **committed before any app code**
   (git history shows the order)
 
 ## 3. Build, API and hosting
-- [ ] Pass: working app using an API; code in GitHub; live
-- [ ] Merit: **own API and database; users, collections (cases) and items (medicines) all work;
+- [x] Pass: working app using an API; code in GitHub; live
+- [x] Merit: **own API and database; users, collections (cases) and items (medicines) all work;
       small, regular commits**
 - [ ] Distinction: **live and reliable**; at least one extra → we do tests, API docs (Swagger), stats
 
 ## 4. Security and data
-- [ ] Pass: no API keys in front-end code or GitHub
-- [ ] Merit: keys in `.env` on the server; **`.gitignore` and `.env.example` in the repo**
+- [x] Pass: no API keys in front-end code or GitHub
+- [x] Merit: keys in `.env` on the server; **`.gitignore` and `.env.example` in the repo**
 - [ ] Distinction: **only collects data it needs; users can only change their own data;
       errors show no details** (generic error messages to users, no stack traces, details only in server logs)
 - Go-live rules: secrets go in the host's environment settings; never put a secret in a `VITE_` variable

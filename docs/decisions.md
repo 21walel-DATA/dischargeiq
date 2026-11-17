@@ -670,3 +670,22 @@ Template:
   dispensing label. Until every box is filled, the complete button stays off, and the server refuses anyway. When all
   three stages are done, the claim page lays out the fields in the order Manage Your Service asks for them, each
   with a copy button, and the deadline worked out from the Community Pharmacy England rule."
+
+## D-050 — Swagger API docs generated from the shared Zod schemas (Phase 3, Checkpoint G)
+- Date: 2026-11-17
+- Decision: Interactive API docs at **`/api/docs`** and the OpenAPI 3 file at `/api/docs.json`. The endpoint list
+  (summaries, status codes, which routes need a login) is written by hand in `server/docs/openapi.ts`; the request
+  and response **shapes are generated** from the same shared Zod schemas the server validates with
+  (`z.toJSONSchema`), so the docs can't drift from the code (a test checks the password rule appears as
+  `minLength: 12`). The page uses Swagger UI's own files from the `swagger-ui-dist` package, served by our API, with
+  no inline scripts or CDN, so helmet's strict Content-Security-Policy stays on.
+- Found while testing live: `swagger-ui-express` redirects `/api/docs` to `/api/docs/`, and the Vercel `/api`
+  rewrite doesn't forward the trailing-slash address, so the page never loaded. Replaced it with a page served at
+  `/api/docs` exactly (no redirect).
+- Why: The marking scheme lists API docs as a Distinction "extra"; generating the shapes from the schemas makes them
+  trustworthy and costs no upkeep.
+- Alternatives considered: a hand-written endpoint table in the README (the cut-order fallback, D-031);
+  `swagger-ui-express` (redirect problem behind Vercel); a library that generates routes from schemas (more to learn
+  and explain).
+- How I'd explain it in 30 seconds: "My API documents itself. The shapes in the Swagger page come from the same
+  validation schemas the server uses, so if I change a rule, the docs change with it."

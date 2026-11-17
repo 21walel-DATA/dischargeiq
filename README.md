@@ -11,6 +11,7 @@ claim-ready record.
 ## Live
 - App: https://dischargeiq-pied.vercel.app
 - API health: https://dischargeiq-api-nr30.onrender.com/api/health
+- API docs (Swagger): https://dischargeiq-pied.vercel.app/api/docs (OpenAPI file: `/api/docs.json`)
 
 ## Tech stack
 TypeScript everywhere · React + Vite (plain CSS + CSS Modules, design tokens) · Node + Express 5 ·
