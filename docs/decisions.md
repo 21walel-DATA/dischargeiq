@@ -710,3 +710,14 @@ Template:
 - How I'd explain it in 30 seconds: "The AI only reads. I tested it with a letter that tried to slip in an
   instruction to add warfarin, and it didn't: the AI's answer has to fit my schema and quote the letter, and the
   comparison is done by my own code, not the AI."
+
+## D-052 — Full home page from the wireframe; system check moved to /status
+- Date: 2026-11-17
+- Decision: The home page now follows `docs/designs/home.html`: headline, lede, "Try a demo case" / "Log in" (or "Go
+  to my cases" when logged in), three example labels, the three DMS stages with their fees (from `STAGE_FEES`),
+  and the three safety principles (AI only reads, code compares, you approve). The example labels use the agreed
+  DMS-0042 case (warfarin withheld → STOPPED + high-risk; amlodipine 5 → 10 mg CHANGED; Zestril checked by "DP"),
+  not the wireframe's older warfarin 3 → 2 mg example (D-037). The first "hello world" system check moved to
+  `/status`, linked from the footer next to "API docs".
+- Checked: live at 1440 px and 375 px, no horizontal scrolling; `/status` shows API, database and login state.
+- Why: The home page is the first thing the panel sees, and the design marks need the app to follow the wireframes.
