@@ -1,0 +1,196 @@
+/* Quiet page furniture shared by every page: headings row, panels, notices, tables. Tokens only. */
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  margin-bottom: var(--space-5);
+}
+
+.head h1 { margin: 0; }
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-5);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.lead { margin: var(--space-2) 0 0; }
+
+.backLink {
+  display: inline-block;
+  margin-bottom: var(--space-3);
+  font-size: var(--text-small);
+}
+
+.panel {
+  background: var(--color-label);
+  border: 1px solid var(--color-backing-edge);
+  padding: var(--space-5) var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.notice {
+  border-left: 4px solid var(--color-ink);
+  background: var(--color-label);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+/* "Demo mode: sample extraction": an honest, visible label when the AI isn't the real one. */
+.demoMode {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  border: 2px dashed var(--color-ink);
+  border-radius: var(--radius-box);
+  padding: var(--space-1) var(--space-3);
+  font-size: var(--text-small);
+  font-weight: 700;
+  background: var(--color-label);
+}
+
+.btnRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.spaced { justify-content: space-between; margin-top: var(--space-5); }
+
+.small { font-size: var(--text-small); }
+.muted { color: var(--color-ink-muted); }
+
+.success {
+  border-left: 4px solid var(--color-started);
+  background: var(--color-started-tint);
+  padding: var(--space-3) var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+/* Tables: flat, and stacked into "label: value" rows on phones. */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-label);
+  border: 1px solid var(--color-backing-edge);
+}
+
+.table th {
+  text-align: left;
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+  font-weight: 700;
+}
+
+.table th,
+.table td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-backing-edge);
+  vertical-align: top;
+}
+
+.right { text-align: right; }
+
+@media (max-width: 899px) {
+  .table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .table,
+  .table tbody,
+  .table tr,
+  .table td { display: block; width: 100%; }
+  .table tr { padding: var(--space-3) var(--space-4); border-bottom: 1px solid var(--color-backing-edge); }
+  .table td {
+    border: 0;
+    padding: var(--space-1) 0;
+    display: grid;
+    grid-template-columns: 9.5em 1fr;
+    gap: var(--space-3);
+  }
+  .table td.right { text-align: left; }
+  .table td::before { content: attr(data-label); font-size: var(--text-small); color: var(--color-ink-muted); }
+  .table td.main { grid-template-columns: 1fr; font-size: 1.0625rem; }
+  .table td.main::before { content: none; }
+}
+
+@media (min-width: 900px) {
+  .panel { padding: var(--space-5); }
+}
+
+/* Stage pips in the cases table: filled = completed, empty = not done, dashed = not applicable. */
+.pips { display: inline-flex; gap: var(--space-1); }
+
+.pip {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--color-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-small);
+  font-weight: 700;
+}
+
+.pipDone { background: var(--color-ink); color: var(--color-on-dark); }
+.pipNa { border-style: dashed; color: var(--color-ink-muted); border-color: var(--color-ink-muted); }
+
+.dueSoon { font-weight: 700; }
+.overdue { font-weight: 700; color: var(--color-stopped); }
+
+/* The stage strip on a case (read-only until Phase 3). */
+.stages {
+  list-style: none;
+  margin: 0 0 var(--space-5);
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.stage {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  gap: var(--space-1) var(--space-3);
+  align-items: center;
+  background: var(--color-label);
+  border: 1px solid var(--color-backing-edge);
+  padding: var(--space-3) var(--space-4);
+}
+
+.stageNum {
+  grid-row: span 2;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--color-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-label);
+  font-weight: 700;
+}
+
+.stageDone .stageNum { background: var(--color-ink); color: var(--color-on-dark); }
+.stageCurrent { border: 2px solid var(--color-ink); }
+.stageTitle { font-weight: 700; }
+.stageState { font-size: var(--text-small); color: var(--color-ink-muted); }
+
+@media (min-width: 900px) {
+  .stages { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Native <dialog> for "Delete…" confirmations (design-system.md: destructive actions confirm first). */
+.dialog {
+  border: 2px solid var(--color-ink);
+  border-radius: var(--radius-control);
+  padding: var(--space-5);
+  max-width: 420px;
+  background: var(--color-label);
+  color: var(--color-ink);
+}
+
+.dialog::backdrop { background: color-mix(in srgb, var(--color-ink) 50%, transparent); }

@@ -4,10 +4,16 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes } from "react-router";
 import "./styles/tokens.css";
 import "./styles/global.css";
-import { Layout } from "./components/Layout";
 import { AuthProvider } from "./auth/AuthContext";
+import { RequireAuth } from "./auth/RequireAuth";
+import { Layout } from "./components/Layout";
 import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
+import { MyCasesPage } from "./pages/MyCasesPage";
+import { CaseFormPage } from "./pages/CaseFormPage";
+import { CaseDetailPage } from "./pages/CaseDetailPage";
+import { MedicinePage } from "./pages/MedicinePage";
+import { DemoCasesPage } from "./pages/DemoCasesPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 
 const rootElement = document.getElementById("root");
@@ -24,6 +30,19 @@ createRoot(rootElement).render(
             <Route index element={<HomePage />} />
             <Route path="login" element={<LoginPage mode="login" />} />
             <Route path="register" element={<LoginPage mode="register" />} />
+
+            {/* Public, read-only demo cases. */}
+            <Route path="demo" element={<DemoCasesPage />} />
+            <Route path="demo/:id" element={<CaseDetailPage demo />} />
+            <Route path="demo/:id/medicines/:medicineId" element={<MedicinePage demo />} />
+
+            {/* Your own cases: log in first. (The API checks ownership on every request regardless.) */}
+            <Route path="cases" element={<RequireAuth><MyCasesPage /></RequireAuth>} />
+            <Route path="cases/new" element={<RequireAuth><CaseFormPage /></RequireAuth>} />
+            <Route path="cases/:id" element={<RequireAuth><CaseDetailPage demo={false} /></RequireAuth>} />
+            <Route path="cases/:id/edit" element={<RequireAuth><CaseFormPage /></RequireAuth>} />
+            <Route path="cases/:id/medicines/:medicineId" element={<RequireAuth><MedicinePage demo={false} /></RequireAuth>} />
+
             <Route path="*" element={<NotFoundPage />} />
           </Route>
         </Routes>

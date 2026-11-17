@@ -1,0 +1,16 @@
+.metaGrid {
+  display: grid;
+  gap: 0 var(--space-4);
+}
+
+.letter {
+  min-height: 260px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.after { margin: var(--space-3) 0 0; }
+
+@media (min-width: 900px) {
+  .metaGrid { grid-template-columns: 1fr 1fr 1.5fr; }
+}

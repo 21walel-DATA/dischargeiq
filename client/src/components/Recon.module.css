@@ -1,0 +1,88 @@
+/* The comparison: labels side by side on desktop, stacked on mobile. The hero of the app. */
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.top h2 { margin: 0; }
+
+.head { display: none; }
+
+.list {
+  display: grid;
+  gap: var(--space-5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.row {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.row + .row {
+  border-top: 2px solid var(--color-backing-edge);
+  padding-top: var(--space-5);
+}
+
+.status {
+  display: grid;
+  gap: var(--space-1);
+  align-content: start;
+  padding: var(--space-1) var(--space-2);
+  border-left: 2px solid var(--color-backing-edge);
+  margin-left: var(--space-4);
+}
+
+.detail { font-size: var(--text-small); }
+.detail a { font-size: var(--text-small); }
+.quote { font-size: var(--text-small); color: var(--color-ink-muted); }
+
+/* Needs-review reasons: the yellow highlighter, as if marked on paper. */
+.highlight {
+  background: var(--color-review);
+  padding: 0 var(--space-1);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.sideTag {
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+  margin-bottom: var(--space-1);
+}
+
+.empty {
+  background: var(--color-label);
+  border: 1px solid var(--color-backing-edge);
+  padding: var(--space-5) var(--space-4);
+}
+
+@media (min-width: 900px) {
+  .head {
+    display: grid;
+    grid-template-columns: 1fr 240px 1fr;
+    gap: var(--space-4);
+    font-family: var(--font-label);
+    font-stretch: var(--font-label-stretch);
+    font-weight: 600;
+    font-size: var(--text-h3);
+    padding-bottom: var(--space-2);
+    border-bottom: 1px solid var(--color-backing-edge);
+    margin-bottom: var(--space-4);
+  }
+  .list { gap: var(--space-4); }
+  .row { grid-template-columns: 1fr 240px 1fr; gap: var(--space-4); align-items: start; }
+  .row + .row { border-top: 0; padding-top: 0; }
+  .status { border-left: 0; margin: 0; padding: var(--space-3) 0; }
+  .sideTag { display: none; }
+}
+
+/* The stage 1 / stage 2 switch above the comparison. */
+.toggle { margin-bottom: var(--space-4); }

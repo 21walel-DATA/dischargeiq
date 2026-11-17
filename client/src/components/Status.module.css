@@ -1,0 +1,46 @@
+/* Clinical status: always a word + a shape + a colour, never colour alone (design-system.md). Tokens only. */
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-weight: 700;
+  font-size: var(--text-small);
+  line-height: 20px;
+}
+
+.mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-box);
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1;
+  color: var(--color-on-dark);
+}
+
+.started { color: var(--color-started); }
+.started .mark { background: var(--color-started); }
+
+.stopped { color: var(--color-stopped); }
+.stopped .mark { background: var(--color-stopped); }
+
+.changed { color: var(--color-changed); }
+.changed .mark { background: var(--color-changed); }
+
+.unchanged { color: var(--color-unchanged); }
+.unchanged .mark { background: transparent; color: var(--color-unchanged); border: 2px solid var(--color-unchanged); }
+
+.review { color: var(--color-ink); }
+.review .mark { background: var(--color-review); color: var(--color-ink); border: 2px dashed var(--color-ink); }
+
+.counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}

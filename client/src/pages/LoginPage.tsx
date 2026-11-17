@@ -2,7 +2,7 @@
 // /login or /register. The same Zod rules as the server check the form first, so most mistakes show instantly;
 // the server still checks everything again.
 import { useState, type FormEvent, type ReactNode } from "react";
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import { loginRequestSchema, registerRequestSchema } from "@dischargeiq/shared";
 import { login, register } from "../api/auth";
 import { useAuth } from "../auth/AuthContext";
@@ -26,6 +26,10 @@ function firstMessagePerField(issues: { path: PropertyKey[]; message: string }[]
 export function LoginPage({ mode }: { mode: Mode }) {
   const { user, setUser } = useAuth();
   const navigate = useNavigate();
+  // Where to go after logging in: the page that sent you here, or "My cases".
+  const location = useLocation();
+  const from: unknown = location.state?.from;
+  const next = typeof from === "string" && from.startsWith("/") ? from : "/cases";
 
   const [email, setEmail] = useState("");
   const [displayName, setDisplayName] = useState("");
@@ -34,9 +38,9 @@ export function LoginPage({ mode }: { mode: Mode }) {
   const [fields, setFields] = useState<Record<string, string>>({});
   const [busy, setBusy] = useState(false);
 
-  // Already logged in: nothing to do here. (Phase 2 sends people to "My cases" instead of home.)
+  // Already logged in: nothing to do here.
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to={next} replace />;
   }
 
   const isRegister = mode === "register";
@@ -67,7 +71,7 @@ export function LoginPage({ mode }: { mode: Mode }) {
       return;
     }
     setUser(result.user);
-    navigate("/");
+    navigate(next, { replace: true });
   }
 
   const title = isRegister ? "Create an account" : "Log in";
@@ -162,6 +166,9 @@ export function LoginPage({ mode }: { mode: Mode }) {
         <h2>Before you start</h2>
         <p>This is a prototype for a bootcamp project. Use it only with the synthetic demo letters, never with real patients.</p>
         <p>We store your email, a display name and a scrambled (hashed) password. Nothing else about you.</p>
+        <p>
+          <Link to="/demo">Look at a demo case without an account</Link>
+        </p>
       </aside>
     </div>
   );

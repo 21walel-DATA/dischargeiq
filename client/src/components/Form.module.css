@@ -63,10 +63,11 @@
   background: var(--color-brand);
   color: var(--color-on-dark);
   font: 700 var(--text-body) / 1.2 var(--font-body);
+  text-decoration: none; /* when a link is styled as a button */
   cursor: pointer;
 }
 
-.button:hover { background: var(--color-brand-dark); }
+.button:hover { background: var(--color-brand-dark); color: var(--color-on-dark); }
 
 .button:disabled {
   background: var(--color-backing);
@@ -82,7 +83,14 @@
   border-color: var(--color-ink);
 }
 
-.buttonSecondary:hover { background: var(--color-backing); }
+.buttonSecondary:hover { background: var(--color-backing); color: var(--color-ink); }
+
+/* Smaller buttons inside lists. Still 44 px tall on phones (touch target), 36 px on desktop. */
+.buttonSmall { padding: var(--space-1) var(--space-3); font-size: var(--text-small); }
+
+@media (min-width: 900px) {
+  .buttonSmall { min-height: 36px; }
+}
 
 .fullWidth { width: 100%; }
 

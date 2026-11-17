@@ -1,0 +1,103 @@
+/* The medicine label: the app's hero component. Only medicine lines are labels (design-system.md). */
+
+.label {
+  position: relative;
+  display: block;
+  background: var(--color-label);
+  border: 1px solid var(--color-backing-edge);
+  border-radius: var(--radius-label);
+  box-shadow: var(--shadow-label);
+  padding: var(--space-4);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+a.label:hover { border-color: var(--color-rule); color: var(--color-ink); }
+
+.line1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-3);
+}
+
+/* Never truncated: long names and strengths wrap instead. */
+.name {
+  font-family: var(--font-label);
+  font-stretch: var(--font-label-stretch);
+  font-weight: 700;
+  font-size: var(--text-drug);
+  line-height: 26px;
+  overflow-wrap: anywhere;
+}
+
+.strength {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: var(--text-drug);
+  line-height: 26px;
+  font-variant-numeric: tabular-nums;
+}
+
+.directions { margin-top: var(--space-1); }
+
+.form {
+  margin-top: var(--space-1);
+  font-size: var(--text-small);
+  color: var(--color-ink-muted);
+}
+
+.bandStarted { border-left: 6px solid var(--color-started); }
+.bandStopped { border-left: 6px solid var(--color-stopped); }
+.bandChanged { border-left: 6px solid var(--color-changed); }
+.struck .name { text-decoration: line-through; text-decoration-thickness: 2px; }
+.muted { color: var(--color-ink-muted); }
+.review { border: 2px dashed var(--color-ink); }
+
+.empty {
+  background: transparent;
+  border: 1px dashed var(--color-backing-edge);
+  box-shadow: none;
+  color: var(--color-ink-muted);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  min-height: 72px;
+}
+
+/* High-risk: a filled cautionary band with an octagon and words, never red alone. */
+.highrisk {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-highrisk);
+  color: var(--color-on-dark);
+  font-weight: 700;
+  font-size: var(--text-small);
+  line-height: 20px;
+  padding: var(--space-1) var(--space-4);
+  margin: calc(-1 * var(--space-4)) calc(-1 * var(--space-4)) var(--space-3);
+  border-radius: var(--radius-label) var(--radius-label) 0 0;
+}
+
+.octagon {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  background: var(--color-label);
+  color: var(--color-highrisk);
+  clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-label);
+  font-weight: 700;
+  font-size: var(--text-small);
+}
+
+.letterNote {
+  margin-top: var(--space-3);
+  padding-top: var(--space-3);
+  border-top: 1px dashed var(--color-backing-edge);
+  font-size: var(--text-small);
+}
