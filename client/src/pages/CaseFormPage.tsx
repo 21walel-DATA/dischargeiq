@@ -246,7 +246,18 @@ export function CaseFormPage() {
                 ) : (
                   <img className={styles.previewImage} src={uploaded.previewUrl} alt="The uploaded letter" />
                 )}
-                <figcaption className={`${page.small} ${page.muted}`}>Your file, shown in this browser only</figcaption>
+                <figcaption className={`${page.small} ${page.muted}`}>
+                  Your file, shown in this browser only.
+                  {/* Some phone browsers (e.g. Chrome on Android) can't show a PDF inside the page, so always offer a tab. */}
+                  {uploaded.isPdf && (
+                    <>
+                      {" "}
+                      <a href={uploaded.previewUrl} target="_blank" rel="noreferrer">
+                        Open the PDF in a new tab
+                      </a>
+                    </>
+                  )}
+                </figcaption>
               </figure>
             )}
             <div className={form.field}>
