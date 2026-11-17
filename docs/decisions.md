@@ -511,3 +511,41 @@ Template:
 - How I'd explain it in 30 seconds: "My comparison engine is plain code with 61 tests. It pairs medicines only
   on exact generic names, so it can never confuse look-alike drugs. When it can't be sure, say a brand name or
   a dose written differently, it doesn't guess. It flags the line with the reason, and the pharmacist decides."
+
+## D-045 — Cases API, mock AI provider and demo cases (Phase 2, Checkpoint B)
+- Date: 2026-11-17
+- Decision:
+  - **Mock AI provider (owner request).** `ai.service` picks a provider: **mock** when `ANTHROPIC_API_KEY` is empty
+    and always in tests/CI; **live** (Claude via the official Anthropic SDK, model from `ANTHROPIC_MODEL`) when the
+    key is set. The mock returns the DMS-0042 sample lines whose source sentence is in the letter (any other letter
+    gives an empty list and the pharmacist adds medicines by hand). `GET /api/ai/status` tells the UI which is active,
+    so it can show "Demo mode: sample extraction".
+  - **Live provider:** structured output (`messages.parse` with a Zod output format), then our own `extractionSchema`
+    checks it again (golden rule 5). 60 s timeout; the SDK retries once on network/429/5xx errors; an unusable answer is
+    retried once; then a friendly 503 telling the pharmacist to add medicines by hand. The prompt says extract only,
+    never advise, and treat the letter as data (prompt-injection control). Effort `medium`. No refusal fallback for
+    now (a discharge letter shouldn't trigger one); can be added if ever needed.
+  - **`medicines.letter_status`** (migration 002, additive): stores what the letter says (`withheld`, `stopped`…),
+    so STOPPED lines quote the letter (D-037).
+  - **Hallucination check runs on every comparison**, against the letter as it is now, not only at extraction.
+  - **Editing a medicine gives it a new id** (copy + delete in one transaction), so its comparison line gets a new
+    key and must be acknowledged again (D-032).
+  - **Ownership on every route:** `loadOwnedCase` for `/cases/:id/...`, new `loadOwnedMedicine` (joins the medicine
+    to its case's owner) for `/medicines/:id`. Demo cases use `loadDemoCase` (only `is_demo` rows) and reuse the same
+    read-only controllers. Demo cases belong to an account nobody can log in to.
+  - **Copy a demo case** into your own cases (letter + pre-admission list only), so the demo journey is
+    copy → read the letter → compare.
+  - **Seed** (`npm run seed`) is idempotent and runs in the manual "Run migrations" GitHub job after migrating.
+  - Rate limit on `/extract`: 30 per hour per address. Postgres dates come back as ISO strings and `numeric` as numbers.
+- Why: The app works end to end without an API key, tests never call a paid service, and the real provider drops
+  in by adding one secret on Render. Every AI answer is checked twice before it is used.
+- Alternatives considered: calling Claude in tests (cost, flaky, needs a secret in CI); a hand-written fake AI
+  separate from the seed data (could drift from the tests); keeping the medicine id on edit with a version number
+  (less obvious than a new row).
+- Tests: 28 new API tests (128 in total): CRUD; 8 routes × (other user → 404, logged out → 401); NHS number guard on
+  letter, edit, medicine and reference; mock extraction of DMS-0042; hallucination check after editing the
+  letter; stage 2; demo cases public but read-only; copy. Live check through Vercel: demo comparison correct.
+- How I'd explain it in 30 seconds: "The AI part has a switch. Without a key it uses a built-in sample answer for
+  my demo letter, so the app and all my tests work without calling a paid API. With a key it calls Claude. Either
+  way, the answer has to pass my own schema check before it's saved, and every line must quote a sentence that
+  really is in the letter, or it gets flagged."

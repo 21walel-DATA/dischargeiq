@@ -110,6 +110,7 @@ flowchart LR
 - `name`, `strength`, `form`, `dose`, `frequency`, `route`
 - `dmd_code` (nullable, later), `source_text` (exact sentence from the document)
 - `ai_confidence` (nullable), `edited_by_user` (boolean)
+- `letter_status` (nullable: `new` | `stopped` | `changed` | `continued` | `withheld`; what the letter says, migration 002, D-045)
 
 **reconciliation_items** (computed result, stored when a stage is completed)
 - `id` PK, `case_id` FK, `stage` (1 | 2), `from_medicine_id` FK (nullable), `to_medicine_id` FK (nullable)
@@ -223,7 +224,9 @@ erDiagram
 - `POST /cases/:id/medicines` · `PATCH /medicines/:id` · `DELETE /medicines/:id`
 
 **Public**
-- `GET /demo-cases` · `GET /demo-cases/:id` (synthetic only, read-only)
+- `GET /demo-cases` · `GET /demo-cases/:id` · `GET /demo-cases/:id/reconciliation` (synthetic only, read-only)
+- `POST /demo-cases/:id/copy` (logged in: copies the letter + pre-admission list into your own cases)
+- `GET /ai/status` (`mock` or `live`; drives the "Demo mode: sample extraction" label, D-045)
 - `GET /stats` (counts, most common changes, claims ready/value — no personal data)
 
 **Utility**
