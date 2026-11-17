@@ -1,5 +1,7 @@
 # Clinical Hazard Log (starter) — DischargeIQ
 
+**Risk scores drafted by AI and reviewed by the owner (former community pharmacist) on 17 Nov 2026.**
+
 *Prototype, synthetic data only. Written in the style of **DCB0129** (clinical risk management for
 manufacturers of health IT). A real deployment would need a Clinical Safety Officer, a full hazard log and a
 clinical safety case report. Decision: D-029. Started 16 Nov 2026; update as features are built (Phase 4).*
@@ -17,11 +19,12 @@ clinical safety case report. Decision: D-029. Started 16 Nov 2026; update as fea
 | H5 | GP's first new prescription ignores the hospital change | Stage 2 check skipped or not compared | Patient receives the pre-admission regimen again | Stage 2 re-check with the same engine; stage can't be "completed" silently; mismatches highlighted | Test sheet #11; engine unit tests (shared) | 4×3=12 → 4×2=8 | Open |
 | H6 | Pharmacist's review work lost | Page closed / connection dropped before saving | Stage repeated late or skipped; 72-hour target missed | Autosave (debounced PATCH + on blur), visible "Saved / Couldn't save" status, warning before leaving | Test sheet #13 | 3×3=9 → 3×1=3 | Open |
 | H7 | Information shown for the wrong patient | Ownership bug or wrong case loaded | Decisions made on another patient's medicines | Ownership checks in SQL on every route; pseudonymous case reference shown on every screen | API tests: another user's case → 403/404; test sheet F3 | 5×2=10 → 5×1=5 | Open |
-| H10 | A real discharge letter is uploaded by mistake (privacy) | A pharmacist photographs or uploads a real patient's letter instead of a synthetic one (D-054) | Real patient data (name, address, NHS number, medicines) sent to the AI provider and possibly saved in the case | **"This letter is synthetic" tick box** before upload; file held **in memory only**, never stored; transcribed text run through the **NHS number guard** on the server (real number → text discarded) and again on save; synthetic-only warnings. **Production would need an information governance review and a DPIA** (plus contract terms with the AI provider) before real letters are allowed | `server/tests/transcribe.test.ts`: upload without the tick → 400; transcript with a real NHS number → discarded; nothing saved to the case; test sheet "Letter upload" | 3×3=9 → 3×2=6 (the file still reaches the AI before the guard can run) | Open |
+| H10 | A real discharge letter is uploaded by mistake (privacy) | A pharmacist photographs or uploads a real patient's letter instead of a synthetic one (D-054) | Real patient data (name, address, NHS number, medicines) sent to the AI provider and possibly saved in the case | **"This letter is synthetic" tick box** before upload; file held **in memory only**, never stored; transcribed text run through the **NHS number guard** on the server (real number → text discarded) and again on save; synthetic-only warnings. **Production would need an information governance review and a DPIA** (plus contract terms with the AI provider) before real letters are allowed | `server/tests/transcribe.test.ts`: upload without the tick → 400; transcript with a real NHS number → discarded; nothing saved to the case; test sheet "Letter upload" | 3×3=9 → 3×2=6 (severity 3 × likelihood 2; owner's reasoning: controls reduce the chance of a real letter being uploaded, not the harm if it is) | Open |
 | H8 | Over-reliance on the tool | User trusts the output without checking | Any of the above reaches the patient | "Supports, never decides" wording; pharmacist must approve each stage; every "Needs review" line must be acknowledged before approval (D-032); no AI clinical advice (golden rule 4) | Review of UI copy; demo script | 4×3=12 → 4×2=8 | Open |
 
 ## Notes
 - Real patient data entering the prototype is a **privacy** risk rather than a clinical one; it is controlled
   by the NHS number guard (D-030) and the synthetic-only policy.
-- Risk scores are a **first draft by Claude Code**. The owner (former community pharmacist) must review and
-  adjust them before they are presented.
+- Risk scores were a first draft by Claude Code. **Reviewed by the owner (former community pharmacist) on
+  17 Nov 2026:** all scores agreed; H10's reasoning rewritten (the after-controls score stays severity 3 ×
+  likelihood 2 = 6, because the controls lower the chance of a real letter being uploaded, not the harm if one is).
