@@ -473,3 +473,41 @@ Template:
   puts a signed token in a cookie that JavaScript can't read and that only travels over HTTPS to my own site.
   Every case route looks up the case together with your user id, so another pharmacist's case simply doesn't
   exist for you: you get a 404, not 'forbidden'. Login is rate-limited, and tests prove each of these rules."
+
+## D-044 — Engine rules set by the owner; high-risk list follows APINCHS (ACCEPTED, owner)
+- Date: 2026-11-17
+- Decision (owner's clinical calls, asked before the engine was written):
+  - **A pre-admission medicine the letter doesn't mention is STOPPED + needs review** ("Not mentioned in the
+    discharge letter: check whether it was stopped on purpose"). In stage 2: "Not on the new prescription".
+  - **Frequency is compared as times per day plus "when required".** Abbreviations are normalised (om/mane =
+    morning, on/nocte = night, OD/BD/TDS/QDS, PRN, once weekly = 1/7 a day). Same times per day with a different
+    time of day (e.g. each morning vs once daily, or morning vs night) is UNCHANGED with a small
+    "Timing differs" note. A real change in times per day, or regular ↔ when required, is CHANGED.
+  - **The high-risk band shows on every line containing a high-risk medicine**, whatever its status, on both sides.
+    The list in `server/services/highrisk.rules.ts` follows the UK **APINCHS** framework (Anti-infectives,
+    Potassium/electrolytes, Insulin, Narcotics/opioids, Chemotherapy incl. oral methotrexate, Heparin and other
+    anticoagulants, Sedatives) plus lithium, digoxin and amiodarone. A code file for the sprint; a database table
+    with an admin screen later.
+- Engine details built to the agreed rules (D-022, D-032, D-037):
+  - Pairing on the tidied generic name only (lowercase, spaces, form words and strengths removed from the name;
+    salts kept); a short hand-checked brand → generic list, and every brand pairing is flagged for review.
+  - Units converted to mg (micrograms/mcg/µg, g), insulin units compared separately, combinations compared part by
+    part (co-codamol 30/500 = 30 mg/500 mg). Amount per dose = strength × number of tablets, so 1 g vs
+    500 mg × two tablets is UNCHANGED + "Dose written differently".
+  - Needs-review reasons: brand match, dose written differently, strength missing on one side, same drug listed
+    more than once (identical lines are paired first, the rest are never guessed), frequency or dose the engine
+    can't read, letter says stopped but also lists the drug, letter stops a drug that isn't on the "before" list,
+    quoted sentence not in the letter, AI confidence under 70%.
+  - Withheld or stopped lines from the letter are kept (new `letter_status`, Checkpoint B), so a STOPPED line
+    quotes the letter's own sentence.
+  - Lines are sorted changes first (stopped, started, changed), then unchanged.
+- Tests: 61 engine tests written first (`server/tests/reconcile.test.ts`), including all 13 P7 edge cases and
+  the full DMS-0042 case; 6 tests for the NHS number guard (D-030). 100 tests in total.
+- Why: These rules make the engine predictable and cautious. It only calls something UNCHANGED when it can
+  prove it, and it explains every doubt in words a pharmacist would use.
+- Alternatives considered: treating an unmentioned medicine as continuing (hides omissions, a common discharge
+  error); treating any timing difference as CHANGED (noisy); flagging only changed high-risk lines (the owner
+  wants the band to show on every high-risk medicine).
+- How I'd explain it in 30 seconds: "My comparison engine is plain code with 61 tests. It pairs medicines only
+  on exact generic names, so it can never confuse look-alike drugs. When it can't be sure, say a brand name or
+  a dose written differently, it doesn't guess. It flags the line with the reason, and the pharmacist decides."
