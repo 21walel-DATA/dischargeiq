@@ -10,9 +10,11 @@
     "start": "node dist/index.js",
     "typecheck": "tsc -p .",
     "test": "vitest run",
-    "migrate": "tsx --env-file-if-exists=.env db/migrate.ts"
+    "migrate": "tsx --env-file-if-exists=.env db/migrate.ts",
+    "seed": "tsx --env-file-if-exists=.env db/seed.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^1.9.0",
     "@dischargeiq/shared": "*",
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",

@@ -4,3 +4,4 @@ export * from "./auth";
 export * from "./nhsNumber";
 export * from "./reconciliation";
 export * from "./extraction";
+export * from "./cases";

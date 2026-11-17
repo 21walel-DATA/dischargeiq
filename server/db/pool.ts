@@ -17,6 +17,11 @@ function sslSettings(): ConnectionOptions | false {
   return { ca: readFileSync(caPath, "utf8") };
 }
 
+// How Postgres values arrive in JavaScript. By default `pg` returns dates as Date objects and `numeric` as text
+// (to avoid rounding). We want plain JSON-friendly values: ISO date strings, and numbers for ai_confidence.
+pg.types.setTypeParser(pg.types.builtins.TIMESTAMPTZ, (value) => new Date(value).toISOString());
+pg.types.setTypeParser(pg.types.builtins.NUMERIC, (value) => Number(value));
+
 export function createPool(connectionString: string | undefined): pg.Pool {
   if (!connectionString) {
     throw new Error("DATABASE_URL is not set");

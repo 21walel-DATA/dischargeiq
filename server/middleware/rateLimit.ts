@@ -16,6 +16,17 @@ export function createLoginLimiter(): RateLimitRequestHandler {
   });
 }
 
+// The AI call costs money and time, so it gets its own limit (architecture.md section 8).
+export function createExtractLimiter(): RateLimitRequestHandler {
+  return rateLimit({
+    windowMs: 60 * 60 * 1000,
+    limit: 30, // 30 letter readings per hour per address
+    standardHeaders: "draft-8",
+    legacyHeaders: false,
+    message: { error: "You've read a lot of letters in the last hour. Wait a while, or add medicines by hand." },
+  });
+}
+
 export function createRegisterLimiter(): RateLimitRequestHandler {
   return rateLimit({
     windowMs: 60 * 60 * 1000,

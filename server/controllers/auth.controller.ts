@@ -1,28 +1,15 @@
 // Handles the four auth requests: check the input, call the service, set or clear the cookie, reply.
 import type { Request, Response } from "express";
-import { z } from "zod";
 import { loginRequestSchema, registerRequestSchema, type AuthResponse } from "@dischargeiq/shared";
 import { findUserById, registerUser, verifyLogin } from "../services/auth.service";
 import { SESSION_COOKIE, sessionCookieOptions, signSessionToken } from "../services/session.service";
 import { getCurrentUser } from "../middleware/requireAuth";
-
-// Turns Zod's result into { field: "first message" } so the form can show each message under its field.
-// The messages are our own wording from shared/src/auth.ts, never library internals.
-function fieldErrors(error: z.ZodError): Record<string, string> {
-  const result: Record<string, string> = {};
-  for (const issue of error.issues) {
-    const field = String(issue.path[0] ?? "form");
-    if (!(field in result)) {
-      result[field] = issue.message;
-    }
-  }
-  return result;
-}
+import { sendValidationError } from "./validation";
 
 export async function register(req: Request, res: Response): Promise<void> {
   const parsed = registerRequestSchema.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: "Check the details you entered.", fields: fieldErrors(parsed.error) });
+    sendValidationError(res, parsed.error);
     return;
   }
 
@@ -44,7 +31,7 @@ export async function register(req: Request, res: Response): Promise<void> {
 export async function login(req: Request, res: Response): Promise<void> {
   const parsed = loginRequestSchema.safeParse(req.body);
   if (!parsed.success) {
-    res.status(400).json({ error: "Check the details you entered.", fields: fieldErrors(parsed.error) });
+    sendValidationError(res, parsed.error);
     return;
   }
 
