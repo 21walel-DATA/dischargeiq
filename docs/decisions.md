@@ -577,3 +577,21 @@ Template:
 - How I'd explain it in 30 seconds: "Each medicine is drawn like a dispensing label. Before admission is on the left,
   discharge on the right, and the middle says what changed in a word, a shape and a colour, so it works for
   colour-blind users and in greyscale. Click any line and you see the exact sentence highlighted in the letter."
+
+## D-047 — Five more demo cases from the owner's scenarios; mock reader answers from one letter only
+- Date: 2026-11-17
+- Decision:
+  - **DMS-0043 to DMS-0047** added to `server/db/demoCases.ts` from the owner's clinically checked scenarios
+    (anticoagulant switch, insulin reduction, omission, heart failure frequency change, post-operative opioid). Each
+    has a synthetic letter with its own NHS test number from the 999 range (`999 000 0026`…`0069`, all Modulus 11
+    valid), a pre-admission list, and the sample extraction. Extra continuing medicines (e.g. bisoprolol, ramipril)
+    were added only to make the lists realistic; they are all UNCHANGED.
+  - **Each case has engine tests for the owner's expected result** (e.g. warfarin and apixaban are never paired;
+    insulin 20 → 16 units is CHANGED and high-risk; unmentioned levothyroxine is the only line needing review).
+  - **Mock reader fix:** some sentences appear in more than one demo letter, so the mock now picks the ONE demo letter
+    that matches best and returns only its lines (previously it could return duplicates).
+  - New tests check every demo letter: synthetic NHS number only, and every sample sentence really is in the letter.
+- Why: Each demo case proves one rule end to end, which makes the demo and the Q&A concrete.
+- How I'd explain it in 30 seconds: "I wrote six synthetic cases, each showing one rule: a withheld anticoagulant,
+  a switch between two anticoagulants that must never be paired, an insulin dose change, a medicine the hospital
+  forgot to mention, a frequency change, and a short opioid course. Each one has its own test."

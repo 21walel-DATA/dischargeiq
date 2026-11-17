@@ -5,7 +5,7 @@
 import { describe, expect, it } from "vitest";
 import type { ComparedMedicine, ReconciliationLine } from "@dischargeiq/shared";
 import { reconcile } from "../services/reconcile.service";
-import { DMS_0042 } from "../db/demoCases";
+import { DMS_0042, DMS_0043, DMS_0044, DMS_0045, DMS_0046, DMS_0047, type DemoCase } from "../db/demoCases";
 
 // ---- helpers -------------------------------------------------------------------------------------------
 
@@ -509,5 +509,106 @@ describe("DMS-0042 (architecture.md section 12)", () => {
 
   it("exactly two lines need review", () => {
     expect(lines.filter((line) => line.needsReview)).toHaveLength(2);
+  });
+});
+
+// ---- The owner's further demo cases (D-047): each one exercises one rule end to end ---------------------------------
+
+// Runs the engine on a demo case's pre-admission list and its sample extraction, like the real app does.
+function demoLines(demo: DemoCase): ReconciliationLine[] {
+  const before = demo.preAdmission.map((m, i) => med(m.name, { ...m, id: `${demo.reference}-pre-${i}` }));
+  const after = demo.extraction.map((m, i) =>
+    med(m.name, {
+      id: `${demo.reference}-dis-${i}`,
+      strength: m.strength ?? null,
+      form: m.form ?? null,
+      dose: m.dose ?? null,
+      frequency: m.frequency ?? null,
+      route: m.route ?? null,
+      letterStatus: m.status_in_letter ?? null,
+      sourceText: m.source_text,
+      aiConfidence: m.confidence,
+    }),
+  );
+  return reconcile(before, after);
+}
+
+function named(lines: ReconciliationLine[], name: string): ReconciliationLine {
+  const found = lines.find((l) => (l.from ?? l.to)?.name.toLowerCase() === name.toLowerCase());
+  if (!found) throw new Error(`No line for ${name}`);
+  return found;
+}
+
+describe("DMS-0043 anticoagulant switch", () => {
+  const lines = demoLines(DMS_0043);
+  it("warfarin STOPPED and apixaban STARTED, both high-risk, nothing to review", () => {
+    expect(named(lines, "Warfarin")).toMatchObject({ changeType: "stopped", highRisk: true, needsReview: false, letterStatus: "stopped" });
+    expect(named(lines, "Apixaban")).toMatchObject({ changeType: "started", highRisk: true, needsReview: false });
+    expect(named(lines, "Apixaban").highRiskReason).toContain("Anticoagulant");
+  });
+  it("never pairs warfarin with apixaban (different drugs)", () => {
+    expect(lines.filter((l) => l.from && l.to && l.from.name !== l.to.name)).toHaveLength(0);
+  });
+  it("the rest is unchanged", () => {
+    expect(named(lines, "Bisoprolol").changeType).toBe("unchanged");
+    expect(named(lines, "Atorvastatin").changeType).toBe("unchanged");
+  });
+});
+
+describe("DMS-0044 insulin dose reduced", () => {
+  const lines = demoLines(DMS_0044);
+  it("insulin glargine is CHANGED 20 units → 16 units, high-risk (insulin)", () => {
+    const line = named(lines, "Insulin glargine");
+    expect(line.changeType).toBe("changed");
+    expect(line.changeDetails).toEqual(["Dose 20 units → 16 units"]);
+    expect(line.highRiskReason).toContain("Insulin");
+    expect(line.needsReview).toBe(false);
+  });
+  it("metformin and ramipril unchanged", () => {
+    expect(named(lines, "Metformin").changeType).toBe("unchanged");
+    expect(named(lines, "Ramipril").changeType).toBe("unchanged");
+  });
+});
+
+describe("DMS-0045 omission", () => {
+  const lines = demoLines(DMS_0045);
+  it("levothyroxine, not mentioned in the letter, is STOPPED + needs review", () => {
+    const line = named(lines, "Levothyroxine");
+    expect(line.changeType).toBe("stopped");
+    expect(line.reviewReasons).toEqual(["Not mentioned in the discharge letter: check whether it was stopped on purpose."]);
+  });
+  it("is the only line that needs review", () => {
+    expect(lines.filter((l) => l.needsReview)).toHaveLength(1);
+    expect(lines).toHaveLength(3);
+  });
+});
+
+describe("DMS-0046 heart failure", () => {
+  const lines = demoLines(DMS_0046);
+  it("furosemide OD → twice daily is CHANGED on times per day only", () => {
+    const line = named(lines, "Furosemide");
+    expect(line.changeType).toBe("changed");
+    expect(line.changeDetails).toEqual(["Frequency OD → twice daily"]);
+    expect(line.highRisk).toBe(false);
+  });
+  it("spironolactone STARTED; bisoprolol and ramipril unchanged", () => {
+    expect(named(lines, "Spironolactone").changeType).toBe("started");
+    expect(named(lines, "Bisoprolol").changeType).toBe("unchanged");
+    expect(named(lines, "Ramipril").changeType).toBe("unchanged");
+  });
+});
+
+describe("DMS-0047 post-operative opioid", () => {
+  const lines = demoLines(DMS_0047);
+  it("morphine sulfate MR STARTED and high-risk (opioid), with the short course in its directions", () => {
+    const line = named(lines, "Morphine sulfate");
+    expect(line).toMatchObject({ changeType: "started", highRisk: true, needsReview: false });
+    expect(line.highRiskReason).toContain("Opioid");
+    expect(line.to?.frequency).toContain("for 5 days");
+  });
+  it("senna STARTED, ibuprofen STOPPED (the letter says so), atorvastatin unchanged", () => {
+    expect(named(lines, "Senna")).toMatchObject({ changeType: "started", highRisk: false });
+    expect(named(lines, "Ibuprofen")).toMatchObject({ changeType: "stopped", needsReview: false, letterStatus: "stopped" });
+    expect(named(lines, "Atorvastatin").changeType).toBe("unchanged");
   });
 });

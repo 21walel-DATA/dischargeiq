@@ -42,11 +42,19 @@ export async function extractMedicines(letterText: string): Promise<ExtractionRe
 
 // ---- Mock provider ------------------------------------------------------------------------------------------------
 
-// Returns the sample extraction lines whose source sentence appears in this letter. For the demo letter that's
-// the whole list; for any other letter it's an empty list, and the UI asks the pharmacist to add medicines by hand.
+// Finds the demo letter this text matches best (most sample sentences found in it), and returns that letter's sample
+// lines whose sentence is still in the text. Only ONE demo case is used, because some sentences ("Continue
+// atorvastatin 20 mg at night.") appear in more than one letter. Any other letter gives an empty list, and the UI
+// asks the pharmacist to add medicines by hand.
 function extractWithMock(letterText: string): ExtractionResult {
-  const medicines = DEMO_CASES.flatMap((demo) => demo.extraction).filter((m) => sourceIsInLetter(m.source_text, letterText));
-  return { ok: true, mode: "mock", medicines };
+  let best: ExtractedMedicine[] = [];
+  for (const demo of DEMO_CASES) {
+    const found = demo.extraction.filter((m) => sourceIsInLetter(m.source_text, letterText));
+    if (found.length > best.length) {
+      best = found;
+    }
+  }
+  return { ok: true, mode: "mock", medicines: best };
 }
 
 // ---- Live provider (Claude) ---------------------------------------------------------------------------------------

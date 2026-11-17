@@ -6,9 +6,14 @@ import { listDemoCases } from "../api/cases";
 import form from "../components/Form.module.css";
 import page from "../components/Page.module.css";
 
-// One line per demo case: what the scenario shows. Written by the owner (architecture.md section 12).
+// One line per demo case: what the scenario shows. Written by the owner (architecture.md section 12, D-047).
 const SCENARIOS: Record<string, string> = {
   "DMS-0042": "Upper GI bleed: warfarin withheld, naproxen stopped, lansoprazole started, amlodipine increased",
+  "DMS-0043": "Anticoagulant switch: warfarin stopped, apixaban started (atrial fibrillation)",
+  "DMS-0044": "Hypoglycaemia: insulin glargine reduced from 20 to 16 units at night",
+  "DMS-0045": "Omission: levothyroxine on the PMR but not mentioned in the letter",
+  "DMS-0046": "Heart failure: furosemide once daily to twice daily, spironolactone started",
+  "DMS-0047": "After knee surgery: 5-day morphine MR course and senna started, ibuprofen stopped",
 };
 
 export function DemoCasesPage() {

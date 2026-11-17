@@ -353,10 +353,15 @@ patients, no real NHS numbers (999 test range only if one is ever shown).
 | Atorvastatin 20 mg at night | "Continue atorvastatin 20 mg at night." | **UNCHANGED** |
 | Levothyroxine 100 micrograms each morning | "Continue levothyroxine 100 micrograms each morning." | **UNCHANGED** (full unit name) |
 
-**Further demo cases (outline, finalised with the owner in Phase 2):** DMS-0043 heart failure (furosemide
-increased, bisoprolol started); DMS-0044 fall (zopiclone and amitriptyline stopped); DMS-0045 basal insulin
-started (units, high-risk); DMS-0046 methotrexate written as daily (CHANGED frequency, high-risk);
-DMS-0047 short stay, all unchanged.
+**Further demo cases (written by the owner, 17 Nov, D-047; one rule each, all unit-tested):**
+
+| Case | Scenario | Expected result |
+|---|---|---|
+| DMS-0043 | Anticoagulant switch (AF): warfarin stopped, apixaban 5 mg twice daily started | Warfarin STOPPED + apixaban STARTED, both high-risk; never paired |
+| DMS-0044 | Hypoglycaemia: insulin glargine 20 units → 16 units at night | CHANGED (dose in units), high-risk |
+| DMS-0045 | Omission: levothyroxine on the PMR, not mentioned in the letter | STOPPED + needs review ("Not mentioned in the discharge letter") |
+| DMS-0046 | Heart failure: furosemide 40 mg OD → twice daily; spironolactone started | CHANGED (times per day only); STARTED |
+| DMS-0047 | After knee replacement: morphine sulfate MR 10 mg twice daily for 5 days + senna started; ibuprofen stopped | Morphine STARTED, high-risk (opioid); senna STARTED; ibuprofen STOPPED |
 
 The committed wireframes in `docs/designs/` show an earlier version of DMS-0042 (warfarin 3 mg → 2 mg); this
 table is the source of truth.
