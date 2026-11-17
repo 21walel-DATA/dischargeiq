@@ -295,6 +295,8 @@ lists), `GET /cases/:id/fhir` (FHIR UK Core export), admin endpoints for high-ri
 - Assurance: DSPT, DTAC, DCB0129/DCB0160 clinical safety (full hazard log and safety case),
   MHRA medical device assessment, penetration test
 - Hosting: Google Cloud Run (`europe-west2`) + Secret Manager, or NHS-approved hosting; redaction before the AI call
+- AI credentials: “Right now the API key is stored as a server secret with a spending cap. In production I’d switch
+  to OIDC: short-lived credentials that rotate automatically, so there’s no long-lived key to leak.”
 
 ## 9. Hosting and deployment (CI/CD)
 - **CI:** one GitHub Actions workflow on every push: `npm ci → typecheck → lint → test → build`. API tests
