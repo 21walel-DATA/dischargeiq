@@ -8,7 +8,7 @@ Validate that DMS list comparison is a real pain point, learn the current workfl
 would make pharmacists trust an AI-assisted tool.
 
 ## Evidence so far
-- **Owner's experience:** former community pharmacist (last worked in pharmacy ~2+ years ago).
+- **Owner's experience:** pharmacy graduate (overseas degree) with 15 years in UK community pharmacy and NHS primary care, as a dispenser, pharmacy team leader and pharmacy team assistant (last worked in pharmacy ~2+ years ago).
   PharmOutcomes remembered as slow, hard to navigate and time-consuming.
 - **Practising pharmacist (friend), Nov 2026:** "Yes, we have to compare the list, and it's time consuming."
 - **Respondent 1 (written questionnaire, 12 Nov 2026):** see the table and findings below.

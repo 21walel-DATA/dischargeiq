@@ -116,5 +116,5 @@ when you copy the case, so cases copied tonight will still be well within 72 hou
 
 ## Not tested
 - Renaming a copy (e.g. to "Case A") via **Case reference** on the edit page: the field is there but I didn't try it.
-- Step 4 path *after* typing `10` over `[unclear]`: not re-run today; the same path passed in D-054, and with `10`
+- Step 4 path *after* typing `10` over `[unclear]`: not re-run today; the same path passed in D-055, and with `10`
   typed the text is identical to the pasted letter that was read successfully in step 5.

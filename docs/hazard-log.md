@@ -1,6 +1,6 @@
 # Clinical Hazard Log (starter) — DischargeIQ
 
-**Risk scores drafted by AI and reviewed by the owner (former community pharmacist) on 17 Nov 2026.**
+**Risk scores drafted by AI and reviewed by the owner (pharmacy graduate with 15 years in UK community pharmacy and NHS primary care; not a registered pharmacist) on 17 Nov 2026.**
 
 *Prototype, synthetic data only. Written in the style of **DCB0129** (clinical risk management for
 manufacturers of health IT). A real deployment would need a Clinical Safety Officer, a full hazard log and a
@@ -25,6 +25,6 @@ clinical safety case report. Decision: D-029. Started 16 Nov 2026; update as fea
 ## Notes
 - Real patient data entering the prototype is a **privacy** risk rather than a clinical one; it is controlled
   by the NHS number guard (D-030) and the synthetic-only policy.
-- Risk scores were a first draft by Claude Code. **Reviewed by the owner (former community pharmacist) on
+- Risk scores were a first draft by Claude Code. **Reviewed by the owner (pharmacy graduate with 15 years in UK community pharmacy and NHS primary care) on
   17 Nov 2026:** all scores agreed; H10's reasoning rewritten (the after-controls score stays severity 3 ×
   likelihood 2 = 6, because the controls lower the chance of a real letter being uploaded, not the harm if one is).

@@ -364,7 +364,7 @@ Template:
   A withheld medicine that is absent from the discharge list is STOPPED; the quoted sentence shows the word
   "withheld" so the pharmacist sees it is not necessarily permanent. (This replaces the "withheld → needs
   review" idea in D-022.) Seed plan: `architecture.md` section 12.
-- Why: Clinically realistic for the owner (former community pharmacist); the source sentence carries the nuance.
+- Why: Clinically realistic from the owner's 15 years in UK community pharmacy and NHS primary care (wording corrected 18 Nov, D-059); the source sentence carries the nuance.
 - Note: the committed wireframes still show the earlier example (warfarin 3 mg to 2 mg); the seed plan is the
   source of truth for demo data.
 
@@ -841,3 +841,22 @@ Template:
   diagrams are harder to read for a marker working from Classroom).
 - How I'd explain it in 30 seconds: "Once the live tests all passed I froze it and submitted, with a short summary
   and PDFs of the brief, architecture and designs, so the marker can see everything without cloning the repo."
+
+## D-059 — Owner's background described accurately
+- Date: 2026-11-18
+- Decision: correct how the docs describe the owner. The owner is **not a UK-registered pharmacist**: they are a
+  pharmacy graduate (overseas degree) with 15 years in UK community pharmacy and NHS primary care, as a dispenser,
+  pharmacy team leader and pharmacy team assistant. They have **not yet passed CompTIA Data+** (exam planned) and
+  have done Google Cloud training only. "Former community pharmacist", "CompTIA Data+" (as if passed) and "GCP
+  basics" were replaced in `CLAUDE.md`, `brief.md`, `user-research.md`, `hazard-log.md`, `consult-claude-code.md`
+  and the D-034 "Why" line (marked as corrected). Lines about the pharmacists surveyed were not changed.
+- Why: the earlier wording overstated a professional registration. Accuracy matters most in a health product,
+  and especially in the hazard log, where a real DCB0129 sign-off needs a registered clinician as Clinical Safety
+  Officer; the review recorded here is the owner's, as a pharmacy professional, not a registered pharmacist's.
+- Not changed: `docs/submission/brief.pdf` was generated and submitted on 17 Nov with the old wording; it is left
+  as submitted.
+- Alternatives considered: leave the old entries as written (the log is append-only), but that would keep an
+  untrue claim in the repo.
+- How I'd explain it in 30 seconds: "I'm a pharmacy graduate with 15 years in UK community pharmacy and NHS primary
+  care, not a registered pharmacist, so the clinical review in my hazard log is a pharmacy professional's review,
+  and a real deployment would need a registered Clinical Safety Officer."

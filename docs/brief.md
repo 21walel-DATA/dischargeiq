@@ -23,7 +23,7 @@ a claim-ready record, so pharmacies complete DMS faster, more safely, and actual
 - Missed changes can cause avoidable harm; unclaimed work means pharmacies lose income for work they've done.
 
 ## Why me
-I'm a former community pharmacist now working in the NHS and retraining in software and data.
+I'm a pharmacy graduate (overseas degree) with 15 years in UK community pharmacy and NHS primary care, as a dispenser, pharmacy team leader and pharmacy team assistant. I'm now retraining in software and data.
 I understand the clinical workflow and its safety risks, and I've designed the app around them.
 
 ## Users

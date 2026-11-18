@@ -110,7 +110,7 @@ and wants a codebase that could later grow into a real product for NHS community
 
 ## P9 — Hosting
 - **Proposal:** Client on Vercel or Netlify, API on Render, DB on Supabase. Stretch: API on Google Cloud Run
-  with Secret Manager (the owner has GCP basics).
+  with Secret Manager (the owner has done Google Cloud training).
 - **Known risk:** free API hosts can "sleep" when idle, so the first request in a live demo could be slow.
 - **Questions for you:** Which host do you recommend for a reliable 5-minute live demo? How do we avoid
   cold starts on the day?
@@ -165,7 +165,7 @@ and wants a codebase that could later grow into a real product for NHS community
 - **Proposal:** Vercel rather than Netlify for the client. Render for the API only; the database stays on
   Supabase (Render's free databases are time-limited).
 - **Questions for you:** Any reason to prefer Cloud Run over Render for the demo (cold starts, secrets,
-  the owner's GCP basics)?
+  the owner's Google Cloud training)?
 - Your opinion: see `docs/consult-review.md`
 - Owner decision: see `docs/decisions.md` (D-016 to D-032)
 

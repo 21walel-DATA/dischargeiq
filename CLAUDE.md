@@ -23,7 +23,7 @@ planned from 3 Nov 2026, **built in a two-day sprint (Mon 16 – Tue 17 Nov, abo
 with ambition to grow into a real product later. Build like it's production: clean, tested, explainable.
 
 ## The owner
-Career changer: former community pharmacist, now NHS + data analysis (CompTIA Data+), GCP basics,
+Career changer: pharmacy graduate (overseas degree) with 15 years in UK community pharmacy and NHS primary care, as a dispenser, pharmacy team leader and pharmacy team assistant (not a UK-registered pharmacist); now NHS + data analysis (CompTIA Data+ exam planned, not yet passed), Google Cloud training,
 cyber security fundamentals, 10-week software bootcamp (HTML, CSS, APIs; **very little JavaScript and
 new to TypeScript**). **The owner must be able to explain every part of the code in Q&A.** Teach as you build:
 keep TypeScript simple (no clever generics or advanced type tricks), and explain any type you introduce.
