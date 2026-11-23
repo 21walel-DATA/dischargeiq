@@ -23,7 +23,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.16.0",
-    "swagger-ui-dist": "^5.35.0",
+    "swagger-ui-dist": "^5.35.1",
     "zod": "^4.1.0"
   },
   "devDependencies": {
